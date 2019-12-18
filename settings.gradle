@@ -1,2 +1,2 @@
-include ':app', ':android_shuttl_location'
+include ':app', ':locationsyncservice'
 rootProject.name='TestApplication'
