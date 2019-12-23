@@ -1,3 +1,4 @@
+
 # Wherro
 
 ![Build Status](https://travis-ci.org/ChuckerTeam/chucker.svg?branch=master) ![License](https://img.shields.io/github/license/ChuckerTeam/Chucker.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
@@ -37,26 +38,26 @@ To start using Wherro, just put in `LocationConfigs` through `LocationsHelper.in
 ```kotlin
 LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs())
 ```
-
-```kotlin
-LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interval for Location Fetching  
-  val minDistanceInterval: Int = 100, // min Distance Interval for Location Fetching  
-  val minSyncInterval: Int = 10000, // min Time Interval for Location Syncing  
-  val xApiKey: String? = "", // xApiKey Auth Key for the URL to function  
-  val syncUrl: String? = "" // PUTS the location parameters on this URL  
-  )
-```
-
 **That's it!** 🎉 Wherro will now start 2 services corresponding to Location Saving and Location Syncing simultaneously and show 1 notification for the same
 
 ## Features 🧰
 
 Don't forget to check the [changelog](https://bintray.com/deeptolat/LocationSyncService/com.shuttl.locations_sync) to have a look at all the changes in the latest version of Wherro.
 
-* Compatible with **OkHTTP 4** | **Retrofit** 
+* Compatible with **OkHTTP 4** | **Retrofit**
 * **API >= 16** compatible
 * Easy to integrate (just a 2 gradle implementation line)
 * Highly Configurable
+
+## Configure 🎨
+```kotlin
+LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interval for Location Fetching
+  val minDistanceInterval: Int = 100, // min Distance Interval for Location Fetching
+  val minSyncInterval: Int = 10000, // min Time Interval for Location Syncing
+  val xApiKey: String? = "", // xApiKey Auth Key for the URL to function, if you have one
+  val syncUrl: String? = "" // PUTs the location parameters on this URL
+  )
+```
 
 
 ## FAQ ❓
