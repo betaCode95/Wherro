@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.open_lib.LocationsHelper
 
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
