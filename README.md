@@ -1,4 +1,5 @@
 
+
 # Wherro
 
 ![Build Status](https://travis-ci.org/ChuckerTeam/chucker.svg?branch=master) ![License](https://img.shields.io/github/license/ChuckerTeam/Chucker.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-orange.svg)](http://makeapullrequest.com)
@@ -10,8 +11,6 @@ A module that helps in syncing locations
 * [Configure](#configure-)
 * [FAQ](#faq-)
 * [Contributing](#contributing-)
-
-
 
 Wherro simplifies the location syncing to the server.
 
@@ -29,7 +28,7 @@ repositories {
 
 ```groovy
 dependencies {
-  implementation(group: 'com.shuttl', name: 'locationsyncservice', version: '0.14', ext: 'aar', classifier: '')
+  implementation(group: 'com.shuttl', name: 'locationsyncservice', version: '0.15', ext: 'aar', classifier: '')
 }
 ```
 
@@ -38,6 +37,24 @@ To start using Wherro, just put in `LocationConfigs` through `LocationsHelper.in
 ```kotlin
 LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs())
 ```
+Following need to be added in the app's `AndroidManifest` root
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+```
+
+Add this to your app's `AndroidManifest` application
+
+```xml
+<service android:name="com.shuttl.location_pings.service.LocationPingService" />
+<service android:name="com.shuttl.location_pings.service.LocationSaveService" />
+```
+
+
+
 **That's it!** 🎉 Wherro will now start 2 services corresponding to Location Saving and Location Syncing simultaneously and show 1 notification for the same
 
 ## Features 🧰
@@ -59,11 +76,32 @@ LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interval for Locat
   )
 ```
 
+Request Body JSON in the PUT network call, along with `xApiKey` as Authorization
+```json
+[
+	{
+	   "lat": 23,
+	   "long": 23,
+	   "accuracy": 20,
+	   "provider": "gps",
+	   "timestamp": "1202"
+	},
+	{
+	   "lat": 26.0012,
+	   "long": 23.0012,
+	   "accuracy": 20.00,
+	   "provider": "gps",
+	   "timestamp": "1203"
+	}
+]
+```
+
 
 ## FAQ ❓
 
 * **Why is it not working for me?** - dependency issue maybe, create an issue if it doesn't work
 * **Why is Notification not showing up for me?** - some phones have an issue with running services, create an issue if you find such issues
+* **Can I modify JSON Request/Params?** - in works, will be updated soon
 
 ## Contributing 🤝
 

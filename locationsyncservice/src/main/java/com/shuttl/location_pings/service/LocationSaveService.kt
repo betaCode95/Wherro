@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
@@ -64,6 +65,7 @@ class LocationSaveService : Service() {
             locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, configs.minTimeInterval.toLong(), configs.minDistanceInterval.toFloat(), locListener, null)
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("LocationSave", "GPS can't be accessed. Asked for permission?")
         }
     }
 
