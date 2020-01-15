@@ -39,7 +39,7 @@ public class MockLocationProviderManager {
             throw new IllegalArgumentException();
         }
         SharedPreferences sharedPreferences = getSharedPreferences(context);
-        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LAT, (float) 28.77);
+        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LAT, (float) 11.77);
     }
 
     public float getMockLocationProviderLongitude(Context context) {
@@ -47,6 +47,6 @@ public class MockLocationProviderManager {
             throw new IllegalArgumentException();
         }
         SharedPreferences sharedPreferences = getSharedPreferences(context);
-        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LNG, (float) 77.28);
+        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LNG, (float) 60.28);
     }
 }

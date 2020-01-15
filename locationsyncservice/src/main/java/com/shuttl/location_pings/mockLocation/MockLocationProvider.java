@@ -23,7 +23,8 @@ public class MockLocationProvider {
 
 
     public MockLocationProvider(Context context) {
-        this.context = context.getApplicationContext();
+        Log.d(TAG, "Inside MockLocationProvider");
+        this.context = context;
     }
 
     public void addMockLocationProvider(LocationManager mLocationManager, Context context, final LocationListener onLocationListener) {
@@ -52,7 +53,10 @@ public class MockLocationProvider {
         mockLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                new LocationSaveService().saveLocation(location);
+
+//                new LocationSaveService().saveLocation(location);
+                Log.d(TAG, "Mock location onLocationChanged");
+
             }
 
             @Override
@@ -67,7 +71,7 @@ public class MockLocationProvider {
             public void onProviderDisabled(String provider) {
             }
         };
-        mLocationManager.requestLocationUpdates(provider, 0, 0, mockLocationListener);
+        mLocationManager.requestLocationUpdates(provider, 100, 0, mockLocationListener);
     }
 
     private void setMockProviderLocationData(String provider, Context context) {
