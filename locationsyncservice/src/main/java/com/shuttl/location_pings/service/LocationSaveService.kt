@@ -29,7 +29,6 @@ class LocationSaveService : Service() {
     private var configs: LocationConfigs = LocationConfigs()
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
     private val locListener by lazy {
-
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
@@ -56,8 +55,6 @@ class LocationSaveService : Service() {
     override fun onCreate() {
         startForeground(1, notification(this, "Updating trip details.."))
         work()
-
-
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -78,13 +75,7 @@ class LocationSaveService : Service() {
                 mMockLocationProvider.addMockLocationProvider(applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager, applicationContext, locListener)
         } else {
             try {
-                locManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    configs.minTimeInterval.toLong(),
-                    configs.minDistanceInterval.toFloat(),
-                    locListener,
-                    null
-                )
+                locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, configs.minTimeInterval.toLong(), configs.minDistanceInterval.toFloat(), locListener, null)
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("LocationSave", "GPS can't be accessed. Asked for permission?")
