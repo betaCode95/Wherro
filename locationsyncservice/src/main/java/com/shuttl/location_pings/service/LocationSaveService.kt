@@ -72,23 +72,11 @@ class LocationSaveService : Service() {
     @SuppressLint("MissingPermission")
     private fun work() {
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) ==
-                PackageManager.PERMISSION_GRANTED
-            ) {
-
-                var mMockLocationProvider: MockLocationProvider =
-                    MockLocationProvider(applicationContext)
-                mMockLocationProvider.addMockLocationProvider(
-                    applicationContext.getSystemService(
-                        Context.LOCATION_SERVICE
-                    ) as LocationManager, applicationContext, locListener
-                )
-            }
-        }
-        else {
+            Log.d("LocationSave" ,"Inside Mock location service")
+                Log.d("LocationSave" ,"Inside checkSelfPermission")
+                var mMockLocationProvider: MockLocationProvider = MockLocationProvider(applicationContext)
+                mMockLocationProvider.addMockLocationProvider(applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager, applicationContext, locListener)
+        } else {
             try {
                 locManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
