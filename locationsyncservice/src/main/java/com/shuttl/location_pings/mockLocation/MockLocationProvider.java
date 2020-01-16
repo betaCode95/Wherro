@@ -7,11 +7,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
-
-import com.shuttl.location_pings.service.MockLocationSaveService;
 
 public class MockLocationProvider {
 
@@ -26,12 +23,12 @@ public class MockLocationProvider {
         this.context = context;
     }
 
-    public void addMockLocationProvider(LocationManager mLocationManager, Context context) {
-        addTestProviderToMockAvailableProviders(mLocationManager, LocationManager.GPS_PROVIDER);
+    public void addMockLocationProvider(LocationManager mLocationManager, Context context, LocationListener locationListener) {
+        addTestProviderToMockAvailableProviders(mLocationManager, LocationManager.GPS_PROVIDER, locationListener);
         setMockProviderLocationData(LocationManager.GPS_PROVIDER, context);
     }
 
-    private void addTestProviderToMockAvailableProviders(LocationManager mLocationManager, String provider) throws SecurityException {
+    private void addTestProviderToMockAvailableProviders(LocationManager mLocationManager, String provider, LocationListener locationListener) throws SecurityException {
         mLocationManager.addTestProvider(provider,
                 true,
                 false,
@@ -44,32 +41,12 @@ public class MockLocationProvider {
                 Criteria.ACCURACY_MEDIUM);
         mLocationManager.setTestProviderEnabled(provider, true);
 
-        subscribeMockLocationTracking(mLocationManager, provider);
+        subscribeMockLocationTracking(mLocationManager, provider, locationListener);
     }
 
     @SuppressLint("MissingPermission")
-    public void subscribeMockLocationTracking(LocationManager mLocationManager, String provider) {
-        mockLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-
-                new MockLocationSaveService().saveMockLocationInDB(location);
-                Log.d(TAG, "Mock location onLocationChanged");
-
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-            }
-        };
+    public void subscribeMockLocationTracking(LocationManager mLocationManager, String provider, LocationListener locationListener) {
+        mockLocationListener = locationListener;
         mLocationManager.requestLocationUpdates(provider, 100, 0, mockLocationListener);
     }
 
