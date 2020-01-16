@@ -33,13 +33,16 @@ object LocationsHelper {
         LocationRetrofit.networkDebug = inteceptor
     }
 
-    fun initLocationsModule(app: Application, interceptor: Interceptor? = null, locationConfigs: LocationConfigs) {
+    fun initLocationsModule(
+        app: Application,
+        interceptor: Interceptor? = null,
+        locationConfigs: LocationConfigs
+    ) {
         setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         val saveIntent = Intent(app, LocationSaveService::class.java)
         saveIntent.putExtra("config", locationConfigs)
-        app.startService(pingIntent)
         app.startService(pingIntent)
         app.bindService(saveIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
@@ -56,6 +59,39 @@ object LocationsHelper {
         val saveIntent = Intent(app, LocationSaveService::class.java)
         app.stopService(pingIntent)
         app.stopService(saveIntent)
+        GlobalScope.launch(Dispatchers.IO) {
+            LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
+        }
+    }
+
+    fun stopLocationPingService(app: Application) {
+        val pingIntent = Intent(app, LocationPingService::class.java)
+        app.stopService(pingIntent)
+    }
+
+    fun stopLocationSaveService(app: Application) {
+        val saveIntent = Intent(app, LocationSaveService::class.java)
+        app.stopService(saveIntent)
+    }
+
+    fun startLocationPingService(
+        app: Application,
+        interceptor: Interceptor? = null,
+        locationConfigs: LocationConfigs
+    ) {
+        setNetworkingDebug(interceptor)
+        val pingIntent = Intent(app, LocationPingService::class.java)
+        pingIntent.putExtra("config", locationConfigs)
+        app.startService(pingIntent)
+    }
+
+    fun startLocationSaveService(app: Application, locationConfigs: LocationConfigs) {
+        val saveIntent = Intent(app, LocationSaveService::class.java)
+        saveIntent.putExtra("config", locationConfigs)
+        app.startService(saveIntent)
+    }
+
+    fun clearSavedLocations(app: Application) {
         GlobalScope.launch(Dispatchers.IO) {
             LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
         }
