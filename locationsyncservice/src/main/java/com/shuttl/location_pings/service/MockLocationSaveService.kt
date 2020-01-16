@@ -4,7 +4,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import com.shuttl.location_pings.config.components.LocationsDB
@@ -12,19 +14,37 @@ import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
 import com.shuttl.location_pings.mockLocation.MockLocationProvider
-import com.shuttl.locations_sync.BuildConfig
 
 class MockLocationSaveService : Service() {
 
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
+    private val locListener by lazy {
+        object : LocationListener {
+
+            override fun onLocationChanged(location: Location?) {
+
+                saveMockLocationInDB(location)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+                locManager.removeUpdates(this)
+            }
+        }
+    }
 
     override fun onBind(intent: Intent): IBinder? {
         throw UnsupportedOperationException("Not yet implemented")
     }
 
     override fun onCreate() {
-        Log.d("MockLocationSaveService", "onCreate")
+        Log.d("MockLocSaveService", "onCreate")
         startForeground(1, notification(this, "Updating mock location details..."))
         work()
     }
@@ -35,17 +55,15 @@ class MockLocationSaveService : Service() {
 
     private fun work(){
         val mMockLocationProvider: MockLocationProvider = MockLocationProvider(applicationContext)
-        mMockLocationProvider.addMockLocationProvider(applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager, applicationContext)
+        mMockLocationProvider.addMockLocationProvider(applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager, applicationContext, locListener)
     }
 
     fun saveMockLocationInDB(location: Location?){
         if (location != null) {
-            Log.d("LocationSave ", " latitude = " + location.getLatitude())
-            Log.d("LocationSave ", " lng = " + location.getLongitude())
+            Log.d("MockLocSaveService ", " latitude = " + location.getLatitude())
+            Log.d("MockLocSaveService ", " lng = " + location.getLongitude())
         }
         repo.addLocation(GPSLocation.create(location))
     }
-
-
 
 }
