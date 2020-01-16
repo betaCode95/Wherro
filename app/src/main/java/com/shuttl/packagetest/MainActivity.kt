@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.open_lib.LocationsHelper
+import com.shuttl.location_pings.config.open_lib.MockLocationHelper
 
 
 class MainActivity : AppCompatActivity() {
@@ -12,10 +13,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs(syncUrl = "https://gps.shuttlstage.com/streams/driver/record"))
+        if (BuildConfig.BUILD_TYPE.equals("debug")) {
+            MockLocationHelper.startMockLocationService(app = application)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         LocationsHelper.stop(application)
+        if (BuildConfig.BUILD_TYPE.equals("debug")) {
+            MockLocationHelper.stopMockLocationService(application)
+        }
     }
 }
