@@ -40,7 +40,6 @@ object LocationsHelper {
         val saveIntent = Intent(app, LocationSaveService::class.java)
         saveIntent.putExtra("config", locationConfigs)
         app.startService(pingIntent)
-        app.startService(pingIntent)
         app.bindService(saveIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 

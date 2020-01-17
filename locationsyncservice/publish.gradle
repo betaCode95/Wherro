@@ -37,7 +37,7 @@ bintray {
     publications = ['Production']
     configurations = ['archives']
     // Default: false. Whether to run this as dry-run, without deploying
-    dryRun = true
+    dryRun = false
     // Default: false. Whether to override version artifacts already published
     override = false
     // Default: false. Whether version should be auto published after an upload
