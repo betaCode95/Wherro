@@ -19,7 +19,6 @@ import com.shuttl.location_pings.data.repo.LocationRepo
 
 class LocationSaveService : Service() {
 
-
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private var configs: LocationConfigs = LocationConfigs()
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
@@ -27,7 +26,6 @@ class LocationSaveService : Service() {
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
-
                 saveLocation(location)
             }
 
@@ -77,7 +75,7 @@ class LocationSaveService : Service() {
         }
     }
 
-    public fun saveLocation(location: Location?) {
+    private fun saveLocation(location: Location?) {
         repo.addLocation(GPSLocation.create(location))
     }
 
