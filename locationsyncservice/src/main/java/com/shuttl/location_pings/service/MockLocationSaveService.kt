@@ -17,7 +17,7 @@ import com.shuttl.location_pings.mockLocation.MockLocationProvider
 
 class MockLocationSaveService : Service() {
 
-    private val TAG: String = MockLocationSaveService::class.java.simpleName
+    private val TAG: String = "MockLocation"
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
     private val locListener by lazy {

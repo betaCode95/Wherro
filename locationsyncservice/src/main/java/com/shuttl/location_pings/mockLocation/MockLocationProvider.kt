@@ -12,7 +12,7 @@ import android.util.Log
 
 class MockLocationProvider(applicationContext: Context) {
 
-    private val TAG: String? = MockLocationProvider::class.java.simpleName
+    private val TAG: String? = "MockLocation"
     private var mockLocationListener: LocationListener? = null
     private var mockLocationProviderManager = MockLocationProviderManager()
 

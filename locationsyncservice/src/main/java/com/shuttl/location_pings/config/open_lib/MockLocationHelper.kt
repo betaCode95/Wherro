@@ -10,7 +10,7 @@ import com.shuttl.location_pings.service.MockLocationSaveService
 
 object MockLocationHelper {
 
-    private val TAG: String = MockLocationHelper::class.java.simpleName
+    private val TAG: String = "MockLocation"
     private val serviceConnection by lazy {
         object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
