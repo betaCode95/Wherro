@@ -8,6 +8,8 @@ class MockLocationProviderManager {
     val PREF_NAME_MOCK_LOCATION_PROVIDER = "mock_location_provider"
     val PREF_KEY_MOCK_LOCATION_LAT = "mock_location_lat"
     val PREF_KEY_MOCK_LOCATION_LNG = "mock_location_lng"
+    val DEFAULT_LAT: Double = 0.0
+    val DEFAULT_LNG: Double = 0.0
 
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREF_NAME_MOCK_LOCATION_PROVIDER, Context.MODE_PRIVATE)
@@ -16,13 +18,13 @@ class MockLocationProviderManager {
     fun getMockLocationProviderLatitude(context: Context?): Float {
         requireNotNull(context)
         val sharedPreferences = getSharedPreferences(context)
-        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LAT, 29.77.toFloat())
+        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LAT, DEFAULT_LAT.toFloat())
     }
 
     fun getMockLocationProviderLongitude(context: Context?): Float {
         requireNotNull(context)
         val sharedPreferences = getSharedPreferences(context)
-        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LNG, 77.28.toFloat())
+        return sharedPreferences.getFloat(PREF_KEY_MOCK_LOCATION_LNG, DEFAULT_LNG.toFloat())
     }
 
     fun setMockLocationProviderLatitude(context: Context?, lat: Double) {
