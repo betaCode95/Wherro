@@ -12,17 +12,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs(syncUrl = "https://gps.shuttlstage.com/streams/driver/record"))
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
             MockLocationHelper.startMockLocationService(app = application)
+        } else {
+            LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs(syncUrl = "https://gps.shuttlstage.com/streams/driver/record"))
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LocationsHelper.stop(application)
         if (BuildConfig.BUILD_TYPE.equals("debug")) {
             MockLocationHelper.stopMockLocationService(application)
+        } else {
+            LocationsHelper.stop(application)
         }
     }
 }
