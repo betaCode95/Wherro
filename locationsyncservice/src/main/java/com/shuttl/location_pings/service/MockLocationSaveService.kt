@@ -17,24 +17,28 @@ import com.shuttl.location_pings.mockLocation.MockLocationProvider
 
 class MockLocationSaveService : Service() {
 
+    private val TAG: String = MockLocationSaveService::class.java.simpleName
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
     private val locListener by lazy {
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
-
+                Log.d(TAG, "onLocationChanged : Update changed location in DB ${location.toString()}")
                 saveMockLocationInDB(location)
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                Log.d(TAG, "onStatusChanged : Changed status for $provider = $status")
             }
 
             override fun onProviderEnabled(provider: String?) {
+                Log.d(TAG, "onProviderEnabled : Enabled provider $provider to update mock location")
             }
 
             override fun onProviderDisabled(provider: String?) {
                 locManager.removeUpdates(this)
+                Log.d(TAG, "onProviderDisabled : Removed mock location update for provider $provider")
             }
         }
     }
@@ -44,8 +48,8 @@ class MockLocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        Log.d("MockLocSaveService", "onCreate")
         startForeground(1, notification(this, "Updating mock location details..."))
+        Log.d(TAG, "onCreate : Start foreground service to sync mock location")
         work()
     }
 
@@ -53,17 +57,21 @@ class MockLocationSaveService : Service() {
         return START_STICKY
     }
 
-    private fun work(){
-        val mMockLocationProvider: MockLocationProvider = MockLocationProvider(applicationContext)
-        mMockLocationProvider.addMockLocationProvider(applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager, applicationContext, locListener)
+    private fun work() {
+        val mMockLocationProvider = MockLocationProvider(applicationContext)
+        mMockLocationProvider.addMockLocationProvider(
+            locManager,
+            applicationContext,
+            locListener
+        )
+        Log.d(TAG, "work : Start mock location provider ")
     }
 
-    fun saveMockLocationInDB(location: Location?){
+    fun saveMockLocationInDB(location: Location?) {
         if (location != null) {
-            Log.d("MockLocSaveService ", " latitude = " + location.getLatitude())
-            Log.d("MockLocSaveService ", " lng = " + location.getLongitude())
+            Log.d(TAG, " Latitude in DB = " + location.getLatitude())
+            Log.d(TAG, " Longitude in DB = " + location.getLongitude())
         }
         repo.addLocation(GPSLocation.create(location))
     }
-
 }
