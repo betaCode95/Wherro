@@ -9,11 +9,14 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.SystemClock
 import android.util.Log
+import com.shuttl.location_pings.config.components.LocationConfigs
 
 class MockLocationProvider(applicationContext: Context) {
 
     private val TAG: String? = "MockLocation"
     private var mockLocationProviderManager = MockLocationProviderManager()
+    private var configs: LocationConfigs = LocationConfigs()
+
 
     fun addMockLocationProvider(
         mLocationManager: LocationManager,
@@ -59,7 +62,7 @@ class MockLocationProvider(applicationContext: Context) {
         provider: String,
         locationListener: LocationListener
     ) {
-        mLocationManager.requestLocationUpdates(provider, 100, 0f, locationListener)
+        mLocationManager.requestLocationUpdates(provider, configs.minTimeInterval.toLong(), configs.minDistanceInterval.toFloat(), locationListener)
         Log.d(TAG, "subscribeMockLocationTracking : Request for location updates")
     }
 
