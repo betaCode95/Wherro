@@ -13,7 +13,6 @@ import android.util.Log
 class MockLocationProvider(applicationContext: Context) {
 
     private val TAG: String? = "MockLocation"
-    private var mockLocationListener: LocationListener? = null
     private var mockLocationProviderManager = MockLocationProviderManager()
 
     fun addMockLocationProvider(
@@ -60,8 +59,7 @@ class MockLocationProvider(applicationContext: Context) {
         provider: String,
         locationListener: LocationListener
     ) {
-        mockLocationListener = locationListener
-        mLocationManager.requestLocationUpdates(provider, 100, 0f, mockLocationListener)
+        mLocationManager.requestLocationUpdates(provider, 100, 0f, locationListener)
         Log.d(TAG, "subscribeMockLocationTracking : Request for location updates")
     }
 
