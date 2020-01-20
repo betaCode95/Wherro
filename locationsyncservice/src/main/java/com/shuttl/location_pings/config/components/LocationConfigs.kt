@@ -6,11 +6,19 @@ import android.os.Parcelable
 data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interval for Location Fetching
                            val minDistanceInterval: Int = 100, // min Distance Interval for Location Fetching
                            val minSyncInterval: Int = 10000, // min Time Interval for Location Syncing
+                           val accuracy: Int = 3, // accuracy of Lat-Long in meters, 3 means 110 meter
+                           val bufferSize: Int = 100, // number of entries at max can be stored in the Database
+                           val batchSize: Int = 10, // number of location entries sent at a time while polling
+                           val timeout: Int = 1800, // time in seconds after which we stop the services
                            val xApiKey: String? = "", // xApiKey Auth Key for the URL to function
                            val syncUrl: String? = "" // PUTS the location parameters on this URL
                                    ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
+            parcel.readInt(),
+            parcel.readInt(),
+            parcel.readInt(),
+            parcel.readInt(),
             parcel.readInt(),
             parcel.readInt(),
             parcel.readInt(),
@@ -21,6 +29,10 @@ data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interva
         parcel.writeInt(minTimeInterval)
         parcel.writeInt(minDistanceInterval)
         parcel.writeInt(minSyncInterval)
+        parcel.writeInt(accuracy)
+        parcel.writeInt(bufferSize)
+        parcel.writeInt(batchSize)
+        parcel.writeInt(timeout)
         parcel.writeString(xApiKey)
         parcel.writeString(syncUrl)
     }
