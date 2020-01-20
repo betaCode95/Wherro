@@ -6,6 +6,7 @@ import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -20,7 +21,7 @@ class MockLocationSaveService : Service() {
     private val TAG: String = "MockLocation"
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
-    private val locListener by lazy {
+    private val mockLocationListener by lazy {
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
@@ -44,7 +45,7 @@ class MockLocationSaveService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        throw UnsupportedOperationException("Not yet implemented")
+        return Binder()
     }
 
     override fun onCreate() {
@@ -62,7 +63,7 @@ class MockLocationSaveService : Service() {
         mMockLocationProvider.addMockLocationProvider(
             locManager,
             applicationContext,
-            locListener
+            mockLocationListener
         )
         Log.d(TAG, "work : Start mock location provider ")
     }
@@ -73,5 +74,10 @@ class MockLocationSaveService : Service() {
             Log.d(TAG, " Longitude in DB = " + location.getLongitude())
         }
         repo.addLocation(GPSLocation.create(location))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locManager.removeUpdates(mockLocationListener)
     }
 }
