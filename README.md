@@ -28,7 +28,7 @@ repositories {
 
 ```groovy
 dependencies {
-  implementation(group: 'com.shuttl', name: 'locationsyncservice', version: '0.15', ext: 'aar', classifier: '')
+  implementation 'com.shuttl:locationsyncservice:0.15'
 }
 ```
 
