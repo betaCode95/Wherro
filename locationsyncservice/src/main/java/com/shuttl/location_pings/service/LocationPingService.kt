@@ -17,7 +17,7 @@ class LocationPingService : Service() {
 
     private val timer by lazy {
         object :
-            CountDownTimer(configs.timeout.toLong() * 1000, configs.minSyncInterval.toLong()) {
+            CountDownTimer(configs.timeout.toLong(), configs.minSyncInterval.toLong()) {
             override fun onTick(millisUntilFinished: Long) {
                 pingLocations()
             }

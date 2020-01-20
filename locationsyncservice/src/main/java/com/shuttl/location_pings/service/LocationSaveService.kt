@@ -25,7 +25,7 @@ class LocationSaveService : Service() {
     private var configs: LocationConfigs = LocationConfigs()
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
     private val timer by lazy {
-        object : CountDownTimer(configs.timeout.toLong() * 1000, 1000) {
+        object : CountDownTimer(configs.timeout.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // ignored
             }
