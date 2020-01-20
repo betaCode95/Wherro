@@ -11,11 +11,11 @@ class MockLocationProviderManager {
     val PREF_KEY_MOCK_LOCATION_ALT = "mock_location_altitude"
     val PREF_KEY_MOCK_LOCATION_ACCURACY = "mock_location_accuracy"
     val PREF_KEY_MOCK_LOCATION_BEARING = "mock_location_bearing"
-    val DEFAULT_LAT: Double = 10.0
-    val DEFAULT_LNG: Double = 20.0
-    val DEFAULT_ALT: Double = 30.0
-    val DEFAULT_ACCURACY: Float = 40.0F
-    val DEFAULT_BEARING: Float = 50.0F
+    val DEFAULT_LAT: Double = 0.0
+    val DEFAULT_LNG: Double = 0.0
+    val DEFAULT_ALT: Double = 0.0
+    val DEFAULT_ACCURACY: Float = 0.0F
+    val DEFAULT_BEARING: Float = 0.0F
 
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREF_NAME_MOCK_LOCATION_PROVIDER, Context.MODE_PRIVATE)
