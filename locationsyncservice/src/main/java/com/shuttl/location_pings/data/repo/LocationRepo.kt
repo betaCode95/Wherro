@@ -19,21 +19,15 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
 
     fun addLocation(location: GPSLocation, bufferSize: Int) = GlobalScope.async(Dispatchers.IO) {
 
-        val rowsCount = locationsDao?.getRowsCount()?: 0
+        val rowsCount = locationsDao?.getRowsCount() ?: 0
         printLocations()
 
-        if(rowsCount >= bufferSize) {
-            var index = rowsCount - bufferSize
+        if (rowsCount >= bufferSize) {
+            val index = rowsCount - bufferSize + 1
             val timeStamp = timeStamps[index]
-
-            while(index > 0) {
-                timeStamps.removeFirst()
-                index--
-            }
-
-            locationsDao?.deleteEntries(timeStamp)
+            deleteEntries(index, timeStamp)
         }
-        if(!timeStamps.contains(location.timestamp)) timeStamps.addLast(location.timestamp)
+        if (!timeStamps.contains(location.timestamp)) timeStamps.addLast(location.timestamp)
         locationsDao?.addLocation(location)
     }
 
@@ -41,9 +35,10 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         locationsDao?.clearLocations()
     }
 
-    fun syncLocations(apiKey: String = "", url: String = "", entires: Int) {
+    fun syncLocations(apiKey: String = "", url: String = "", batchSize: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            val locations = locationsDao?.locations()
+            val timeStamp = timeStamps[batchSize]
+            val locations = locationsDao?.getBatchLocations(timeStamp)
             if (locations != null && locations.isNotEmpty()) {
                 try {
                     if (TextUtils.isEmpty(url)) {
@@ -56,7 +51,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                             "application/json",
                             SendLocationRequestBody.create(locations))
                     if (!response.SequenceNumber.isNullOrEmpty()) {
-                        clearLocations()
+                        deleteEntries(batchSize, timeStamp)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -77,5 +72,14 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                 timeStamps.addLast(gpsLocation.timestamp)
             }
         }
+    }
+
+    fun deleteEntries(index: Int, timeStamp: String) {
+        var i = index
+        while(i > 0) {
+            timeStamps.removeFirst()
+            i--
+        }
+        locationsDao?.deleteEntries(timeStamp)
     }
 }

@@ -14,6 +14,9 @@ interface GPSLocationsDao {
     @Query("SELECT * FROM gps_locations")
     fun locations(): List<GPSLocation>
 
+    @Query("SELECT * FROM gps_locations where timestamp < :lastTimestamp")
+    fun getBatchLocations(lastTimestamp: String): List<GPSLocation>
+
     @Query("DELETE FROM gps_locations")
     fun clearLocations()
 
