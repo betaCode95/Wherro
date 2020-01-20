@@ -17,7 +17,6 @@ class MockLocationProvider(applicationContext: Context) {
     private var mockLocationProviderManager = MockLocationProviderManager()
     private var configs: LocationConfigs = LocationConfigs()
 
-
     fun addMockLocationProvider(
         mLocationManager: LocationManager,
         context: Context,
