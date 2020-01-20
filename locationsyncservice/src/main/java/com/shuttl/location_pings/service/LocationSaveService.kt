@@ -9,6 +9,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Binder
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
 import com.shuttl.location_pings.config.components.LocationConfigs
@@ -19,9 +20,21 @@ import com.shuttl.location_pings.data.repo.LocationRepo
 
 class LocationSaveService : Service() {
 
+    private val TAG: String = javaClass.name
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private var configs: LocationConfigs = LocationConfigs()
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
+    private val timer by lazy {
+        object : CountDownTimer(configs.timeout.toLong() * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // ignored
+            }
+
+            override fun onFinish() {
+                stopSelf()
+            }
+        }
+    }
     private val locListener by lazy {
         object : LocationListener {
 
@@ -46,7 +59,7 @@ class LocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating trip details.."))
+        startForeground(1, notification(this, "Updating trip details..."))
         work()
     }
 
@@ -56,21 +69,37 @@ class LocationSaveService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        locManager.removeUpdates(locListener)
+        try {
+            timer.cancel()
+            locManager.removeUpdates(locListener)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     @SuppressLint("MissingPermission")
     private fun work() {
         try {
-            locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, configs.minTimeInterval.toLong(), configs.minDistanceInterval.toFloat(), locListener, null)
+            timer.start()
+            refreshList()
+            locManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                configs.minTimeInterval.toLong(),
+                configs.minDistanceInterval.toFloat(),
+                locListener,
+                null
+            )
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("LocationSave", "GPS can't be accessed. Asked for permission?")
+            Log.e(TAG, "GPS can't be accessed. Asked for permission?")
         }
     }
 
     private fun saveLocation(location: Location?) {
-        repo.addLocation(GPSLocation.create(location))
+        repo.addLocation(GPSLocation.create(location), configs.bufferSize)
     }
 
+    private fun refreshList() {
+        repo.refreshList()
+    }
 }
