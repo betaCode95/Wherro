@@ -10,11 +10,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import java.util.*
 
 class LocationRepo(private val locationsDao: GPSLocationsDao?) {
 
-    fun addLocation(location: GPSLocation) = GlobalScope.async(Dispatchers.IO) {
+    val TAG: String = javaClass.name
+    val timeStamps: LinkedList<String> = LinkedList()
+
+    fun addLocation(location: GPSLocation, bufferSize: Int) = GlobalScope.async(Dispatchers.IO) {
+
+        val rowsCount = locationsDao?.getRowsCount()?: 0
+        printLocations()
+
+        if(rowsCount >= bufferSize) {
+            var index = rowsCount - bufferSize
+            val timeStamp = timeStamps[index]
+
+            while(index > 0) {
+                timeStamps.removeFirst()
+                index--
+            }
+
+            locationsDao?.deleteEntries(timeStamp)
+        }
+        if(!timeStamps.contains(location.timestamp)) timeStamps.addLast(location.timestamp)
         locationsDao?.addLocation(location)
     }
 
@@ -22,13 +41,13 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         locationsDao?.clearLocations()
     }
 
-    fun syncLocations(apiKey: String = "", url: String = "") {
+    fun syncLocations(apiKey: String = "", url: String = "", entires: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             val locations = locationsDao?.locations()
             if (locations != null && locations.isNotEmpty()) {
                 try {
                     if (TextUtils.isEmpty(url)) {
-                        Log.e("LocationsHelper", "No Url Found")
+                        Log.e(TAG, "No Url Found")
                         return@launch
                     }
                     val response = LocationRetrofit.locationAPI.syncLocation(
@@ -46,4 +65,17 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         }
     }
 
+    fun printLocations() {
+        Log.i(TAG, locationsDao?.locations().toString())
+    }
+
+    fun refreshList() = GlobalScope.async(Dispatchers.IO) {
+        timeStamps.clear()
+        val savedLocations: List<GPSLocation>? = locationsDao?.locations()
+        if(savedLocations != null){
+            for(gpsLocation in savedLocations){
+                timeStamps.addLast(gpsLocation.timestamp)
+            }
+        }
+    }
 }
