@@ -62,7 +62,13 @@ class LocationSaveService : Service() {
     @SuppressLint("MissingPermission")
     private fun work() {
         try {
-            locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, configs.minTimeInterval.toLong(), configs.minDistanceInterval.toFloat(), locListener, null)
+            locManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                configs.minTimeInterval.toLong(),
+                configs.minDistanceInterval.toFloat(),
+                locListener,
+                null
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("LocationSave", "GPS can't be accessed. Asked for permission?")
