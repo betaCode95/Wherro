@@ -70,9 +70,9 @@ class MockLocationProvider(applicationContext: Context) {
         val location = Location(provider)
         location.latitude = mockLocationProviderManager.getMockLocationProviderLatitude(context).toDouble()
         location.longitude = mockLocationProviderManager.getMockLocationProviderLongitude(context).toDouble()
-        location.altitude = 634.61
-        location.accuracy = 20f
-        location.bearing = 0f
+        location.altitude = mockLocationProviderManager.getMockLocationProviderAltitude(context).toDouble()
+        location.accuracy = mockLocationProviderManager.getMockLocationProviderAccuracy(context)
+        location.bearing = mockLocationProviderManager.getMockLocationProviderBearing(context)
         location.time = System.currentTimeMillis()
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
             location.elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos()
