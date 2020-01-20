@@ -17,4 +17,10 @@ interface GPSLocationsDao {
     @Query("DELETE FROM gps_locations")
     fun clearLocations()
 
+    @Query("SELECT COUNT(*) FROM gps_locations")
+    fun getRowsCount(): Int
+
+    @Query("DELETE FROM gps_locations WHERE timestamp < :lastTimestamp ")
+    fun deleteEntries(lastTimestamp: String)
+
 }
