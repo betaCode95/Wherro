@@ -37,8 +37,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
     implementation project(path: ':locationsyncservice')
 //    implementation(group: 'com.shuttl', name: 'locationsyncservice', version: '0.14', ext: 'aar', classifier: '')
 
+    // Required -- JUnit 4 framework
+    testImplementation 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 }
