@@ -81,7 +81,6 @@ class LocationSaveService : Service() {
     private fun work() {
         try {
             timer.start()
-            refreshList()
             locManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 configs.minTimeInterval.toLong(),
@@ -97,9 +96,5 @@ class LocationSaveService : Service() {
 
     private fun saveLocation(location: Location?) {
         repo.addLocation(GPSLocation.create(location), configs.bufferSize)
-    }
-
-    private fun refreshList() {
-        repo.refreshList()
     }
 }
