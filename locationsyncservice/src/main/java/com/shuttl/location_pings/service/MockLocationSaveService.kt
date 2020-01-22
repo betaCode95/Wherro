@@ -58,10 +58,12 @@ class MockLocationSaveService : Service() {
     override fun onCreate() {
         startForeground(1, notification(this, "Updating mock location details..."))
         Log.d(TAG, "onCreate : Start foreground service to sync mock location")
-        work()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        var bundle :Bundle ?= intent?.extras
+        configs = bundle!!.getParcelable("config")!!
+        work()
         return START_STICKY
     }
 
@@ -73,7 +75,7 @@ class MockLocationSaveService : Service() {
             mockLocationListener,
             configs
         )
-        Log.d(TAG, "work : Start mock location provider ")
+        Log.d(TAG, "work : Start mock location provider with config : minTimeInterval= " + configs.minTimeInterval.toLong() + " minDistanceInterval = " + configs.minDistanceInterval.toFloat())
     }
 
     fun saveMockLocationInDB(location: Location?) {
