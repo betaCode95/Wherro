@@ -46,7 +46,7 @@ public class TestMockLocation {
         Log.d(TAG, "check003*************");
 
         try {
-            Thread.sleep(3600000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -62,5 +62,7 @@ public class TestMockLocation {
         mockLocationProviderManager.setMockLocationProviderLatitude(context, lat);
         mockLocationProviderManager.setMockLocationProviderLongitude(context, lng);
         editor.commit();
+        Log.d("MockLocation", "Data in sharedPreference Lat = " + mockLocationProviderManager.getMockLocationProviderLatitude(context)
+        + "  Lng = " + mockLocationProviderManager.getMockLocationProviderLongitude(context));
     }
 }
