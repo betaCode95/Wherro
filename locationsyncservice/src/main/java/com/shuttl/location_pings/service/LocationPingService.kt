@@ -92,9 +92,9 @@ class LocationPingService : Service() {
         fun serviceStopped()
     }
 
-    class CustomBinder : Binder() {
+    inner class CustomBinder : Binder() {
         fun getService(): LocationPingService {
-            return LocationPingService()
+            return this@LocationPingService
         }
     }
 }
