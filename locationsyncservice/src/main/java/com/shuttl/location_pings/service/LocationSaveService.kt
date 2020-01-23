@@ -20,6 +20,7 @@ import com.shuttl.location_pings.data.repo.LocationRepo
 
 class LocationSaveService : Service() {
 
+    private var serviceStarted = false
     private val TAG: String = javaClass.name
     private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
     private var configs: LocationConfigs = LocationConfigs()
@@ -27,7 +28,6 @@ class LocationSaveService : Service() {
     private val timer by lazy {
         object : CountDownTimer(configs.timeout.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                // ignored
             }
 
             override fun onFinish() {
@@ -60,11 +60,14 @@ class LocationSaveService : Service() {
 
     override fun onCreate() {
         startForeground(1, notification(this, "Updating trip details..."))
-        work()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
+        if(!serviceStarted) {
+            serviceStarted = true
+            work()
+        }
         return START_STICKY // this makes the service restart if it was stopped by system, when memory gets restored in the system
     }
 
