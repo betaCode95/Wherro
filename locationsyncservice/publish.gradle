@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version '0.15' // your library version
+version '0.16' // your library version
 group 'com.shuttl' // whatever group name you'd like
 
 publishing {
@@ -37,7 +37,7 @@ bintray {
     publications = ['Production']
     configurations = ['archives']
     // Default: false. Whether to run this as dry-run, without deploying
-    dryRun = true
+    dryRun = false
     // Default: false. Whether to override version artifacts already published
     override = false
     // Default: false. Whether version should be auto published after an upload
