@@ -73,7 +73,7 @@ class MockLocationSaveService : Service() {
             Log.d(TAG, " Latitude in DB = " + location.getLatitude())
             Log.d(TAG, " Longitude in DB = " + location.getLongitude())
         }
-        repo.addLocation(GPSLocation.create(location))
+        repo.addLocation(GPSLocation.create(location), 100)
     }
 
     override fun onDestroy() {
