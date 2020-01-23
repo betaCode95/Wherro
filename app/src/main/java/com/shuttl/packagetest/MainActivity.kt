@@ -26,6 +26,14 @@ class MainActivity : AppCompatActivity() {
         override fun errorWhileSyncLocations(error: String?) {
             Log.i(TAG, "errorWhileSyncLocations")
         }
+
+        override fun serviceStarted() {
+            Log.i(TAG, "serviceStarted")
+        }
+
+        override fun serviceStopped() {
+            Log.i(TAG, "serviceStopped")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

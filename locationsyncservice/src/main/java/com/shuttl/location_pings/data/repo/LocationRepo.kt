@@ -6,6 +6,7 @@ import com.shuttl.location_pings.config.components.LocationRetrofit
 import com.shuttl.location_pings.data.dao.GPSLocationsDao
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.model.request.SendLocationRequestBody
+import com.shuttl.location_pings.service.LocationPingService
 import kotlinx.coroutines.*
 
 class LocationRepo(private val locationsDao: GPSLocationsDao?) {
@@ -25,7 +26,13 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         locationsDao?.clearLocations()
     }
 
-    suspend fun syncLocations(apiKey: String = "", url: String = "", userId: String = "", bookingId: String = "", batchSize: Int) = GlobalScope.async(Dispatchers.IO) {
+    fun syncLocations(apiKey: String = "",
+                      url: String = "",
+                      userId: String = "",
+                      bookingId: String = "",
+                      batchSize: Int,
+                      callback: LocationPingService.LocationPingServiceCallback?) {
+        GlobalScope.launch(Dispatchers.IO) {
             val locations = locationsDao?.getLimitedLocations(batchSize)
             if (locations?.isNotEmpty() == true) {
                 try {
@@ -35,21 +42,23 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         Log.i(TAG, "url: $url")
                     }
                     val response = LocationRetrofit.locationAPI.syncLocation(
-                            url,
-                            apiKey,
-                            "application/json",
-                            SendLocationRequestBody.create(locations, userId, bookingId))
+                        url,
+                        apiKey,
+                        "application/json",
+                        SendLocationRequestBody.create(locations, userId, bookingId)
+                    )
                     if (!response.SequenceNumber.isNullOrEmpty()) {
                         deleteEntries(locations.last().timestamp)
-
+                        callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    callback?.errorWhileSyncLocations(e.toString())
                 }
 
             }
-            locations
         }
+    }
 
     fun printLocations() {
         Log.i(TAG, locationsDao?.locations().toString())

@@ -11,8 +11,6 @@ import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class LocationPingService : Service() {
 
@@ -28,6 +26,7 @@ class LocationPingService : Service() {
             }
 
             override fun onFinish() {
+                callback?.serviceStopped()
                 stopSelf()
             }
         }
@@ -35,21 +34,17 @@ class LocationPingService : Service() {
 
     private fun pingLocations() {
         try {
-            GlobalScope.launch {
-                val a =
-                    LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()).syncLocations(
-                        configs.xApiKey
-                            ?: "", configs.syncUrl ?: "",
-                        configs.userId ?: "",
-                        configs.bookingId ?: "",
-                        configs.batchSize
-                    )
-                val locations = a.await()
-                callback?.afterSyncLocations(locations)
-            }
+            LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()).syncLocations(
+                configs.xApiKey
+                    ?: "",
+                configs.syncUrl ?: "",
+                configs.userId ?: "",
+                configs.bookingId ?: "",
+                configs.batchSize,
+                callback
+            )
         } catch (e: Exception) {
             Log.d("LocationsHelper", e.toString())
-            callback?.errorWhileSyncLocations(e.toString())
         }
     }
 
@@ -78,6 +73,7 @@ class LocationPingService : Service() {
 
     private fun work() {
         try {
+            callback?.serviceStarted()
             timer.start()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -92,6 +88,8 @@ class LocationPingService : Service() {
     interface LocationPingServiceCallback {
         fun afterSyncLocations(locations: List<GPSLocation>?)
         fun errorWhileSyncLocations(error: String?)
+        fun serviceStarted()
+        fun serviceStopped()
     }
 
     class CustomBinder : Binder() {
