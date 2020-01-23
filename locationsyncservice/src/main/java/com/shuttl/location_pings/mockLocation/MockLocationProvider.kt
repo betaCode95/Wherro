@@ -11,21 +11,22 @@ import android.os.SystemClock
 import android.util.Log
 import com.shuttl.location_pings.config.components.LocationConfigs
 
-class MockLocationProvider(applicationContext: Context) {
+class MockLocationProvider() {
 
     private val TAG: String? = "MockLocation"
     private var mockLocationProviderManager = MockLocationProviderManager()
-    private var configs: LocationConfigs = LocationConfigs()
 
     fun addMockLocationProvider(
         mLocationManager: LocationManager,
         context: Context,
-        locationListener: LocationListener
+        locationListener: LocationListener,
+        configs: LocationConfigs
     ) {
         addTestProviderToMockAvailableProviders(
             mLocationManager,
             LocationManager.GPS_PROVIDER,
-            locationListener
+            locationListener,
+            configs
         )
         setMockProviderLocationData(LocationManager.GPS_PROVIDER, context)
         Log.d(TAG, "addMockLocationProvider : Add provider and set mock location latLng")
@@ -35,7 +36,8 @@ class MockLocationProvider(applicationContext: Context) {
     private fun addTestProviderToMockAvailableProviders(
         mLocationManager: LocationManager,
         provider: String,
-        locationListener: LocationListener
+        locationListener: LocationListener,
+        configs: LocationConfigs
     ) {
         mLocationManager.addTestProvider(
             provider,
@@ -50,7 +52,7 @@ class MockLocationProvider(applicationContext: Context) {
             Criteria.ACCURACY_MEDIUM
         )
         mLocationManager.setTestProviderEnabled(provider, true)
-        subscribeMockLocationTracking(mLocationManager, provider, locationListener)
+        subscribeMockLocationTracking(mLocationManager, provider, locationListener, configs)
         Log.d(TAG, "addTestProviderToMockAvailableProviders : Add test provider = $provider"
         )
     }
@@ -59,13 +61,14 @@ class MockLocationProvider(applicationContext: Context) {
     private fun subscribeMockLocationTracking(
         mLocationManager: LocationManager,
         provider: String,
-        locationListener: LocationListener
+        locationListener: LocationListener,
+        configs: LocationConfigs
     ) {
         mLocationManager.requestLocationUpdates(provider, configs.minTimeInterval.toLong(), configs.minDistanceInterval.toFloat(), locationListener)
         Log.d(TAG, "subscribeMockLocationTracking : Request for location updates")
     }
 
-    private fun setMockProviderLocationData(provider: String, context: Context) {
+    public fun setMockProviderLocationData(provider: String, context: Context) {
         val location = Location(provider)
         location.latitude = mockLocationProviderManager.getMockLocationProviderLatitude(context).toDouble()
         location.longitude = mockLocationProviderManager.getMockLocationProviderLongitude(context).toDouble()
