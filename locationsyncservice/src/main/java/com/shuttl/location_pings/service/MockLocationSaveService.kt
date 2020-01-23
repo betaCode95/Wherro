@@ -29,7 +29,6 @@ class MockLocationSaveService : Service() {
     private val timer by lazy {
         object : CountDownTimer(configs.timeout.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                // ignored
             }
 
             override fun onFinish() {
@@ -86,8 +85,7 @@ class MockLocationSaveService : Service() {
 
     private fun work() {
         timer.start()
-        val mMockLocationProvider = MockLocationProvider()
-        mMockLocationProvider.addMockLocationProvider(
+        mockLocationProvider.addMockLocationProvider(
             locManager,
             applicationContext,
             mockLocationListener,
@@ -106,7 +104,12 @@ class MockLocationSaveService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        timer.cancel()
-        locManager.removeUpdates(mockLocationListener)
+        try {
+            timer.cancel()
+            locManager.removeUpdates(mockLocationListener)
+        } catch (e: Exception) {
+            Log.e(TAG, "onDestroy")
+            e.printStackTrace()
+        }
     }
 }
