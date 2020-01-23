@@ -64,6 +64,7 @@ class LocationSaveService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
         return START_STICKY // this makes the service restart if it was stopped by system, when memory gets restored in the system
     }
 
