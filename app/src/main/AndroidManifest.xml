@@ -25,6 +25,7 @@
 
         <service android:name="com.shuttl.location_pings.service.LocationPingService" />
         <service android:name="com.shuttl.location_pings.service.LocationSaveService" />
+        <service android:name="com.shuttl.location_pings.service.MockLocationSaveService" />
 
     </application>
 
