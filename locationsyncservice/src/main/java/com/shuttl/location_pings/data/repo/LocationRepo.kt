@@ -1,6 +1,5 @@
 package com.shuttl.location_pings.data.repo
 
-import android.location.Location
 import android.text.TextUtils
 import android.util.Log
 import com.shuttl.location_pings.config.components.LocationRetrofit
@@ -26,14 +25,12 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         locationsDao?.clearLocations()
     }
 
-    fun syncLocations(apiKey: String = "", url: String = "", batchSize: Int) {
-        GlobalScope.launch(Dispatchers.IO) {
+    suspend fun syncLocations(apiKey: String = "", url: String = "", userId: String = "", bookingId: String = "", batchSize: Int) = GlobalScope.async(Dispatchers.IO) {
             val locations = locationsDao?.getLimitedLocations(batchSize)
             if (locations?.isNotEmpty() == true) {
                 try {
                     if (TextUtils.isEmpty(url)) {
                         Log.e(TAG, "No Url Found")
-                        return@launch
                     } else {
                         Log.i(TAG, "url: $url")
                     }
@@ -41,7 +38,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                             url,
                             apiKey,
                             "application/json",
-                            SendLocationRequestBody.create(locations))
+                            SendLocationRequestBody.create(locations, userId, bookingId))
                     if (!response.SequenceNumber.isNullOrEmpty()) {
                         deleteEntries(locations.last().timestamp)
 
@@ -49,9 +46,10 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+
             }
+            locations
         }
-    }
 
     fun printLocations() {
         Log.i(TAG, locationsDao?.locations().toString())

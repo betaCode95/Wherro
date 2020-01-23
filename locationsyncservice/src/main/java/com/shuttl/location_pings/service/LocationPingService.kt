@@ -9,11 +9,16 @@ import android.util.Log
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
+import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LocationPingService : Service() {
 
     private var configs: LocationConfigs = LocationConfigs()
+    private var callback: LocationPingServiceCallback? = null
+    private val customBinder = CustomBinder()
 
     private val timer by lazy {
         object :
@@ -30,19 +35,27 @@ class LocationPingService : Service() {
 
     private fun pingLocations() {
         try {
-            LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()).syncLocations(
-                configs.xApiKey
-                    ?: "", configs.syncUrl ?: "",
-                configs.batchSize
-            )
+            GlobalScope.launch {
+                val a =
+                    LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()).syncLocations(
+                        configs.xApiKey
+                            ?: "", configs.syncUrl ?: "",
+                        configs.userId ?: "",
+                        configs.bookingId ?: "",
+                        configs.batchSize
+                    )
+                val locations = a.await()
+                callback?.afterSyncLocations(locations)
+            }
         } catch (e: Exception) {
             Log.d("LocationsHelper", e.toString())
+            callback?.errorWhileSyncLocations(e.toString())
         }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
-        return Binder()
+        return customBinder
     }
 
     override fun onCreate() {
@@ -60,7 +73,6 @@ class LocationPingService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
-        work()
         return START_STICKY
     }
 
@@ -69,6 +81,22 @@ class LocationPingService : Service() {
             timer.start()
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun setCallbackAndWork(c: LocationPingServiceCallback?) {
+        callback = c
+        work()
+    }
+
+    interface LocationPingServiceCallback {
+        fun afterSyncLocations(locations: List<GPSLocation>?)
+        fun errorWhileSyncLocations(error: String?)
+    }
+
+    class CustomBinder : Binder() {
+        fun getService(): LocationPingService {
+            return LocationPingService()
         }
     }
 }

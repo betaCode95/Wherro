@@ -19,12 +19,14 @@ import okhttp3.Interceptor
 
 object LocationsHelper {
 
+    var callback: LocationPingService.LocationPingServiceCallback? = null
     private val serviceConnection by lazy {
         object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
             }
 
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                (service as LocationPingService.CustomBinder).getService().setCallbackAndWork(callback)
             }
         }
     }
@@ -36,15 +38,17 @@ object LocationsHelper {
     fun initLocationsModule(
         app: Application,
         interceptor: Interceptor? = null,
-        locationConfigs: LocationConfigs
+        locationConfigs: LocationConfigs,
+        callback: LocationPingService.LocationPingServiceCallback?
     ) {
+        this.callback = callback
         setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         val saveIntent = Intent(app, LocationSaveService::class.java)
         saveIntent.putExtra("config", locationConfigs)
-        app.startService(pingIntent)
         app.startService(saveIntent)
+        app.bindService(pingIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     fun stop(app: Application) {
