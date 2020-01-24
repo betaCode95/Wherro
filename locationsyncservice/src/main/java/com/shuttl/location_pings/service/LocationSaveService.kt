@@ -17,7 +17,6 @@ import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
-import com.shuttl.locations_sync.R
 
 class LocationSaveService : Service() {
 
@@ -70,7 +69,7 @@ class LocationSaveService : Service() {
                 notification(
                     this,
                     "Updating trip details...",
-                    configs.smallIcon ?: R.drawable.ic_loc
+                    configs.smallIcon
                 )
             )
             serviceStarted = true

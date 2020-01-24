@@ -15,7 +15,7 @@ data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interva
                            val syncUrl: String? = "", // PUTS the location parameters on this URL
                            val userId: String? = "", // to uniquely identify the user
                            val bookingId: String? = "", // to uniquely identify the trip
-                           val smallIcon: Int? = R.drawable.ic_loc // Notification icon
+                           val smallIcon: Int = R.drawable.ic_loc // Notification icon
                                    ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -29,7 +29,9 @@ data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interva
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString())
+            parcel.readString(),
+            parcel.readInt())
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(minTimeInterval)
@@ -43,6 +45,7 @@ data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interva
         parcel.writeString(syncUrl)
         parcel.writeString(userId)
         parcel.writeString(bookingId)
+        parcel.writeInt(smallIcon)
     }
 
     override fun describeContents(): Int {
