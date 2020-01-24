@@ -15,6 +15,7 @@ import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
 import com.shuttl.location_pings.mockLocation.MockLocationProvider
+import com.shuttl.locations_sync.R
 
 class MockLocationSaveService : Service() {
 
@@ -49,7 +50,7 @@ class MockLocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating mock location details..."))
+        startForeground(1, notification(this, "Updating mock location details...", R.drawable.ic_loc))
         Log.d(TAG, "onCreate : Start foreground service to sync mock location")
         work()
     }

@@ -17,6 +17,7 @@ import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
+import com.shuttl.locations_sync.R
 
 class LocationSaveService : Service() {
 
@@ -59,12 +60,19 @@ class LocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating trip details..."))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
-        if(!serviceStarted) {
+        if (!serviceStarted) {
+            startForeground(
+                1,
+                notification(
+                    this,
+                    "Updating trip details...",
+                    configs.smallIcon ?: R.drawable.ic_loc
+                )
+            )
             serviceStarted = true
             work()
         }

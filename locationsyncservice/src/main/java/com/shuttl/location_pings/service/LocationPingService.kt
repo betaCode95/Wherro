@@ -11,6 +11,7 @@ import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
+import com.shuttl.locations_sync.R
 
 class LocationPingService : Service() {
 
@@ -50,11 +51,14 @@ class LocationPingService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
+        startForeground(
+            1,
+            notification(this, "Updating trip details...", configs.smallIcon ?: R.drawable.ic_loc)
+        )
         return customBinder
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating trip details.."))
     }
 
     override fun onDestroy() {

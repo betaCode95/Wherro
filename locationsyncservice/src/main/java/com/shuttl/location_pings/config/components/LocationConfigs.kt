@@ -2,6 +2,7 @@ package com.shuttl.location_pings.config.components
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.shuttl.locations_sync.R
 
 data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interval for Location Fetching
                            val minDistanceInterval: Int = 100, // min Distance Interval for Location Fetching
@@ -13,7 +14,8 @@ data class LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interva
                            val xApiKey: String? = "", // xApiKey Auth Key for the URL to function
                            val syncUrl: String? = "", // PUTS the location parameters on this URL
                            val userId: String? = "", // to uniquely identify the user
-                           val bookingId: String? = "" // to uniquely identify the trip
+                           val bookingId: String? = "", // to uniquely identify the trip
+                           val smallIcon: Int? = R.drawable.ic_loc // Notification icon
                                    ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
