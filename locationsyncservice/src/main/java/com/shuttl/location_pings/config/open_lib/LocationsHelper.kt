@@ -59,13 +59,16 @@ object LocationsHelper {
     }
 
     fun stopAndClearAll(app: Application) {
-        val pingIntent = Intent(app, LocationPingService::class.java)
         val saveIntent = Intent(app, LocationSaveService::class.java)
-        app.stopService(pingIntent)
         app.stopService(saveIntent)
+        app.unbindService(serviceConnection)
         GlobalScope.launch(Dispatchers.IO) {
             LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
         }
+    }
+
+    fun unBindLocationPingService(app: Application) {
+        app.unbindService(serviceConnection)
     }
 
     fun stopLocationPingService(app: Application) {

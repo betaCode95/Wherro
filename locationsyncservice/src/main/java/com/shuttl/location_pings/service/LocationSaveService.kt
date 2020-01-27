@@ -59,12 +59,19 @@ class LocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating trip details..."))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
-        if(!serviceStarted) {
+        if (!serviceStarted) {
+            startForeground(
+                1,
+                notification(
+                    this,
+                    "Updating trip details...",
+                    configs.smallIcon
+                )
+            )
             serviceStarted = true
             work()
         }

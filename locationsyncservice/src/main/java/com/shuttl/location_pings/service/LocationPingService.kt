@@ -50,11 +50,14 @@ class LocationPingService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
+        startForeground(
+            1,
+            notification(this, "Updating trip details...", configs.smallIcon)
+        )
         return customBinder
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating trip details.."))
     }
 
     override fun onDestroy() {
