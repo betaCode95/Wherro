@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.open_lib.LocationsHelper
 import com.shuttl.location_pings.data.model.entity.GPSLocation
-import com.shuttl.location_pings.service.LocationPingService
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,13 +18,13 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-    private val callback = object : LocationPingService.LocationPingServiceCallback {
+    private val callback = object : LocationPingServiceCallback {
         override fun afterSyncLocations(locations: List<GPSLocation>?) {
-            Log.i(TAG, "afterSyncLocations")
+            Log.i(TAG, "afterSyncLocations, number of locations synced: " + locations?.size)
         }
 
         override fun errorWhileSyncLocations(error: String?) {
-            Log.i(TAG, "errorWhileSyncLocations")
+            Log.i(TAG, "errorWhileSyncLocations$error")
         }
 
         override fun serviceStarted() {
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestLocationPermission()
         LocationsHelper.initLocationsModule(app = application,
-            locationConfigs = LocationConfigs(syncUrl = "http://10.191.7.30:3000/record"), callback = callback)
+            locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"), callback = callback)
     }
 
     fun requestLocationPermission() {

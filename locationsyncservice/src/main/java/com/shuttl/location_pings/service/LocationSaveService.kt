@@ -31,7 +31,7 @@ class LocationSaveService : Service() {
             }
 
             override fun onFinish() {
-                stopSelf()
+                stopForeground(true)
             }
         }
     }
