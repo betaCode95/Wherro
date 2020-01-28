@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
-import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.service.MockLocationSaveService
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.service.LocationPingService
@@ -16,7 +15,7 @@ import com.shuttl.location_pings.service.LocationPingService
 object MockLocationHelper {
 
     private val TAG: String = "MockLocation"
-    var callback: LocationPingServiceCallback? = null
+    var callback: LocationPingService.LocationPingServiceCallback? = null
     private val serviceConnection by lazy {
         object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -31,7 +30,7 @@ object MockLocationHelper {
     fun initMockLocationsModule(
         app: Application,
         locationConfigs: LocationConfigs,
-        callback: LocationPingServiceCallback?
+        callback: LocationPingService.LocationPingServiceCallback?
     ) {
         this.callback = callback
         val pingIntent = Intent(app, LocationPingService::class.java)

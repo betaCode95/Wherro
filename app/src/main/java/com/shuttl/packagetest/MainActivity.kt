@@ -8,7 +8,6 @@ import androidx.core.app.ActivityCompat
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.open_lib.LocationsHelper
-import com.shuttl.location_pings.config.open_lib.MockLocationHelper
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 
 class MainActivity : AppCompatActivity() {
@@ -41,13 +40,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         requestLocationPermission()
-        if (BuildConfig.BUILD_TYPE.equals("debug")) {
-            MockLocationHelper.startMockLocationService(app = application, locationConfigs = LocationConfigs(minTimeInterval =  100, minDistanceInterval =  0, minSyncInterval =  50000, accuracy =  3, bufferSize = 100, batchSize = 10,timeout = 180000, xApiKey = "", syncUrl = "http://10.191.7.30:3000/record", userId = "", bookingId = "" ))
-
-    } else {
         LocationsHelper.initLocationsModule(app = application,
-            locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"), callback = callback)    }}
-    
+            locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"), callback = callback)
+    }
+
     fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
             this,
