@@ -6,10 +6,10 @@ import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
+import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
-import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
 
 class LocationPingService : Service() {
@@ -27,7 +27,7 @@ class LocationPingService : Service() {
 
             override fun onFinish() {
                 callback?.serviceStopped()
-                stopSelf()
+                stopForeground(true)
             }
         }
     }
@@ -44,7 +44,7 @@ class LocationPingService : Service() {
                 callback
             )
         } catch (e: Exception) {
-            Log.d("LocationsHelper", e.toString())
+            Log.e("LocationsHelper", e.toString())
         }
     }
 
@@ -86,13 +86,6 @@ class LocationPingService : Service() {
     fun setCallbackAndWork(c: LocationPingServiceCallback?) {
         callback = c
         work()
-    }
-
-    interface LocationPingServiceCallback {
-        fun afterSyncLocations(locations: List<GPSLocation>?)
-        fun errorWhileSyncLocations(error: String?)
-        fun serviceStarted()
-        fun serviceStopped()
     }
 
     inner class CustomBinder : Binder() {

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationRetrofit
 import com.shuttl.location_pings.config.components.LocationsDB
@@ -19,7 +20,7 @@ import okhttp3.Interceptor
 
 object LocationsHelper {
 
-    var callback: LocationPingService.LocationPingServiceCallback? = null
+    var callback: LocationPingServiceCallback? = null
     private val serviceConnection by lazy {
         object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -39,7 +40,7 @@ object LocationsHelper {
         app: Application,
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs,
-        callback: LocationPingService.LocationPingServiceCallback?
+        callback: LocationPingServiceCallback?
     ) {
         this.callback = callback
         setNetworkingDebug(interceptor)
