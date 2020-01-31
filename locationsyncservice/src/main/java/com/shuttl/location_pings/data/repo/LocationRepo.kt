@@ -42,13 +42,13 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         "application/json",
                         SendLocationRequestBody.create(locations)
                     )
-                    if (!response.SequenceNumber.isNullOrEmpty()) {
+                    if (response.success == true) {
                         deleteEntries(locations.last().timestamp)
                         callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    callback?.errorWhileSyncLocations(e.toString())
+                    callback?.errorWhileSyncLocations(e)
                 }
 
             }
