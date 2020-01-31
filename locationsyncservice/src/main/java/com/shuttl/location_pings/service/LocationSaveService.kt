@@ -106,6 +106,12 @@ class LocationSaveService : Service() {
     }
 
     private fun saveLocation(location: Location?) {
-        repo.addLocation(GPSLocation.create(location), configs.bufferSize)
+        repo.addLocation(
+            GPSLocation.create(
+                location,
+                configs.userId ?: "",
+                configs.bookingId ?: ""
+            ), configs.bufferSize
+        )
     }
 }

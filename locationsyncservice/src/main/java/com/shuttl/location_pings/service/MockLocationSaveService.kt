@@ -47,7 +47,10 @@ class MockLocationSaveService : Service() {
                         LocationManager.GPS_PROVIDER,
                         applicationContext
                     )
-                    Log.d(TAG, "onLocationChanged : Update changed location in DB ${location.toString()}")
+                    Log.d(
+                        TAG,
+                        "onLocationChanged : Update changed location in DB ${location.toString()}"
+                    )
                     saveMockLocationInDB(location)
                 }
             }
@@ -62,7 +65,10 @@ class MockLocationSaveService : Service() {
 
             override fun onProviderDisabled(provider: String?) {
                 locManager.removeUpdates(this)
-                Log.d(TAG, "onProviderDisabled : Removed mock location update for provider $provider")
+                Log.d(
+                    TAG,
+                    "onProviderDisabled : Removed mock location update for provider $provider"
+                )
             }
         }
     }
@@ -72,12 +78,15 @@ class MockLocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        startForeground(1, notification(this, "Updating mock location details...", R.drawable.ic_loc))
+        startForeground(
+            1,
+            notification(this, "Updating mock location details...", R.drawable.ic_loc)
+        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
-        if(!startMockLocationService){
+        if (!startMockLocationService) {
             startMockLocationService = true
             work()
         }
@@ -92,7 +101,10 @@ class MockLocationSaveService : Service() {
             mockLocationListener,
             configs
         )
-        Log.d(TAG, "work : Start mock location provider with config : minTimeInterval= " + configs.minTimeInterval.toLong() + " minDistanceInterval = " + configs.minDistanceInterval.toFloat())
+        Log.d(
+            TAG,
+            "work : Start mock location provider with config : minTimeInterval= " + configs.minTimeInterval.toLong() + " minDistanceInterval = " + configs.minDistanceInterval.toFloat()
+        )
     }
 
     fun saveMockLocationInDB(location: Location?) {
@@ -100,7 +112,13 @@ class MockLocationSaveService : Service() {
             Log.d(TAG, " Latitude in DB = " + location.getLatitude())
             Log.d(TAG, " Longitude in DB = " + location.getLongitude())
         }
-        repo.addLocation(GPSLocation.create(location), configs.bufferSize)
+        repo.addLocation(
+            GPSLocation.create(
+                location,
+                configs.userId ?: "",
+                configs.bookingId ?: ""
+            ), configs.bufferSize
+        )
     }
 
     override fun onDestroy() {

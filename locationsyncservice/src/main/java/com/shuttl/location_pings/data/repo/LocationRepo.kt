@@ -27,8 +27,6 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
 
     fun syncLocations(apiKey: String = "",
                       url: String = "",
-                      userId: String = "",
-                      bookingId: String = "",
                       batchSize: Int,
                       callback: LocationPingServiceCallback?) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -42,7 +40,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         url,
                         apiKey,
                         "application/json",
-                        SendLocationRequestBody.create(locations, userId, bookingId)
+                        SendLocationRequestBody.create(locations)
                     )
                     if (!response.SequenceNumber.isNullOrEmpty()) {
                         deleteEntries(locations.last().timestamp)

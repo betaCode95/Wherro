@@ -38,8 +38,6 @@ class LocationPingService : Service() {
                 configs.xApiKey
                     ?: "",
                 configs.syncUrl ?: "",
-                configs.userId ?: "",
-                configs.bookingId ?: "",
                 configs.batchSize,
                 callback
             )
