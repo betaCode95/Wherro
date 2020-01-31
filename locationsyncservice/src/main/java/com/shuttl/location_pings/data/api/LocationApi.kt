@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface LocationApi {
 
-    @PUT
+    @POST
     suspend fun syncLocation(@Url fullUrl: String,
                              @Header("x-api-key") apiKey: String,
                              @Header("Content-Type") contentType: String,
