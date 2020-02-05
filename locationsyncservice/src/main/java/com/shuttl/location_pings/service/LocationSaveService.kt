@@ -39,6 +39,7 @@ class LocationSaveService : Service() {
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
+                Log.d("LocationSaveService", "onLocationChanged " + location.toString())
                 saveLocation(location)
             }
 
