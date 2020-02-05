@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestLocationPermission()
         LocationsHelper.initLocationsModule(app = application,
-            locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"), callback = callback)
+            locationConfigs = LocationConfigs(100, 0, 10000, 3, 100, 10, 180000, "", "http://10.191.1.41:3000/record", "", "", R.drawable.ic_loc), callback = callback)
     }
 
     fun requestLocationPermission() {
