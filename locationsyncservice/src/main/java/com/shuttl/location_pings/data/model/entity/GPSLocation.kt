@@ -17,7 +17,7 @@ data class GPSLocation(
         fun create(location: Location?, user_id: String, vehicle_number: String): GPSLocation = GPSLocation(
                 latitude = location?.latitude ?: 0.0,
                 longitude = location?.longitude ?: 0.0,
-                time = (location?.time ?: 0).toString(),
+                time = (((location?.time ?: 0))/1000).toString(),
                 user_id = user_id,
                 vehicle_number = vehicle_number)
     }
