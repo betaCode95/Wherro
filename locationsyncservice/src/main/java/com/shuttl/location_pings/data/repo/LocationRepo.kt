@@ -43,7 +43,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         SendLocationRequestBody.create(locations)
                     )
                     if (response.success == true) {
-                        deleteEntries(locations.last().timestamp)
+                        deleteEntries(locations.last().time)
                         callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
@@ -55,7 +55,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         }
     }
 
-    fun deleteEntries(timeStamp: String) {
-        locationsDao?.deleteEntries(timeStamp)
+    fun deleteEntries(time: String) {
+        locationsDao?.deleteEntries(time)
     }
 }
