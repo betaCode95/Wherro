@@ -69,7 +69,8 @@ class LocationSaveService : Service() {
                 notification(
                     this,
                     "Updating trip details...",
-                    configs.smallIcon
+                    configs.smallIcon,
+                    null
                 )
             )
             serviceStarted = true

@@ -50,7 +50,7 @@ class LocationPingService : Service() {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
         startForeground(
             1,
-            notification(this, "Updating trip details...", configs.smallIcon)
+            notification(this, "Updating trip details...", configs.smallIcon, intent?.getParcelableExtra("pendingIntent"))
         )
         return customBinder
     }
@@ -68,6 +68,10 @@ class LocationPingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if(intent?.action.equals("STOP")) {
+            callback?.serviceStoppedManually()
+        }
+
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
         return START_STICKY
     }

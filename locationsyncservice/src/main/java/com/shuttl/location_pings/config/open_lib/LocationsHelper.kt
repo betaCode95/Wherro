@@ -1,6 +1,7 @@
 package com.shuttl.location_pings.config.open_lib
 
 import android.app.Application
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -40,12 +41,15 @@ object LocationsHelper {
         app: Application,
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs,
-        callback: LocationPingServiceCallback?
+        callback: LocationPingServiceCallback?,
+        intent: Intent
     ) {
+        val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback
         setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
+        pingIntent.putExtra("pendingIntent", pendingIntent)
         val saveIntent = Intent(app, LocationSaveService::class.java)
         saveIntent.putExtra("config", locationConfigs)
         app.startService(saveIntent)
@@ -62,7 +66,9 @@ object LocationsHelper {
     fun stopAndClearAll(app: Application) {
         val saveIntent = Intent(app, LocationSaveService::class.java)
         app.stopService(saveIntent)
+        val pingIntent = Intent(app, LocationPingService::class.java)
         app.unbindService(serviceConnection)
+        app.stopService(pingIntent)
         GlobalScope.launch(Dispatchers.IO) {
             LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
         }
