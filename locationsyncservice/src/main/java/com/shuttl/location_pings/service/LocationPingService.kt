@@ -11,6 +11,7 @@ import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.repo.LocationRepo
+import java.util.*
 
 class LocationPingService : Service() {
 
@@ -28,6 +29,15 @@ class LocationPingService : Service() {
             override fun onFinish() {
                 callback?.serviceStopped()
                 stopForeground(true)
+            }
+        }
+    }
+
+    private val longTimer by lazy { Timer() }
+    private val timerTask by lazy {
+        object : TimerTask() {
+            override fun run() {
+                pingLocations()
             }
         }
     }
@@ -50,7 +60,12 @@ class LocationPingService : Service() {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
         startForeground(
             1,
-            notification(this, "Updating trip details...", configs.smallIcon, intent?.getParcelableExtra("pendingIntent"))
+            notification(
+                this,
+                "Updating trip details...",
+                configs.smallIcon,
+                intent?.getParcelableExtra("pendingIntent")
+            )
         )
         return customBinder
     }
@@ -61,14 +76,17 @@ class LocationPingService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            timer.cancel()
+            if (configs.timeout <= 0) {
+                longTimer.cancel()
+                timerTask.cancel()
+            } else timer.cancel()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(intent?.action.equals("STOP")) {
+        if (intent?.action.equals("STOP")) {
             callback?.serviceStoppedManually()
         }
 
@@ -79,7 +97,9 @@ class LocationPingService : Service() {
     private fun work() {
         try {
             callback?.serviceStarted()
-            timer.start()
+            if (configs.timeout <= 0)
+                longTimer.schedule(timerTask, 0, configs.minSyncInterval.toLong())
+            else timer.start()
         } catch (e: Exception) {
             e.printStackTrace()
         }

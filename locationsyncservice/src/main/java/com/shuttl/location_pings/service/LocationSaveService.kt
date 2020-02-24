@@ -17,6 +17,7 @@ import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
+import java.util.*
 
 class LocationSaveService : Service() {
 
@@ -35,6 +36,7 @@ class LocationSaveService : Service() {
             }
         }
     }
+
     private val locListener by lazy {
         object : LocationListener {
 
@@ -82,7 +84,8 @@ class LocationSaveService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            timer.cancel()
+            if (configs.timeout > 0)
+                timer.cancel()
             locManager.removeUpdates(locListener)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -92,7 +95,8 @@ class LocationSaveService : Service() {
     @SuppressLint("MissingPermission")
     private fun work() {
         try {
-            timer.start()
+            if (configs.timeout > 0)
+                timer.start()
             locManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 configs.minTimeInterval.toLong(),
