@@ -28,7 +28,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
     fun syncLocations(apiKey: String = "",
                       url: String = "",
                       batchSize: Int,
-                      callback: LocationPingServiceCallback?) {
+                      callback: LocationPingServiceCallback<Any>?) {
         GlobalScope.launch(Dispatchers.IO) {
             val locations = locationsDao?.getLimitedLocations(batchSize)
             if (locations?.isNotEmpty() == true) {
@@ -36,11 +36,12 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                     if (TextUtils.isEmpty(url)) {
                         Log.e(TAG, "No Url Found")
                     }
+                    val obj = callback?.beforeSyncLocations(locations)
                     val response = LocationRetrofit.locationAPI.syncLocation(
                         url,
                         apiKey,
                         "application/json",
-                        SendLocationRequestBody.create(locations)
+                        SendLocationRequestBody.create(obj)
                     )
                     if (response.success == true) {
                         deleteEntries(locations.last().time)

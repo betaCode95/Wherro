@@ -21,7 +21,7 @@ import okhttp3.Interceptor
 
 object LocationsHelper {
 
-    var callback: LocationPingServiceCallback? = null
+    var callback: LocationPingServiceCallback<Any>? = null
     private val serviceConnection by lazy {
         object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -37,15 +37,15 @@ object LocationsHelper {
         LocationRetrofit.networkDebug = inteceptor
     }
 
-    fun initLocationsModule(
+    fun<T> initLocationsModule(
         app: Application,
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs,
-        callback: LocationPingServiceCallback?,
+        callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
-        this.callback = callback
+        this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-    private val callback = object : LocationPingServiceCallback {
+    private val callback = object : LocationPingServiceCallback<String> {
         override fun afterSyncLocations(locations: List<GPSLocation>?) {
             Log.i(TAG, "afterSyncLocations, number of locations synced: " + locations?.size)
         }
@@ -41,6 +41,10 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "serviceStoppedManually")
             LocationsHelper.stopAndClearAll(application)
         }
+
+        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<String> {
+            return listOf("one" , "two")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +55,9 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, LocationPingService::class.java)
         intent.action = "STOP"
 
-        LocationsHelper.initLocationsModule(app = application,
-            locationConfigs = LocationConfigs(syncUrl = "http://192.168.1.4:3000/record"), callback = callback, intent = intent)
+        LocationsHelper.initLocationsModule(
+            app = application,
+            locationConfigs = LocationConfigs(syncUrl = "http://10.191.6.177:3000/record", minSyncInterval = 5000, minDistanceInterval = 10, minTimeInterval = 1000), callback = callback, intent = intent)
 
     }
 

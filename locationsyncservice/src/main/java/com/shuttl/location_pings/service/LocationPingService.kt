@@ -16,7 +16,7 @@ import java.util.*
 class LocationPingService : Service() {
 
     private var configs: LocationConfigs = LocationConfigs()
-    private var callback: LocationPingServiceCallback? = null
+    private var callback: LocationPingServiceCallback<Any>? = null
     private val customBinder = CustomBinder()
 
     private val timer by lazy {
@@ -105,7 +105,7 @@ class LocationPingService : Service() {
         }
     }
 
-    fun setCallbackAndWork(c: LocationPingServiceCallback?) {
+    fun setCallbackAndWork(c: LocationPingServiceCallback<Any>?) {
         callback = c
         work()
     }

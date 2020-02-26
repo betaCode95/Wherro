@@ -16,7 +16,7 @@ import com.shuttl.location_pings.service.LocationPingService
 object MockLocationHelper {
 
     private val TAG: String = "MockLocation"
-    var callback: LocationPingServiceCallback? = null
+    var callback: LocationPingServiceCallback<Any>? = null
     private val serviceConnection by lazy {
         object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -31,7 +31,7 @@ object MockLocationHelper {
     fun initMockLocationsModule(
         app: Application,
         locationConfigs: LocationConfigs,
-        callback: LocationPingServiceCallback?
+        callback: LocationPingServiceCallback<Any>?
     ) {
         this.callback = callback
         val pingIntent = Intent(app, LocationPingService::class.java)
