@@ -17,7 +17,6 @@ import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
-import java.util.*
 
 class LocationSaveService : Service() {
 
@@ -113,9 +112,7 @@ class LocationSaveService : Service() {
     private fun saveLocation(location: Location?) {
         repo.addLocation(
             GPSLocation.create(
-                location,
-                configs.userId ?: "",
-                configs.vehicleNumber ?: ""
+                location
             ), configs.bufferSize
         )
     }

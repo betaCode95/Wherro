@@ -114,9 +114,7 @@ class MockLocationSaveService : Service() {
         }
         repo.addLocation(
             GPSLocation.create(
-                location,
-                configs.userId ?: "",
-                configs.vehicleNumber ?: ""
+                location
             ), configs.bufferSize
         )
     }

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-    private val callback = object : LocationPingServiceCallback<String> {
+    private val callback = object : LocationPingServiceCallback<GPSLocation> {
         override fun afterSyncLocations(locations: List<GPSLocation>?) {
             Log.i(TAG, "afterSyncLocations, number of locations synced: " + locations?.size)
         }
@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
             LocationsHelper.stopAndClearAll(application)
         }
 
-        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<String> {
-            return listOf("one" , "two")
+        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+            return locations?: emptyList()
         }
     }
 
