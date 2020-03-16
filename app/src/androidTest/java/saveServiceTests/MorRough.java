@@ -1,26 +1,20 @@
 package saveServiceTests;
 
-import android.os.Build;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.uiautomator.UiDevice;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import java.io.IOException;
 
 import mockLocationUtils.MockLocationProvider;
-import uiTestUtils.BaseTestCase;
-import uiTestUtils.LogUITest;
-import uiTestUtils.UiUtils;
-
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import testUtils.BaseTestCase;
+import testUtils.LogUITest;
+import testUtils.UiUtils;
 
 
 @RunWith(AndroidJUnit4.class)
 public class MorRough extends BaseTestCase {
+
 
     @Test
     public void tinyMockGPSTest() {

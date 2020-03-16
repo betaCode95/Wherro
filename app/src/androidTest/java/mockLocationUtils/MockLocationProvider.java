@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import uiTestUtils.LogUITest;
+import testUtils.LogUITest;
 
 public class MockLocationProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
     static String TAG = "MockLocationProvider";

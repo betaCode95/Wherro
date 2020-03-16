@@ -1,4 +1,4 @@
-package uiTestUtils;
+package testUtils;
 
 import android.util.Log;
 
