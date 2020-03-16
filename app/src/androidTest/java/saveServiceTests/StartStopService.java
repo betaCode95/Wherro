@@ -133,7 +133,6 @@ public class StartStopService extends BaseTestCase {
 
         // Stop Location Ping Service
         LogUITest.debug("Stopping 'Ping Location Service'");
-        LocationsHelper.INSTANCE.unBindLocationPingService(activityTestRule.getActivity().getApplication());
         LocationsHelper.INSTANCE.stopLocationPingService(activityTestRule.getActivity().getApplication());
 
         boolean isServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
