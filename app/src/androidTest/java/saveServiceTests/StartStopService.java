@@ -124,7 +124,7 @@ public class StartStopService extends BaseTestCase {
 
         // Start Location Save Service
         LogUITest.debug("Starting 'Save Location Service'");
-        LocationsHelper.INSTANCE.startLocationSaveService(BaseTestCase.appContext, activityTestRule.getActivity().getApplication(), locationConfigs);
+        LocationsHelper.INSTANCE.startLocationSaveService(activityTestRule.getActivity().getApplication(), locationConfigs);
 
         boolean isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
 
