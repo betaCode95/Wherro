@@ -27,6 +27,10 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "errorWhileSyncLocations" + error?.toString())
         }
 
+        override fun errorWhileSyncLocations(error: String?) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
         override fun serviceStarted() {
             Log.i(TAG, "serviceStarted")
         }
@@ -40,8 +44,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         requestLocationPermission()
-        LocationsHelper.initLocationsModule(app = application,
-            locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"), callback = callback)
+
+        if (!BuildConfig.BUILD_TYPE.equals("debug"))
+            LocationsHelper.initLocationsModule(
+                app = application,
+                locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"),
+                callback = callback
+            )
     }
 
     fun requestLocationPermission() {

@@ -7,4 +7,5 @@ interface LocationPingServiceCallback {
     fun errorWhileSyncLocations(error: Exception?)
     fun serviceStarted()
     fun serviceStopped()
+    fun errorWhileSyncLocations(error: String?)
 }

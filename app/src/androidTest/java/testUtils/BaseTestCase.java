@@ -40,7 +40,7 @@ public class BaseTestCase {
     @Before
     public void mainSetUp() {
 
-        UiUtils.safeSleep(10);
+        UiUtils.safeSleep(2);
 
         LogUITest.debug("Checking if 'Save Location Service' is Already running");
         if (UiUtils.isServiceRunning(LocationSaveService.class.getName())) {

@@ -31,15 +31,19 @@ public class StartStopService extends BaseTestCase {
     private LocationConfigs locationConfigs;
     private LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
         @Override
-        public void afterSyncLocations(@Nullable List<GPSLocation> locations) {
-            assert locations != null;
-            Log.i("StartStopService", "afterSyncLocations, number of locations synced: " + locations.size());
+        public void errorWhileSyncLocations(@org.jetbrains.annotations.Nullable String error) {
 
         }
 
         @Override
-        public void errorWhileSyncLocations(@Nullable String error) {
-            Log.i("StartStopService", "errorWhileSyncLocations : " + error);
+        public void errorWhileSyncLocations(@org.jetbrains.annotations.Nullable Exception error) {
+
+        }
+
+        @Override
+        public void afterSyncLocations(@Nullable List<GPSLocation> locations) {
+            assert locations != null;
+            Log.i("StartStopService", "afterSyncLocations, number of locations synced: " + locations.size());
 
         }
 
@@ -71,8 +75,7 @@ public class StartStopService extends BaseTestCase {
 
 
     @Test
-    public void verifyStartLocationServicesViaInitModule() {
-
+    public void verifyStartStopLocationServicesViaInitModule() {
 
         // Start Both Services Via Init module .
         LogUITest.debug("Starting 'Save Location Service' & 'Ping Location Service Via Init Module'");
@@ -90,6 +93,26 @@ public class StartStopService extends BaseTestCase {
         AssertUtils.assertTrueV(isLocationPingServiceRunning,
                 "Failed to start 'Ping Location Service' Via Init Module",
                 "Successfully started 'Ping Location Service'  Via Init Module");
+
+
+        // ----------------------------------------------------------------------------------------------------------------------------------
+
+
+        LogUITest.debug("Stopping 'Save Location Service' & 'Ping Location Service Via Init Module'");
+        LocationsHelper.INSTANCE.stop(activityTestRule.getActivity().getApplication());
+
+        isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
+
+        AssertUtils.assertTrueV(!isLocationSaveServiceRunning,
+                "Failed to stop 'Save Location Service'  Via Init Module",
+                "Successfully stopped 'Save Location Service'  Via Init Module");
+
+        isLocationPingServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
+
+        AssertUtils.assertTrueV(!isLocationPingServiceRunning,
+                "Failed to stop 'Ping Location Service' Via Init Module",
+                "Successfully stopped 'Ping Location Service'  Via Init Module");
+
 
     }
 
@@ -110,6 +133,7 @@ public class StartStopService extends BaseTestCase {
 
         // Stop Location Ping Service
         LogUITest.debug("Stopping 'Ping Location Service'");
+        LocationsHelper.INSTANCE.unBindLocationPingService(activityTestRule.getActivity().getApplication());
         LocationsHelper.INSTANCE.stopLocationPingService(activityTestRule.getActivity().getApplication());
 
         boolean isServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
