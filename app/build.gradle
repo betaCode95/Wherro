@@ -7,23 +7,25 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
-    defaultConfig {
+    defaultConfig
+    {
         applicationId "com.shuttl.packagetest"
         minSdkVersion 18
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        testOptions {
+            execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        }
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-
-    testOptions {
-        unitTests.includeAndroidResources = true
     }
 }
 

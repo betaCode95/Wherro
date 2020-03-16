@@ -1,7 +1,9 @@
 package saveServiceTests;
 
-import android.app.Application;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
@@ -11,9 +13,9 @@ import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.location_pings.service.LocationSaveService;
 import com.shuttl.packagetest.R;
 
-import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ import testUtils.LogUITest;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
 
+@RunWith(AndroidJUnit4.class)
 public class StartStopService extends BaseTestCase {
 
     private LocationConfigs locationConfigs;
