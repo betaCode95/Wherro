@@ -80,18 +80,18 @@ Request Body JSON in the PUT network call, along with `xApiKey` as Authorization
 ```json
 [
 	{
-	   "lat": 23,
-	   "long": 23,
+	   "latitude": 23,
+	   "longitude": 23,
 	   "accuracy": 20,
 	   "provider": "gps",
-	   "timestamp": "1202"
+	   "time": "1202"
 	},
 	{
-	   "lat": 26.0012,
-	   "long": 23.0012,
+	   "latitude": 26.0012,
+	   "longitude": 23.0012,
 	   "accuracy": 20.00,
 	   "provider": "gps",
-	   "timestamp": "1203"
+	   "time": "1203"
 	}
 ]
 ```

@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "afterSyncLocations, number of locations synced: " + locations?.size)
         }
 
-        override fun errorWhileSyncLocations(error: String?) {
-            Log.i(TAG, "errorWhileSyncLocations$error")
+        override fun errorWhileSyncLocations(error: Exception?) {
+            Log.i(TAG, "errorWhileSyncLocations" + error?.toString())
         }
 
         override fun serviceStarted() {

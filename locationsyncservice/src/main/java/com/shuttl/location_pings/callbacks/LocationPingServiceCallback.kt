@@ -4,7 +4,7 @@ import com.shuttl.location_pings.data.model.entity.GPSLocation
 
 interface LocationPingServiceCallback {
     fun afterSyncLocations(locations: List<GPSLocation>?)
-    fun errorWhileSyncLocations(error: String?)
+    fun errorWhileSyncLocations(error: Exception?)
     fun serviceStarted()
     fun serviceStopped()
 }

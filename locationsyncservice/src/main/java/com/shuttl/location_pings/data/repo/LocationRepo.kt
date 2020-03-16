@@ -42,20 +42,20 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         "application/json",
                         SendLocationRequestBody.create(locations)
                     )
-                    if (!response.SequenceNumber.isNullOrEmpty()) {
-                        deleteEntries(locations.last().timestamp)
+                    if (response.success == true) {
+                        deleteEntries(locations.last().time)
                         callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    callback?.errorWhileSyncLocations(e.toString())
+                    callback?.errorWhileSyncLocations(e)
                 }
 
             }
         }
     }
 
-    fun deleteEntries(timeStamp: String) {
-        locationsDao?.deleteEntries(timeStamp)
+    fun deleteEntries(time: String) {
+        locationsDao?.deleteEntries(time)
     }
 }

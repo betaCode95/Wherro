@@ -110,7 +110,7 @@ class LocationSaveService : Service() {
             GPSLocation.create(
                 location,
                 configs.userId ?: "",
-                configs.bookingId ?: ""
+                configs.vehicleNumber ?: ""
             ), configs.bufferSize
         )
     }

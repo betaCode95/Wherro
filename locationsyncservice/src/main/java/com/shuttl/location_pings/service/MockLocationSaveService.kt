@@ -116,7 +116,7 @@ class MockLocationSaveService : Service() {
             GPSLocation.create(
                 location,
                 configs.userId ?: "",
-                configs.bookingId ?: ""
+                configs.vehicleNumber ?: ""
             ), configs.bufferSize
         )
     }
