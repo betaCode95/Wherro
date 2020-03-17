@@ -16,6 +16,7 @@ import testUtils.UiUtils;
 public class MorRough extends BaseTestCase {
 
 
+    @Ignore
     @Test
     public void tinyMockGPSTest() {
 
