@@ -50,8 +50,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.2'
 
     implementation project(path: ':locationsyncservice')
-    implementation 'androidx.room:room-runtime:2.1.0'
-    annotationProcessor 'androidx.room:room-compiler:2.1.0'
 //    implementation(group: 'com.shuttl', name: 'locationsyncservice', version: '0.14', ext: 'aar', classifier: '')
 
 }
