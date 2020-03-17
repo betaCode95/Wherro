@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        LocationsHelper.stopAndClearAll(application)
+        if (!BuildConfig.BUILD_TYPE.equals("debug"))
+            LocationsHelper.stopAndClearAll(application)
     }
 }

@@ -31,7 +31,9 @@ public class BaseTestCase {
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.FOREGROUND_SERVICE
     );
 
     @Rule
