@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 import mockLocationUtils.MockLocationProvider;
+import testUtils.mockWebServer.MockWebUtils;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
@@ -86,11 +87,13 @@ public class BaseTestCase {
     public ActivityTestRule activityTestRule = new ActivityTestRule(MainActivity.class);
 
     @Before
-    public void mainSetUp() {
+    public void mainSetUp() throws IOException {
 
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
         LogUITest.info("\n***** \t\tBEGIN Test: " + testName.getMethodName());
         LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
+
+        MockWebUtils.callOnSetup();
 
         // TODO : Call init explicitly to start services for tests other than StartStopServiceTests
 
@@ -112,11 +115,14 @@ public class BaseTestCase {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         MockLocationProvider.unregister();
 
         UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+
+        MockWebUtils.callOnTearDown();
+
 
 
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
