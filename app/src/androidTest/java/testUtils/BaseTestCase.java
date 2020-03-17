@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Build;
 
-import androidx.annotation.Nullable;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -16,6 +15,8 @@ import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.packagetest.MainActivity;
 import com.shuttl.packagetest.R;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,21 +36,20 @@ public class BaseTestCase {
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public LocationConfigs locationConfigs;
 
-
     public LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
         @Override
-        public void errorWhileSyncLocations(@org.jetbrains.annotations.Nullable String error) {
+        public void afterSyncLocations(@Nullable List list) {
 
         }
 
+        @NotNull
         @Override
-        public void errorWhileSyncLocations(@org.jetbrains.annotations.Nullable Exception error) {
-
+        public List beforeSyncLocations(@Nullable List list) {
+            return null;
         }
 
         @Override
-        public void afterSyncLocations(@Nullable List<GPSLocation> locations) {
-            assert locations != null;
+        public void errorWhileSyncLocations(@Nullable Exception error) {
 
         }
 
@@ -60,6 +60,11 @@ public class BaseTestCase {
 
         @Override
         public void serviceStopped() {
+
+        }
+
+        @Override
+        public void serviceStoppedManually() {
 
         }
     };
@@ -91,8 +96,7 @@ public class BaseTestCase {
         locationConfigs =
                 new LocationConfigs(10000, 100
                         , 10000, 3, 100, 10, 1800000
-                        , "", TestConstants.GPS_PIPELINE_URL, TestConstants.USER_ID
-                        , TestConstants.VEHICLE_NUMBER, R.drawable.ic_loc);
+                        , "", TestConstants.GPS_PIPELINE_URL, R.drawable.ic_loc);
 
         // TODO : Call init explicitly to start services for tests other than StartStopServiceTests
 

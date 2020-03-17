@@ -1,6 +1,7 @@
 package com.shuttl.packagetest
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.open_lib.LocationsHelper
 import com.shuttl.location_pings.data.model.entity.GPSLocation
+import com.shuttl.location_pings.service.LocationPingService
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,17 +20,13 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-    private val callback = object : LocationPingServiceCallback {
+    private val callback = object : LocationPingServiceCallback<GPSLocation> {
         override fun afterSyncLocations(locations: List<GPSLocation>?) {
             Log.i(TAG, "afterSyncLocations, number of locations synced: " + locations?.size)
         }
 
         override fun errorWhileSyncLocations(error: Exception?) {
             Log.i(TAG, "errorWhileSyncLocations" + error?.toString())
-        }
-
-        override fun errorWhileSyncLocations(error: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
 
         override fun serviceStarted() {
@@ -38,6 +36,15 @@ class MainActivity : AppCompatActivity() {
         override fun serviceStopped() {
             Log.i(TAG, "serviceStopped")
         }
+
+        override fun serviceStoppedManually() {
+            Log.i(TAG, "serviceStoppedManually")
+            LocationsHelper.stopAndClearAll(application)
+        }
+
+        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+            return locations?: emptyList()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +53,16 @@ class MainActivity : AppCompatActivity() {
         requestLocationPermission()
 
         if (!BuildConfig.BUILD_TYPE.equals("debug"))
+        {
+            val intent = Intent(this, LocationPingService::class.java)
+            intent.action = "STOP"
+
             LocationsHelper.initLocationsModule(
                 app = application,
-                locationConfigs = LocationConfigs(syncUrl = "http://10.191.1.41:3000/record"),
-                callback = callback
-            )
+                locationConfigs = LocationConfigs(syncUrl = "http://10.191.6.177:3000/record", minSyncInterval = 5000, minDistanceInterval = 10, minTimeInterval = 1000), callback = callback, intent = intent)
+
+        }
+
     }
 
     fun requestLocationPermission() {

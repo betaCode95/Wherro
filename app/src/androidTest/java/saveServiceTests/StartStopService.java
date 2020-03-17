@@ -1,5 +1,7 @@
 package saveServiceTests;
 
+import android.content.Intent;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
@@ -31,9 +33,11 @@ public class StartStopService extends BaseTestCase {
     @Test
     public void verifyStartStopLocationServicesViaInitModule() {
 
+        Intent intent = new Intent(appContext, LocationPingService.class);
+        intent.setAction("STOP");
         // Start Both Services Via Init module .
         LogUITest.debug("Starting 'Save Location Service' & 'Ping Location Service Via Init Module'");
-        LocationsHelper.INSTANCE.initLocationsModule(activityTestRule.getActivity().getApplication(), null, locationConfigs, locationPingServiceCallback);
+        LocationsHelper.INSTANCE.initLocationsModule(activityTestRule.getActivity().getApplication(), null, locationConfigs, locationPingServiceCallback, intent);
 
 
         boolean isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
