@@ -12,10 +12,7 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
-import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.data.model.entity.GPSLocation;
-import com.shuttl.location_pings.service.LocationPingService;
-import com.shuttl.location_pings.service.LocationSaveService;
 import com.shuttl.packagetest.MainActivity;
 import com.shuttl.packagetest.R;
 
@@ -33,15 +30,10 @@ import testUtils.mockWebServer.MockWebUtils;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class BaseTestCase {
+    
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
-
-    // Set config
-    public LocationConfigs locationConfigs =
-            new LocationConfigs(10000, 100
-                    , 10000, 3, 100, 10, 1800000
-                    , "", TestConstants.GPS_PIPELINE_URL, TestConstants.USER_ID
-                    , TestConstants.VEHICLE_NUMBER, R.drawable.ic_loc);
+    public LocationConfigs locationConfigs;
 
 
     public LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
@@ -95,6 +87,13 @@ public class BaseTestCase {
 
         MockWebUtils.callOnSetup();
 
+        // Set config
+        locationConfigs =
+                new LocationConfigs(10000, 100
+                        , 10000, 3, 100, 10, 1800000
+                        , "", TestConstants.GPS_PIPELINE_URL, TestConstants.USER_ID
+                        , TestConstants.VEHICLE_NUMBER, R.drawable.ic_loc);
+
         // TODO : Call init explicitly to start services for tests other than StartStopServiceTests
 
     }
@@ -122,7 +121,6 @@ public class BaseTestCase {
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
         MockWebUtils.callOnTearDown();
-
 
 
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");

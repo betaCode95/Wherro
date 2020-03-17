@@ -14,23 +14,20 @@ import testUtils.LogUITest;
 public class MockWebUtils {
 
     private static MockWebServer mockWebServer;
+    private static String mockWebServerUrl;
+
+    public static String getMockWebServerUrl() {
+        return mockWebServerUrl;
+    }
 
     public static void callOnSetup() throws IOException {
-        if (mockWebServer != null){
-            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SETUP :MOCK WEB SERVER IS STILL RUNNING @@@@@@@@@@@@@@@@@@@@@@@@@@");
-            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CLOSE SERVER BEFORE RUNNING SETUP FOR NEW TEST @@@@@@@@@@@@@@@@@@@");
-            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
-            mockWebServer.shutdown();
+        if (mockWebServer == null) {
+            mockWebServer = new MockWebServer();
+            mockWebServer.start();
         }
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
+        mockWebServerUrl = mockWebServer.url("/").url().toString();
     }
 
-    public static MockWebServer getMockWebServer() {
-        return mockWebServer;
-    }
 
     public static void callOnTearDown() throws IOException {
         if (mockWebServer != null) {
