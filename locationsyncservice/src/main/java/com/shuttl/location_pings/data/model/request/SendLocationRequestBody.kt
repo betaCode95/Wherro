@@ -1,10 +1,9 @@
 package com.shuttl.location_pings.data.model.request
 
-import com.shuttl.location_pings.data.model.entity.GPSLocation
 
-data class SendLocationRequestBody(val data: List<GPSLocation>? = listOf()) {
+data class SendLocationRequestBody<T>(val data: List<T>? = listOf()) {
 
     companion object {
-        fun create(gps: List<GPSLocation>?) = SendLocationRequestBody(data = gps)
+        fun<T> create(gps: List<T>?) = SendLocationRequestBody(data = gps)
     }
 }

@@ -80,7 +80,7 @@ class MockLocationSaveService : Service() {
     override fun onCreate() {
         startForeground(
             1,
-            notification(this, "Updating mock location details...", R.drawable.ic_loc)
+            notification(this, "Updating mock location details...", R.drawable.ic_loc, null)
         )
     }
 
@@ -114,9 +114,7 @@ class MockLocationSaveService : Service() {
         }
         repo.addLocation(
             GPSLocation.create(
-                location,
-                configs.userId ?: "",
-                configs.vehicleNumber ?: ""
+                location
             ), configs.bufferSize
         )
     }
