@@ -1,7 +1,12 @@
 package testUtils;
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
+
+import com.shuttl.location_pings.config.open_lib.LocationsHelper;
+import com.shuttl.location_pings.service.LocationPingService;
+import com.shuttl.location_pings.service.LocationSaveService;
 
 import java.util.List;
 import java.util.Random;
@@ -34,16 +39,63 @@ public class UiUtils {
         return randomNum;
     }
 
-    public static boolean isServiceRunning(String serviceClassName){
+    public static boolean isServiceRunning(String serviceClassName) {
         final ActivityManager activityManager = (ActivityManager) BaseTestCase.appContext.getSystemService(Context.ACTIVITY_SERVICE);
         final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 
         for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
-            if (runningServiceInfo.service.getClassName().equals(serviceClassName)){
+            if (runningServiceInfo.service.getClassName().equals(serviceClassName)) {
                 return true;
             }
         }
         return false;
     }
+
+
+    public static boolean stopSaveLocationServiceIfRunning(Application app) {
+        LogUITest.debug("Checking if 'Save Location Service' is running");
+        for (int i = 0; i < TestConstants.NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES; i++) {
+            if (UiUtils.isServiceRunning(LocationSaveService.class.getName()))
+                LocationsHelper.INSTANCE.stopLocationSaveService(app);
+            else {
+                LogUITest.debug("'Save Location Service' is not running now");
+                return true;
+            }
+
+        }
+
+        // After last retrial, Check if location service is still running or not
+        if (UiUtils.isServiceRunning(LocationSaveService.class.getName())) {
+            LogUITest.debug("Failed to shut down 'Save Location Service' even after " + TestConstants.NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES + " retries");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public static boolean stopPingLocationServiceIfRunning(Application app) {
+
+        LogUITest.debug("Checking if 'Ping Location Service' is running");
+        for (int i = 0; i < TestConstants.NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES; i++) {
+            if (UiUtils.isServiceRunning(LocationPingService.class.getName()))
+                LocationsHelper.INSTANCE.stopLocationPingService(app);
+            else {
+                LogUITest.debug("'Ping Location Service' is not running now");
+                return true;
+            }
+
+        }
+
+        // After last retrial, Check if location service is still running or not
+        if (UiUtils.isServiceRunning(LocationPingService.class.getName())) {
+            LogUITest.debug("Failed to shut down 'Ping Location Service' even after " + TestConstants.NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES + " retries");
+            return false;
+        }
+
+        return true;
+
+    }
+
 
 }

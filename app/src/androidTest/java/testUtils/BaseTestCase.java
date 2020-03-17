@@ -4,21 +4,28 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Build;
 
+import androidx.annotation.Nullable;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 
+import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
+import com.shuttl.location_pings.config.components.LocationConfigs;
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
+import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.location_pings.service.LocationSaveService;
 import com.shuttl.packagetest.MainActivity;
+import com.shuttl.packagetest.R;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.rules.TestName;
 
 import java.io.IOException;
+import java.util.List;
 
 import mockLocationUtils.MockLocationProvider;
 
@@ -28,13 +35,52 @@ public class BaseTestCase {
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
 
+    // Set config
+    public LocationConfigs locationConfigs =
+            new LocationConfigs(10000, 100
+                    , 10000, 3, 100, 10, 1800000
+                    , "", TestConstants.GPS_PIPELINE_URL, TestConstants.USER_ID
+                    , TestConstants.VEHICLE_NUMBER, R.drawable.ic_loc);
+
+
+    public LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
+        @Override
+        public void errorWhileSyncLocations(@org.jetbrains.annotations.Nullable String error) {
+
+        }
+
+        @Override
+        public void errorWhileSyncLocations(@org.jetbrains.annotations.Nullable Exception error) {
+
+        }
+
+        @Override
+        public void afterSyncLocations(@Nullable List<GPSLocation> locations) {
+            assert locations != null;
+
+        }
+
+        @Override
+        public void serviceStarted() {
+
+        }
+
+        @Override
+        public void serviceStopped() {
+
+        }
+    };
+
+
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.INTERNET,
-            Manifest.permission.FOREGROUND_SERVICE
+            Manifest.permission.ACCESS_COARSE_LOCATION
     );
+
+
+    @Rule
+    public TestName testName = new TestName();
 
     @Rule
     public ActivityTestRule activityTestRule = new ActivityTestRule(MainActivity.class);
@@ -42,25 +88,11 @@ public class BaseTestCase {
     @Before
     public void mainSetUp() {
 
-        UiUtils.safeSleep(2);
+        LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
+        LogUITest.info("\n***** \t\tBEGIN Test: " + testName.getMethodName());
+        LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
 
-        LogUITest.debug("Checking if 'Save Location Service' is Already running");
-        if (UiUtils.isServiceRunning(LocationSaveService.class.getName())) {
-            LogUITest.debug("'Save Location Service' is Already running");
-            LocationsHelper.INSTANCE.stopLocationSaveService(activityTestRule.getActivity().getApplication());
-            LogUITest.debug("'Save Location Service' has been Stopped");
-            LogUITest.debug("Current status of 'Location Save Service : '" + UiUtils.isServiceRunning(LocationSaveService.class.getName()));
-        }
-
-
-        LogUITest.debug("Checking if 'Ping Location Service' is Already running");
-        if (UiUtils.isServiceRunning(LocationPingService.class.getName())) {
-            LogUITest.debug("'Ping Location Service' is Already running");
-            LocationsHelper.INSTANCE.stopLocationPingService(activityTestRule.getActivity().getApplication());
-            LogUITest.debug("'Ping Location Service' has been stopped");
-            LogUITest.debug("Current status of 'Location Ping Service : '" + UiUtils.isServiceRunning(LocationPingService.class.getName()));
-        }
-
+        // TODO : Call init explicitly to start services for tests other than StartStopServiceTests
 
     }
 
@@ -83,13 +115,13 @@ public class BaseTestCase {
     public void tearDown() {
         MockLocationProvider.unregister();
 
-        // Stop Location Save Service
-        LogUITest.debug("Stopping 'Save Location Service'");
-        LocationsHelper.INSTANCE.stopLocationSaveService(activityTestRule.getActivity().getApplication());
+        UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+        UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
-        // Stop Location Save Service
-        LogUITest.debug("Stopping 'Ping Location Service'");
-        LocationsHelper.INSTANCE.stopLocationPingService(activityTestRule.getActivity().getApplication());
+
+        LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
+        LogUITest.info("\n***** \t\tEND Test: " + testName.getMethodName());
+        LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
 
     }
 }
