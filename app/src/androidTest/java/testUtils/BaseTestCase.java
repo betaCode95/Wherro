@@ -136,7 +136,10 @@ public class BaseTestCase {
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
         MockWebUtils.stopServer();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 993ede7cb0ab4115a4c9fdbc0b27991af74e3d26
 
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
         LogUITest.info("\n***** \t\tEND Test: " + testName.getMethodName());

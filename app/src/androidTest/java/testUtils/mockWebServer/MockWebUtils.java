@@ -1,11 +1,5 @@
 package testUtils.mockWebServer;
 
-import android.app.Instrumentation;
-import android.content.Context;
-
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
 import java.io.IOException;
 
 import okhttp3.mockwebserver.MockWebServer;
