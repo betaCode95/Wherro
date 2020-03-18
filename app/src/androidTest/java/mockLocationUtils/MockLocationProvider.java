@@ -11,6 +11,8 @@ import android.util.Log;
 
 import testUtils.LogUITest;
 
+
+
 public class MockLocationProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
     static String TAG = "MockLocationProvider";
     static String locationProviderName = LocationManager.GPS_PROVIDER;
@@ -141,14 +143,6 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
     }
 
     private int parseAccuracy() {
-        /**
-         * Retrieve a String value from the preferences.
-         *
-         * @param key The name of the preference to retrieve.
-         * @param defValue Value to return if this preference does not exist.
-         *
-         * @return Returns the preference value if it exists, or defValue.
-         */
         String str = mPref.getString("accuracy", "1");
         int ret;
         try {

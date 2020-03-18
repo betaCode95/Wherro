@@ -13,6 +13,10 @@ import testUtils.LogUITest;
 
 public class MockWebUtils {
 
+    public static MockWebServer getMockWebServer() {
+        return mockWebServer;
+    }
+
     private static MockWebServer mockWebServer;
     private static String mockWebServerUrl;
 
@@ -20,7 +24,7 @@ public class MockWebUtils {
         return mockWebServerUrl;
     }
 
-    public static void callOnSetup() throws IOException {
+    public static void startServer() throws IOException {
         if (mockWebServer == null) {
             mockWebServer = new MockWebServer();
             mockWebServer.start();
@@ -29,7 +33,7 @@ public class MockWebUtils {
     }
 
 
-    public static void callOnTearDown() throws IOException {
+    public static void stopServer() throws IOException {
         if (mockWebServer != null) {
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@ TEARDOWN : SHUTTING DOWN MOCK WEB SERVER IN MOCK WEB UTILS TEARDOWN @@@@@@@@@@@@@@@@@@@@@@@@@@@@");

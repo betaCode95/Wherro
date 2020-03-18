@@ -11,7 +11,6 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
-import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.packagetest.MainActivity;
 import com.shuttl.packagetest.R;
 
@@ -23,16 +22,22 @@ import org.junit.Rule;
 import org.junit.rules.TestName;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mockLocationUtils.MockLocationProvider;
+import testUtils.mockWebServer.CustomDispatcher;
+import testUtils.mockWebServer.DispatcherUtils;
 import testUtils.mockWebServer.MockWebUtils;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class BaseTestCase {
-    
+
+    public static Map<String, String> edgeCaseResponses = new HashMap<>();
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
+    public static Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public LocationConfigs locationConfigs;
 
@@ -90,29 +95,35 @@ public class BaseTestCase {
         LogUITest.info("\n***** \t\tBEGIN Test: " + testName.getMethodName());
         LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
 
-        MockWebUtils.callOnSetup();
+        MockWebUtils.startServer();
+        //DispatcherUtils.setDispacher(new CustomDispatcher());
+
+        LogUITest.debug("Current URL : " + TestConstants.GPS_PIPELINE_URL);
 
         // Set config
         locationConfigs =
-                new LocationConfigs(10000, 100
-                        , 10000, 3, 100, 10, 1800000
+                new LocationConfigs(100, 100
+                        , 1000, 3, 100, 10, 1800000
                         , "", TestConstants.GPS_PIPELINE_URL, R.drawable.ic_loc);
-
-        // TODO : Call init explicitly to start services for tests other than StartStopServiceTests
 
     }
 
 
-    private static void setMockLocationInDeveloperOption() {
+    protected static void setMockLocationInDeveloperOption() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
                 mDevice.executeShellCommand("appops set " + "com.shuttl.packagetest" + " android:mock_location allow");
                 //mDevice.executeShellCommand("appops set " + getInstrumentation().getTargetContext().getPackageName() + " android:mock_location allow");
-                UiUtils.safeSleep(3);
             } catch (IOException e) {
                 LogUITest.error("Failed to set Mock Location App in developer options");
+                LogUITest.debug(e.getMessage());
                 e.printStackTrace();
+            } catch (Exception e) {
+                LogUITest.error("Failed to set Mock Location App in developer options");
+                LogUITest.debug(e.getMessage());
+                e.printStackTrace();
+
             }
         }
     }
@@ -124,7 +135,7 @@ public class BaseTestCase {
         UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
-        MockWebUtils.callOnTearDown();
+        MockWebUtils.stopServer();
 
 
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
