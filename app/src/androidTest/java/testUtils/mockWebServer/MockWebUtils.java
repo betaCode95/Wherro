@@ -1,11 +1,5 @@
 package testUtils.mockWebServer;
 
-import android.app.Instrumentation;
-import android.content.Context;
-
-
-import androidx.test.platform.app.InstrumentationRegistry;
-
 import java.io.IOException;
 
 import okhttp3.mockwebserver.MockWebServer;
@@ -20,7 +14,7 @@ public class MockWebUtils {
         return mockWebServerUrl;
     }
 
-    public static void callOnSetup() throws IOException {
+    public static void startServer() throws IOException {
         if (mockWebServer == null) {
             mockWebServer = new MockWebServer();
             mockWebServer.start();
@@ -29,7 +23,7 @@ public class MockWebUtils {
     }
 
 
-    public static void callOnTearDown() throws IOException {
+    public static void stopServer() throws IOException {
         if (mockWebServer != null) {
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@ TEARDOWN : SHUTTING DOWN MOCK WEB SERVER IN MOCK WEB UTILS TEARDOWN @@@@@@@@@@@@@@@@@@@@@@@@@@@@");

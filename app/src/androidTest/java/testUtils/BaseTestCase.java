@@ -90,7 +90,7 @@ public class BaseTestCase {
         LogUITest.info("\n***** \t\tBEGIN Test: " + testName.getMethodName());
         LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
 
-        MockWebUtils.callOnSetup();
+        MockWebUtils.startServer();
 
         // Set config
         locationConfigs =
@@ -124,8 +124,7 @@ public class BaseTestCase {
         UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
-        MockWebUtils.callOnTearDown();
-
+        MockWebUtils.stopServer();
 
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
         LogUITest.info("\n***** \t\tEND Test: " + testName.getMethodName());
