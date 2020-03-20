@@ -46,8 +46,6 @@ public class SaveLocationTest extends BaseTestCase {
     public void bigGPSTest() {
 
 
-        MyDao myDao = new MyDao();
-
         LogUITest.debug("-------- checkpoint 001 ");
 
         for (int i = 0; i <= 10; i++) {
