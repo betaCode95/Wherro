@@ -30,6 +30,7 @@ public class SaveLocationTest extends BaseTestCase {
 
     Location loc1, loc2, loc3, loc4, loc5, loc6;
     List<Location> mockLocationList = new LinkedList<>();
+    List<GPSLocation> gpsLocationsFromDatabase;
 
     @Before
     public void setUp() {
@@ -58,13 +59,76 @@ public class SaveLocationTest extends BaseTestCase {
         latitude = UiUtils.randomGenerator(1, 90);
         longitude = UiUtils.randomGenerator(1, 90);
 
-        loc1 = new Location(latitude, longitude , 3);
+        loc1 = new Location(latitude, longitude, 3);
         mockLocationList.add(loc1);
-        UiUtils.safeSleep(5);
-        MockLocationProvider.setMockLocation(loc1.getLongitude(), loc1.getLatitude() , loc1.getAccuracy());
-        UiUtils.safeSleep(5);
+        MockLocationProvider.setMockLocation(loc1.getLongitude(), loc1.getLatitude(), loc1.getAccuracy());
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
 
 
+        // --------------------- Set and Validate Second Location ---------------------
+        latitude = UiUtils.randomGenerator(1, 90);
+        longitude = UiUtils.randomGenerator(1, 90);
+
+        loc2 = new Location(latitude, longitude, 3);
+        mockLocationList.add(loc2);
+        MockLocationProvider.setMockLocation(loc2.getLongitude(), loc2.getLatitude(), loc2.getAccuracy());
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
+
+
+        // --------------------- Set and Validate Third Location ---------------------
+        latitude = UiUtils.randomGenerator(1, 90);
+        longitude = UiUtils.randomGenerator(1, 90);
+
+        loc3 = new Location(latitude, longitude, 3);
+        mockLocationList.add(loc3);
+        MockLocationProvider.setMockLocation(loc3.getLongitude(), loc3.getLatitude(), loc3.getAccuracy());
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
+
+
+        // --------------------- Set and Validate Fourth Location ---------------------
+        loc4 = loc3;
+        mockLocationList.add(loc4);
+        MockLocationProvider.setMockLocation(loc4.getLongitude(), loc4.getLatitude(), loc4.getAccuracy());
+        fetchDataFromDatabase();
+        AssertUtils.assertTrueV(mockLocationList.size() != gpsLocationsFromDatabase.size(),
+                "Failed : Save Location Service is storing duplicate values in database",
+                "Successfully validated that Save Location Service is not storing duplicate locations ");
+
+
+        // --------------------- Set and Validate Fourth Location ---------------------
+        latitude = UiUtils.randomGenerator(1, 90);
+        longitude = UiUtils.randomGenerator(1, 90);
+        loc4 = new Location(latitude, longitude, 3);
+        mockLocationList.add(loc4);
+        MockLocationProvider.setMockLocation(loc4.getLongitude(), loc4.getLatitude(), loc4.getAccuracy());
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
+
+
+        // --------------------- Set and Validate Fifth Location ---------------------
+        latitude = UiUtils.randomGenerator(1, 90);
+        longitude = UiUtils.randomGenerator(1, 90);
+        loc5 = new Location(latitude, longitude, 3);
+        mockLocationList.add(loc5);
+        MockLocationProvider.setMockLocation(loc5.getLongitude(), loc5.getLatitude(), loc5.getAccuracy());
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
+
+
+        // --------------------- Set and Validate Sixth Location ---------------------
+        latitude = UiUtils.randomGenerator(1, 90);
+        longitude = UiUtils.randomGenerator(1, 90);
+        loc6 = new Location(latitude, longitude, 3);
+        mockLocationList.add(loc6);
+        MockLocationProvider.setMockLocation(loc6.getLongitude(), loc6.getLatitude(), loc6.getAccuracy());
         AssertUtils.assertTrueV(validateDatabase(),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");

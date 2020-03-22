@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import testUtils.LogUITest;
+import testUtils.UiUtils;
 
 
 public class MockLocationProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -40,8 +41,10 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
     }
 
     static public void setMockLocation(double longitude, double latitude , float accuracy) {
+        UiUtils.safeSleep(5);
         getInstance()._verifyInitiated();
         getInstance()._setMockLocation(longitude, latitude, 0, -1, accuracy);
+        UiUtils.safeSleep(5);
     }
 
 

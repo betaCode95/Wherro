@@ -115,7 +115,7 @@ public class BaseTestCase {
         // Set config
         locationConfigs =
                 new LocationConfigs(100, 100
-                        , 100000, 3, 100, 10, 1800000
+                        , 10000, 3, 5, 3, 1800000
                         , "", TestConstants.GPS_PIPELINE_URL, R.drawable.ic_loc);
 
     }
