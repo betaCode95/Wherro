@@ -82,7 +82,10 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
                     false, true, true, true, 0, accuracy);
             mLocationManager.setTestProviderEnabled(locationProviderName, true);
         } catch (IllegalArgumentException ex) {
-            Log.e(TAG, "IllegalArgumentException thrown in _register");
+           LogUITest.debug("IllegalArgumentException thrown in _register : " + ex.getMessage());
+        }catch (Exception e)
+        {
+            LogUITest.debug(e.getMessage());
         }
     }
 

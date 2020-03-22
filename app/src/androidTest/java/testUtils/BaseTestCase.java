@@ -95,15 +95,27 @@ public class BaseTestCase {
         LogUITest.info("\n***** \t\tBEGIN Test: " + testName.getMethodName());
         LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
 
+        LogUITest.debug("Starting MockWebServer ...........");
         MockWebUtils.startServer();
+
+        LogUITest.debug("Setting Dispatcher ...........");
         DispatcherUtils.setDispacher(new CustomDispatcher());
+
+        LogUITest.debug("Initiating MockLocationProvider ...........");
+        MockLocationProvider.init(targetContext); // get app under test context
+
+        LogUITest.debug("Setting MockLocationProvider in Develop Options ...........");
+        setMockLocationInDeveloperOption();
+
+        LogUITest.debug("Register MockLocationProvider ...........");
+        MockLocationProvider.register();
 
         LogUITest.debug("Current URL : " + TestConstants.GPS_PIPELINE_URL);
 
         // Set config
         locationConfigs =
                 new LocationConfigs(100, 100
-                        , 10000, 3, 100, 10, 1800000
+                        , 100000, 3, 100, 10, 1800000
                         , "", TestConstants.GPS_PIPELINE_URL, R.drawable.ic_loc);
 
     }
@@ -130,8 +142,14 @@ public class BaseTestCase {
 
     @After
     public void tearDown() throws IOException {
+
+        LogUITest.debug("Un-Register MockLocationProvider ...........");
         MockLocationProvider.unregister();
 
+//        LogUITest.debug("Stopping 'Save Location Service' & 'Ping Location Service'");
+//        LocationsHelper.INSTANCE.stopAndClearAll(activityTestRule.getActivity().getApplication());
+
+        // Stop Services Inividually
         UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 

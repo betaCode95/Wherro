@@ -55,9 +55,10 @@ public class UiUtils {
     public static boolean stopSaveLocationServiceIfRunning(Application app) {
         LogUITest.debug("Checking if 'Save Location Service' is running");
         for (int i = 0; i < TestConstants.NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES; i++) {
-            if (UiUtils.isServiceRunning(LocationSaveService.class.getName()))
+            if (UiUtils.isServiceRunning(LocationSaveService.class.getName())) {
+                LogUITest.debug("'Save Location Service' is running . Stopping Now");
                 LocationsHelper.INSTANCE.stopLocationSaveService(app);
-            else {
+            } else {
                 LogUITest.debug("'Save Location Service' is not running now");
                 return true;
             }
@@ -78,9 +79,11 @@ public class UiUtils {
 
         LogUITest.debug("Checking if 'Ping Location Service' is running");
         for (int i = 0; i < TestConstants.NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES; i++) {
-            if (UiUtils.isServiceRunning(LocationPingService.class.getName()))
+            if (UiUtils.isServiceRunning(LocationPingService.class.getName())) {
+                LogUITest.debug("'Ping Location Service' is running . Stopping Now");
+                LocationsHelper.INSTANCE.unBindLocationPingService(app);
                 LocationsHelper.INSTANCE.stopLocationPingService(app);
-            else {
+            } else {
                 LogUITest.debug("'Ping Location Service' is not running now");
                 return true;
             }

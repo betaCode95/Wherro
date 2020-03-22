@@ -39,28 +39,25 @@ public class SaveLocationTest extends BaseTestCase {
 
         LogUITest.debug("Both Location Services are running");
 
-
-        setMockLocationInDeveloperOption();
-        MockLocationProvider.init(targetContext); // get app under test context
-        MockLocationProvider.register();
     }
 
 
     @Test
     public void bigGPSTest() {
 
+        for (int i = 0; i <= 4; i++) {
 
-        LogUITest.debug("Setting Location");
-        double latitude = UiUtils.randomGenerator(1, 90);
-        double longitude = UiUtils.randomGenerator(1, 90);
-        double altitude = UiUtils.randomGenerator(0, 5000);
-        UiUtils.safeSleep(5);
+            LogUITest.debug("Setting Location Index : " + i);
+            double latitude = UiUtils.randomGenerator(1, 90);
+            double longitude = UiUtils.randomGenerator(1, 90);
+            double altitude = UiUtils.randomGenerator(0, 5000);
 
-        MockLocationProvider.setMockLocation(longitude, latitude, altitude);
+            MockLocationProvider.setMockLocation(longitude, latitude, altitude);
+            UiUtils.safeSleep(5);
+        }
 
 
     }
-
 
     public void fetchDataFromDatabase() {
         try {
