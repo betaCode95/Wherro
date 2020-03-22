@@ -5,12 +5,15 @@ import android.content.Intent;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
+import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.location_pings.service.LocationSaveService;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.List;
 
 import mockLocationUtils.MockLocationProvider;
 import testUtils.BaseTestCase;
@@ -36,52 +39,71 @@ public class SaveLocationTest extends BaseTestCase {
 
         LogUITest.debug("Both Location Services are running");
 
+
+
+
+
         setMockLocationInDeveloperOption();
         MockLocationProvider.init(targetContext); // get app under test context
         MockLocationProvider.register();
     }
 
 
+
+
+
     @Test
     public void bigGPSTest() {
 
 
-        LogUITest.debug("-------- checkpoint 001 ");
+        LogUITest.debug("Setting Location");
+        double latitude = UiUtils.randomGenerator(1, 90);
+        double longitude = UiUtils.randomGenerator(1, 90);
+        double altitude = UiUtils.randomGenerator(0, 5000);
+        UiUtils.safeSleep(5);
 
-        for (int i = 0; i <= 10; i++) {
+        MockLocationProvider.setMockLocation(longitude, latitude, altitude);
 
-            LogUITest.debug("The run count is: " + i);
-            double latitude = UiUtils.randomGenerator(1, 90);
-            double longitude = UiUtils.randomGenerator(1, 90);
-            double altitude = UiUtils.randomGenerator(0, 5000);
 
-            MockLocationProvider.setMockLocation(longitude, latitude);
-
+        try {
+            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
             UiUtils.safeSleep(5);
+            LogUITest.debug("Fetching Locations from database");
+            List<GPSLocation> gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
 
-            MockLocationProvider.setMockLocation(longitude, latitude, altitude);
+            UiUtils.safeSleep(10);
 
-//
-//            LogUITest.debug("Waiting for 20 seconds Location Save Service to Save data in database");
-//            UiUtils.safeSleep(20);
-//
-//           try
-//           {
-//               List<GPSLocation> gpsLocations = myDao.getLimitedLocations(10);
-//               LogUITest.debug("Size of gpsLocations List : " + gpsLocations.size());
-//               if (gpsLocations.size() > 0) {
-//                   LogUITest.debug("gpsLocations Lat : " + gpsLocations.get(0).getLatitude());
-//                   LogUITest.debug("gpsLocations Lng : " + gpsLocations.get(0).getLongitude());
-//
-//               } else
-//                   LogUITest.debug("Gps Locations List is Empty Even After inserting Locations");
-//           }catch (Exception e)
-//           {
-//               LogUITest.debug(e.getMessage());
-//           }
+            LogUITest.debug("Number of entries in database : " + gpsLocations.size());
+            LogUITest.debug("Latitude In Database : " + gpsLocations.get(0).getLatitude());
+            LogUITest.debug("Longitude In Database : " + gpsLocations.get(0).getLongitude());
+            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        } catch (Exception e) {
+            LogUITest.debug(e.getMessage());
         }
 
 
+    }
+
+
+    public void fetchDataFromDatabase()
+    {
+        try {
+            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            LogUITest.debug("Fetching Locations from database");
+            List<GPSLocation> gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
+
+            UiUtils.safeSleep(10);
+
+            LogUITest.debug("Number of entries in database : " + gpsLocations.size());
+            LogUITest.debug("Latitude In Database : " + gpsLocations.get(0).getLatitude());
+            LogUITest.debug("Longitude In Database : " + gpsLocations.get(0).getLongitude());
+            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+        } catch (Exception e) {
+            LogUITest.debug(e.getMessage());
+        }
+    }
     }
 
 }

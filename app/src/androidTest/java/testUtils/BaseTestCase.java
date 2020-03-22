@@ -35,7 +35,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 public class BaseTestCase {
 
-    public static Map<String, String> edgeCaseResponses = new HashMap<>();
+    public static Map<String, TestConstants.RESPONSE_TYPE> edgeCaseResponses = new HashMap<>();
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
     public static Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -96,14 +96,14 @@ public class BaseTestCase {
         LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
 
         MockWebUtils.startServer();
-        //DispatcherUtils.setDispacher(new CustomDispatcher());
+        DispatcherUtils.setDispacher(new CustomDispatcher());
 
         LogUITest.debug("Current URL : " + TestConstants.GPS_PIPELINE_URL);
 
         // Set config
         locationConfigs =
                 new LocationConfigs(100, 100
-                        , 1000, 3, 100, 10, 1800000
+                        , 10000, 3, 100, 10, 1800000
                         , "", TestConstants.GPS_PIPELINE_URL, R.drawable.ic_loc);
 
     }
