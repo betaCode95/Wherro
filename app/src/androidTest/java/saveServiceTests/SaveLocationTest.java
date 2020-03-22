@@ -54,6 +54,8 @@ public class SaveLocationTest extends BaseTestCase {
 
             MockLocationProvider.setMockLocation(longitude, latitude, altitude);
             UiUtils.safeSleep(5);
+
+            fetchDataFromDatabase();
         }
 
 
@@ -65,7 +67,7 @@ public class SaveLocationTest extends BaseTestCase {
             LogUITest.debug("Fetching Locations from database");
             List<GPSLocation> gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
 
-            UiUtils.safeSleep(10);
+            UiUtils.safeSleep(5);
 
             LogUITest.debug("Number of entries in database : " + gpsLocations.size());
             LogUITest.debug("Latitude In Database : " + gpsLocations.get(0).getLatitude());
