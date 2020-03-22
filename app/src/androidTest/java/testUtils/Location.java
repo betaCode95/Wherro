@@ -5,7 +5,7 @@ public class Location {
     private double longitude;
     private String timeStamp;
     private String provider = "gps";
-
+    float accuracy;
 
 
     public String getTimeStamp() {
@@ -24,14 +24,11 @@ public class Location {
         return longitude;
     }
 
-    public double getAccuracy() {
+    public float getAccuracy() {
         return accuracy;
     }
 
-    double accuracy;
-
-
-    public Location(double latitude, double longitude, int accuracy) {
+    public Location(double latitude, double longitude, float accuracy) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.accuracy = accuracy;

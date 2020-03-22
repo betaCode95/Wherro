@@ -36,18 +36,24 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
 
     static public void setMockLocation(double longitude, double latitude) {
         getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, 0, -1);
+        getInstance()._setMockLocation(longitude, latitude, 0, -1 , 10f);
     }
+
+    static public void setMockLocation(double longitude, double latitude , float accuracy) {
+        getInstance()._verifyInitiated();
+        getInstance()._setMockLocation(longitude, latitude, 0, -1, accuracy);
+    }
+
 
     static public void setMockLocation(double longitude, double latitude, double altitude) {
         getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, altitude, -1);
+        getInstance()._setMockLocation(longitude, latitude, altitude, -1,10f);
     }
 
     static public void setMockLocation(double longitude, double latitude, double altitude,
                                        int satellites) {
         getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, altitude, satellites);
+        getInstance()._setMockLocation(longitude, latitude, altitude, satellites,10f);
     }
 
 
@@ -96,7 +102,7 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
 
 
 
-    protected void _setMockLocation(double longitude, double latitude, double altitude, int satellites) {
+    protected void _setMockLocation(double longitude, double latitude, double altitude, int satellites , float accuracy) {
         Location mockLocation = new Location(locationProviderName); // a string
         mockLocation.setLatitude(latitude);  // double
         mockLocation.setLongitude(longitude);
@@ -107,7 +113,7 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
             mockLocation.setExtras(bundle);
         }
         mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(10);
+        mockLocation.setAccuracy(accuracy);
 
         mockLocation.setElapsedRealtimeNanos(200);
         LogUITest.info("****************************************");

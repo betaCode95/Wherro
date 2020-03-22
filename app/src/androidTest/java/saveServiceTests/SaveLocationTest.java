@@ -58,10 +58,10 @@ public class SaveLocationTest extends BaseTestCase {
         latitude = UiUtils.randomGenerator(1, 90);
         longitude = UiUtils.randomGenerator(1, 90);
 
-        loc1 = new Location(latitude, longitude);
+        loc1 = new Location(latitude, longitude , 3);
         mockLocationList.add(loc1);
         UiUtils.safeSleep(5);
-        MockLocationProvider.setMockLocation(loc1.getLongitude(), loc1.getLatitude());
+        MockLocationProvider.setMockLocation(loc1.getLongitude(), loc1.getLatitude() , loc1.getAccuracy());
         UiUtils.safeSleep(5);
 
 
