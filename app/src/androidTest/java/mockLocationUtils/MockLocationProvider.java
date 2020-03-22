@@ -12,7 +12,6 @@ import android.util.Log;
 import testUtils.LogUITest;
 
 
-
 public class MockLocationProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
     static String TAG = "MockLocationProvider";
     static String locationProviderName = LocationManager.GPS_PROVIDER;

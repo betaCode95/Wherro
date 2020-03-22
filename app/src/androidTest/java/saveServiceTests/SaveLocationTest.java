@@ -13,10 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import mockLocationUtils.MockLocationProvider;
+import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
+import testUtils.Location;
 import testUtils.LogUITest;
 import testUtils.UiUtils;
 
@@ -24,6 +27,9 @@ import static junit.framework.TestCase.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class SaveLocationTest extends BaseTestCase {
+
+    Location loc1, loc2, loc3, loc4, loc5, loc6;
+    List<Location> mockLocationList = new LinkedList<>();
 
     @Before
     public void setUp() {
@@ -45,38 +51,89 @@ public class SaveLocationTest extends BaseTestCase {
     @Test
     public void bigGPSTest() {
 
-        for (int i = 0; i <= 4; i++) {
 
-            LogUITest.debug("Setting Location Index : " + i);
-            double latitude = UiUtils.randomGenerator(1, 90);
-            double longitude = UiUtils.randomGenerator(1, 90);
-            double altitude = UiUtils.randomGenerator(0, 5000);
+        double latitude, longitude;
 
-            MockLocationProvider.setMockLocation(longitude, latitude, altitude);
-            UiUtils.safeSleep(5);
+        // --------------------- Set and Validate First Location ---------------------
+        latitude = UiUtils.randomGenerator(1, 90);
+        longitude = UiUtils.randomGenerator(1, 90);
 
-            fetchDataFromDatabase();
-        }
+        loc1 = new Location(latitude, longitude);
+        mockLocationList.add(loc1);
+        UiUtils.safeSleep(5);
+        MockLocationProvider.setMockLocation(loc1.getLongitude(), loc1.getLatitude());
+        UiUtils.safeSleep(5);
+
+
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
 
 
     }
 
-    public void fetchDataFromDatabase() {
+
+    public boolean validateDatabase() {
+
+        List<GPSLocation> gpsLocationsFromDatabase = fetchDataFromDatabase();
+
+        if (!mockLocationList.isEmpty()) {
+            if (mockLocationList.size() == gpsLocationsFromDatabase.size()) {
+
+                for (int i = 0; i < mockLocationList.size(); i++) {
+                    if (gpsLocationsFromDatabase.get(i).getLatitude() != mockLocationList.get(i).getLatitude() ||
+                            gpsLocationsFromDatabase.get(i).getLongitude() != mockLocationList.get(i).getLongitude() ||
+                            gpsLocationsFromDatabase.get(i).getAccuracy() != mockLocationList.get(i).getAccuracy() ||
+                            !gpsLocationsFromDatabase.get(i).getProvider().equals(mockLocationList.get(i).getProvider())) {
+
+                        LogUITest.debug("Failed to match all values in database");
+
+                        LogUITest.debug(" --------------------     Expected Params : ---------------------");
+                        LogUITest.debug(" Latitude : " + mockLocationList.get(i).getLatitude());
+                        LogUITest.debug(" Longitude : " + mockLocationList.get(i).getLongitude());
+                        LogUITest.debug(" Provider : " + mockLocationList.get(i).getProvider());
+                        LogUITest.debug(" Accuracy : " + mockLocationList.get(i).getAccuracy());
+
+                        LogUITest.debug(" --------------------     Actual Params : ---------------------");
+                        LogUITest.debug(" Latitude : " + gpsLocationsFromDatabase.get(i).getLatitude());
+                        LogUITest.debug(" Longitude : " + gpsLocationsFromDatabase.get(i).getLongitude());
+                        LogUITest.debug(" Provider : " + gpsLocationsFromDatabase.get(i).getProvider());
+                        LogUITest.debug(" Accuracy : " + gpsLocationsFromDatabase.get(i).getAccuracy());
+                        return false;
+                    }
+                }
+
+                return true;
+
+
+            } else {
+                LogUITest.debug("Number of locations in database vs locations set by Mockwebserver are different");
+                LogUITest.debug("Number of Locations mock location set : " + mockLocationList.size());
+                LogUITest.debug("Number of Locations in database : " + gpsLocationsFromDatabase.size());
+                return false;
+
+            }
+        }
+
+
+        LogUITest.debug("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
+        return false;
+
+
+    }
+
+
+    public List<GPSLocation> fetchDataFromDatabase() {
+
+        List<GPSLocation> gpsLocations = new LinkedList<>();
         try {
-            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            LogUITest.debug("Fetching Locations from database");
-            List<GPSLocation> gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
-
-            UiUtils.safeSleep(5);
-
-            LogUITest.debug("Number of entries in database : " + gpsLocations.size());
-            LogUITest.debug("Latitude In Database : " + gpsLocations.get(0).getLatitude());
-            LogUITest.debug("Longitude In Database : " + gpsLocations.get(0).getLongitude());
-            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
+            LogUITest.debug("+++++++++++++++++++   Fetching Locations from database   +++++++++++++++++++");
+            gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
+            LogUITest.debug("+++++++++++++++++++   Fetched Locations from database   +++++++++++++++++++");
         } catch (Exception e) {
             LogUITest.debug(e.getMessage());
         }
+        return gpsLocations;
     }
 
 
