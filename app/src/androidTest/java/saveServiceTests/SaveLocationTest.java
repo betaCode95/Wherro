@@ -40,16 +40,10 @@ public class SaveLocationTest extends BaseTestCase {
         LogUITest.debug("Both Location Services are running");
 
 
-
-
-
         setMockLocationInDeveloperOption();
         MockLocationProvider.init(targetContext); // get app under test context
         MockLocationProvider.register();
     }
-
-
-
 
 
     @Test
@@ -65,29 +59,10 @@ public class SaveLocationTest extends BaseTestCase {
         MockLocationProvider.setMockLocation(longitude, latitude, altitude);
 
 
-        try {
-            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            UiUtils.safeSleep(5);
-            LogUITest.debug("Fetching Locations from database");
-            List<GPSLocation> gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
-
-            UiUtils.safeSleep(10);
-
-            LogUITest.debug("Number of entries in database : " + gpsLocations.size());
-            LogUITest.debug("Latitude In Database : " + gpsLocations.get(0).getLatitude());
-            LogUITest.debug("Longitude In Database : " + gpsLocations.get(0).getLongitude());
-            LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-        } catch (Exception e) {
-            LogUITest.debug(e.getMessage());
-        }
-
-
     }
 
 
-    public void fetchDataFromDatabase()
-    {
+    public void fetchDataFromDatabase() {
         try {
             LogUITest.debug("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
             LogUITest.debug("Fetching Locations from database");
@@ -104,6 +79,6 @@ public class SaveLocationTest extends BaseTestCase {
             LogUITest.debug(e.getMessage());
         }
     }
-    }
+
 
 }
