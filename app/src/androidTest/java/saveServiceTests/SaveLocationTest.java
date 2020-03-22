@@ -138,20 +138,35 @@ public class SaveLocationTest extends BaseTestCase {
         latitude = UiUtils.randomGenerator(1, 90);
         longitude = UiUtils.randomGenerator(1, 90);
         loc6 = new Location(latitude, longitude, 3);
+        mockLocationList.add(loc6);
         MockLocationProvider.setMockLocation(loc6.getLongitude(), loc6.getLatitude(), loc6.getAccuracy());
         gpsLocationsFromDatabase = fetchDataFromDatabase();
         AssertUtils.assertTrueV(gpsLocationsFromDatabase.size() == TestConstants.BUFFER_SIZE,
-                "Numnber of locations enteries in database is greater than the buffer size",
+                "Numnber of locations in database is greater than the buffer size",
                 "Successfully validated that database is not storing locations more than the expected buffer size ");
 
 
-//        UiUtils.safeSleep(20);
-//        AssertUtils.assertTrueV(validateDatabase(),
-//                "Database state does not match with the desired state",
-//                "Successfully validated expected database state ");
+        UiUtils.safeSleep(20);
+        gpsLocationsFromDatabase = fetchDataFromDatabase();
+        AssertUtils.assertTrueV(gpsLocationsFromDatabase.size() == 2,
+                "Number of locations in database is greater than expected ",
+                "Successfully validated that Ping Service is cleaning database after successful location sync");
+
+        mockLocationList.remove(0);
+        mockLocationList.remove(0);
+        mockLocationList.remove(0);
+        mockLocationList.remove(0);
+        AssertUtils.assertTrueV(validateDatabase(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
 
 
-
+        mockLocationList.clear();
+        UiUtils.safeSleep(95);
+        gpsLocationsFromDatabase = fetchDataFromDatabase();
+        AssertUtils.assertTrueV(gpsLocationsFromDatabase.isEmpty(),
+                "Database state does not match with the desired state",
+                "Successfully validated expected database state ");
 
     }
 
@@ -209,9 +224,7 @@ public class SaveLocationTest extends BaseTestCase {
 
         List<GPSLocation> gpsLocations = new LinkedList<>();
         try {
-            LogUITest.debug("+++++++++++++++++++   Fetching Locations from database   +++++++++++++++++++");
             gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
-            LogUITest.debug("+++++++++++++++++++   Fetched Locations from database   +++++++++++++++++++");
         } catch (Exception e) {
             LogUITest.debug(e.getMessage());
         }

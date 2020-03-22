@@ -21,7 +21,7 @@ public class TestConstants {
 
     public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS = 100;  // in millis
     public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS = 100;  // in millis
-    public static final int MIN_PING_SERVICE_SYNC_INTERVAL = 70000;  // in millis
+    public static final int MIN_PING_SERVICE_SYNC_INTERVAL = 90000;  // in millis
     public static final int ACCURACY = 3;
     public static final int BUFFER_SIZE = 5;
     public static final int BATCH_SIZE_FOR_PING_SERVICE = 3;
