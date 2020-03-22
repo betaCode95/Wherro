@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.shuttl.location_pings.config.components.LocationConfigs;
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.location_pings.service.LocationPingService;
@@ -21,6 +22,7 @@ import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.Location;
 import testUtils.LogUITest;
+import testUtils.TestConstants;
 import testUtils.UiUtils;
 
 import static junit.framework.TestCase.fail;
@@ -34,6 +36,14 @@ public class SaveLocationTest extends BaseTestCase {
 
     @Before
     public void setUp() {
+
+        // Set config
+        locationConfigs =
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL, TestConstants.ACCURACY
+                        , TestConstants.BUFFER_SIZE, TestConstants.BATCH_SIZE_FOR_PING_SERVICE
+                        , TestConstants.SERVICE_TIMEOUT, "", TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.NOTIFICATION_ICON_ID);
 
         Intent intent = new Intent(appContext, LocationPingService.class);
         intent.setAction("STOP");
@@ -91,14 +101,15 @@ public class SaveLocationTest extends BaseTestCase {
                 "Successfully validated expected database state ");
 
 
-        // --------------------- Set and Validate Fourth Location ---------------------
+        // --------------------- Set Duplicate Location ---------------------
         loc4 = loc3;
         mockLocationList.add(loc4);
         MockLocationProvider.setMockLocation(loc4.getLongitude(), loc4.getLatitude(), loc4.getAccuracy());
-        fetchDataFromDatabase();
+        gpsLocationsFromDatabase = fetchDataFromDatabase();
         AssertUtils.assertTrueV(mockLocationList.size() != gpsLocationsFromDatabase.size(),
                 "Failed : Save Location Service is storing duplicate values in database",
                 "Successfully validated that Save Location Service is not storing duplicate locations ");
+        mockLocationList.remove(3);
 
 
         // --------------------- Set and Validate Fourth Location ---------------------
@@ -127,11 +138,19 @@ public class SaveLocationTest extends BaseTestCase {
         latitude = UiUtils.randomGenerator(1, 90);
         longitude = UiUtils.randomGenerator(1, 90);
         loc6 = new Location(latitude, longitude, 3);
-        mockLocationList.add(loc6);
         MockLocationProvider.setMockLocation(loc6.getLongitude(), loc6.getLatitude(), loc6.getAccuracy());
-        AssertUtils.assertTrueV(validateDatabase(),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+        gpsLocationsFromDatabase = fetchDataFromDatabase();
+        AssertUtils.assertTrueV(gpsLocationsFromDatabase.size() == TestConstants.BUFFER_SIZE,
+                "Numnber of locations enteries in database is greater than the buffer size",
+                "Successfully validated that database is not storing locations more than the expected buffer size ");
+
+
+//        UiUtils.safeSleep(20);
+//        AssertUtils.assertTrueV(validateDatabase(),
+//                "Database state does not match with the desired state",
+//                "Successfully validated expected database state ");
+
+
 
 
     }
@@ -178,7 +197,6 @@ public class SaveLocationTest extends BaseTestCase {
 
             }
         }
-
 
         LogUITest.debug("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
         return false;

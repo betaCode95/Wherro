@@ -12,7 +12,6 @@ import androidx.test.uiautomator.UiDevice;
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
 import com.shuttl.packagetest.MainActivity;
-import com.shuttl.packagetest.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,19 +103,21 @@ public class BaseTestCase {
         LogUITest.debug("Initiating MockLocationProvider ...........");
         MockLocationProvider.init(targetContext); // get app under test context
 
-        LogUITest.debug("Setting MockLocationProvider in Develop Options ...........");
+        LogUITest.debug("Setting MockLocationProvider in Developer Option ...........");
         setMockLocationInDeveloperOption();
 
         LogUITest.debug("Register MockLocationProvider ...........");
         MockLocationProvider.register();
 
-        LogUITest.debug("Current URL : " + TestConstants.GPS_PIPELINE_URL);
+        LogUITest.debug("Current GPS PipeLine URL : " + TestConstants.GPS_PIPELINE_URL);
 
         // Set config
         locationConfigs =
-                new LocationConfigs(100, 100
-                        , 10000, 3, 5, 3, 1800000
-                        , "", TestConstants.GPS_PIPELINE_URL, R.drawable.ic_loc);
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL, TestConstants.ACCURACY_GLOBAL
+                        , TestConstants.BUFFER_SIZE_GLOBAL, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_GLOBAL
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.NOTIFICATION_ICON_ID);
 
     }
 
@@ -146,10 +147,7 @@ public class BaseTestCase {
         LogUITest.debug("Un-Register MockLocationProvider ...........");
         MockLocationProvider.unregister();
 
-//        LogUITest.debug("Stopping 'Save Location Service' & 'Ping Location Service'");
-//        LocationsHelper.INSTANCE.stopAndClearAll(activityTestRule.getActivity().getApplication());
-
-        // Stop Services Inividually
+        // Stop Services Individually
         UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 

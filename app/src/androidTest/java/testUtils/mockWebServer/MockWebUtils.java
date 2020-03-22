@@ -7,6 +7,8 @@ import testUtils.LogUITest;
 
 public class MockWebUtils {
 
+    private MockWebUtils(){}
+
     public static MockWebServer getMockWebServer() {
         return mockWebServer;
     }
