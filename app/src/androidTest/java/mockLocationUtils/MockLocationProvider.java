@@ -92,7 +92,7 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
             bundle.putInt("satellites", location.getSatellite());
             mockLocation.setExtras(bundle);
         }
-        mockLocation.setTime(System.currentTimeMillis());
+        mockLocation.setTime(location.getTimeStamp());
         mockLocation.setAccuracy(location.getAccuracy());
 
         mockLocation.setElapsedRealtimeNanos(200);

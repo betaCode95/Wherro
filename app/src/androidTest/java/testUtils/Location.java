@@ -3,7 +3,7 @@ package testUtils;
 public class Location {
     private double latitude;
     private double longitude;
-    private String timeStamp;
+    private long timeStamp = System.currentTimeMillis();
     private String provider = "gps";
     float accuracy = 10f;
     int satellite = -1;
@@ -18,7 +18,7 @@ public class Location {
         return altitude;
     }
 
-    public String getTimeStamp() {
+    public long getTimeStamp() {
         return timeStamp;
     }
 
@@ -46,13 +46,21 @@ public class Location {
 
     }
 
+    public Location(double latitude, double longitude, float accuracy, long timeStamp) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
+        this.timeStamp = timeStamp;
+
+    }
+
     public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
 
     }
 
-    public Location(double latitude, double longitude , double altitude) {
+    public Location(double latitude, double longitude, double altitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
