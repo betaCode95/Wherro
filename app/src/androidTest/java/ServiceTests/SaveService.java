@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.shuttl.location_pings.config.components.LocationConfigs;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,6 +56,7 @@ public class SaveService extends BaseTestCase {
 
     }
 
+    @Ignore
     @AutoTest_SaveLocationService
     @Test
     public void verifyTimeCheck() {
@@ -92,7 +94,7 @@ public class SaveService extends BaseTestCase {
 
     }
 
-
+    @Ignore
     @AutoTest_SaveLocationService
     @Test
     public void verifyDistanceCheck() {
