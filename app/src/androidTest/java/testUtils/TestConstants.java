@@ -22,12 +22,12 @@ public class TestConstants {
 
     // ---------------------------------    LOCATION CONFIG FOR SAVE SERVICE TESTS  -------------------------------------
 
-    public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 15000;  // in millis
+    public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 100;  // in millis
     public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 100;
     public static final int MIN_PING_SERVICE_SYNC_INTERVAL_SS = 90000;  // in millis
     public static final int ACCURACY_SS = 3;
     public static final int BUFFER_SIZE_SS = 3;
-    public static final int BATCH_SIZE_FOR_PING_SERVICE_SS = 3;
+    public static final int BATCH_SIZE_FOR_PING_SERVICE_SS = 1;
 
     // ---------------------------------    LOCATION CONFIG FOR SAVE SERVICE TESTS  -------------------------------------
 

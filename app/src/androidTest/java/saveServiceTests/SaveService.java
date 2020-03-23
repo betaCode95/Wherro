@@ -5,7 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.shuttl.location_pings.config.components.LocationConfigs;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,6 +29,7 @@ public class SaveService extends BaseTestCase {
     @Before
     public void setUp() {
 
+
         // Set config
         locationConfigs =
                 new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_SS, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
@@ -38,6 +38,18 @@ public class SaveService extends BaseTestCase {
                         , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
                         , TestConstants.NOTIFICATION_ICON_ID);
 
+
+        if (testName.getMethodName().equals("verifyBufferSize")) {
+            // Set config
+            locationConfigs =
+                    new LocationConfigs(100, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
+                            , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_SS, TestConstants.ACCURACY_SS
+                            , 3, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_SS
+                            , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
+                            , TestConstants.NOTIFICATION_ICON_ID);
+        }
+
+
         initiateLocationServices(locationConfigs);
 
     }
@@ -45,7 +57,6 @@ public class SaveService extends BaseTestCase {
     @AutoTest_SaveLocationService
     @Test
     public void verifyTimeCheck() {
-
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
@@ -81,7 +92,6 @@ public class SaveService extends BaseTestCase {
     }
 
 
-    @Ignore
     @AutoTest_SaveLocationService
     @Test
     public void verifyDistanceCheck() {
@@ -167,9 +177,6 @@ public class SaveService extends BaseTestCase {
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
-        // Time interval between two locations is set 20 seconds in config file.
-        UiUtils.safeSleep(20);
-
         // --------------------- Set and Validate Third Location ---------------------
         loc3 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
         mockLocationList.add(loc3);
@@ -177,9 +184,6 @@ public class SaveService extends BaseTestCase {
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
-
-        // Time interval between two locations is set 20 seconds in config file.
-        UiUtils.safeSleep(20);
 
         // --------------------- Set and Validate Fourth Location ---------------------
         loc4 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
