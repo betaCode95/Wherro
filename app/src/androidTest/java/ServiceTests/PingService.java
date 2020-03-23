@@ -1,4 +1,4 @@
-package saveServiceTests;
+package ServiceTests;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -49,7 +49,7 @@ public class PingService extends BaseTestCase {
 
     @AutoTest_PingLocationService
     @Test
-    public void verifyFailedResponse() {
+    public void verifyFailedResponseOfPingService() {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);

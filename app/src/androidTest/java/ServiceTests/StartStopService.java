@@ -1,4 +1,4 @@
-package saveServiceTests;
+package ServiceTests;
 
 import android.content.Intent;
 
@@ -18,6 +18,7 @@ import testUtils.BaseTestCase;
 import testUtils.LogUITest;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
+import testUtils.customAnnotations.AutoTest_Critical;
 import testUtils.customAnnotations.AutoTest_PingLocationService;
 import testUtils.customAnnotations.AutoTest_SaveLocationService;
 import testUtils.customAnnotations.AutoTest_StartStopServices;
@@ -41,6 +42,7 @@ public class StartStopService extends BaseTestCase {
     }
 
 
+    @AutoTest_Critical
     @AutoTest_StartStopServices
     @Test
     public void verifyStartStopLocationServicesViaInitModule() {

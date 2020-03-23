@@ -1,4 +1,4 @@
-package saveServiceTests;
+package ServiceTests;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 

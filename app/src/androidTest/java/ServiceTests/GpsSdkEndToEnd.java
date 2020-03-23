@@ -1,4 +1,4 @@
-package saveServiceTests;
+package ServiceTests;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -18,6 +18,7 @@ import testUtils.BaseTestCase;
 import testUtils.Location;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
+import testUtils.customAnnotations.AutoTest_Critical;
 
 @RunWith(AndroidJUnit4.class)
 public class GpsSdkEndToEnd extends BaseTestCase {
@@ -45,7 +46,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
     }
 
-
+    @AutoTest_Critical
     @Test
     public void verifySdkEndToEnd() {
 
