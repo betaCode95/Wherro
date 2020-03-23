@@ -18,8 +18,15 @@ public class CustomDispatcher extends Dispatcher {
 
         LogUITest.debug(" ******************** Current request: " + request.getPath() + " *********************");
 
-        LogUITest.debug("Body" + request.getBody().readUtf8());
+        LogUITest.debug("Body" + request.getBody());
         LogUITest.debug("Method" + request.getMethod());
+        LogUITest.debug("getRequestLine" + request.getRequestLine());
+        LogUITest.debug("getBodySize" + request.getBodySize());
+        LogUITest.debug("getUtf8Body" + request.getUtf8Body());
+        LogUITest.debug("getHeaders" + request.getHeaders());
+        LogUITest.debug("encodedQuery" + request.getRequestUrl().encodedQuery());
+        LogUITest.debug("encodedPath" + request.getRequestUrl().encodedPath());
+        LogUITest.debug("query" + request.getRequestUrl().query());
 
 
         // Get API Response  (Success OR Failure)

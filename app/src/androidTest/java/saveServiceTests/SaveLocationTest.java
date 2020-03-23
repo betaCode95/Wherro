@@ -142,11 +142,11 @@ public class SaveLocationTest extends BaseTestCase {
         MockLocationProvider.setMockLocation(loc6.getLongitude(), loc6.getLatitude(), loc6.getAccuracy());
         gpsLocationsFromDatabase = fetchDataFromDatabase();
         AssertUtils.assertTrueV(gpsLocationsFromDatabase.size() == TestConstants.BUFFER_SIZE,
-                "Numnber of locations in database is greater than the buffer size",
+                "Number of locations in database is greater than the buffer size",
                 "Successfully validated that database is not storing locations more than the expected buffer size ");
 
 
-        UiUtils.safeSleep(20);
+        UiUtils.safeSleep(30);
         gpsLocationsFromDatabase = fetchDataFromDatabase();
         AssertUtils.assertTrueV(gpsLocationsFromDatabase.size() == 2,
                 "Number of locations in database is greater than expected ",
