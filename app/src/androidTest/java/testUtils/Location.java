@@ -5,8 +5,18 @@ public class Location {
     private double longitude;
     private String timeStamp;
     private String provider = "gps";
-    float accuracy;
+    float accuracy = 10f;
+    int satellite = -1;
+    double altitude;
 
+
+    public int getSatellite() {
+        return satellite;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
 
     public String getTimeStamp() {
         return timeStamp;
@@ -28,6 +38,7 @@ public class Location {
         return accuracy;
     }
 
+
     public Location(double latitude, double longitude, float accuracy) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -35,10 +46,16 @@ public class Location {
 
     }
 
-
     public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+
+    }
+
+    public Location(double latitude, double longitude , double altitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
 
     }
 }

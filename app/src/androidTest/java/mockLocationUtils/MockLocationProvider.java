@@ -22,7 +22,7 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
     private MockLocationProvider() {}
 
     protected Context mContext;
-    protected LocationManager mLocationManager;
+    protected static LocationManager mLocationManager;
     protected SharedPreferences mPref = null;
     protected int accuracy = 10;
 
@@ -34,31 +34,6 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
     static public void unregister() { getInstance()._unregister(); } //Call this in BaseTestCase tear down
 
     static public void unregisterGPS_PROVIDER() { getInstance()._unregister(); }
-
-    static public void setMockLocation(double longitude, double latitude) {
-        getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, 0, -1 , 10f);
-    }
-
-    static public void setMockLocation(double longitude, double latitude , float accuracy) {
-        UiUtils.safeSleep(5);
-        getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, 0, -1, accuracy);
-        UiUtils.safeSleep(5);
-    }
-
-
-    static public void setMockLocation(double longitude, double latitude, double altitude) {
-        getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, altitude, -1,10f);
-    }
-
-    static public void setMockLocation(double longitude, double latitude, double altitude,
-                                       int satellites) {
-        getInstance()._verifyInitiated();
-        getInstance()._setMockLocation(longitude, latitude, altitude, satellites,10f);
-    }
-
 
     static public Location getLocation() {
         return new Location(locationProviderName);
@@ -105,21 +80,24 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
 
 
 
-    protected void _setMockLocation(double longitude, double latitude, double altitude, int satellites , float accuracy) {
+    public static void setMockLocation(testUtils.Location location) {
+
+        UiUtils.safeSleep(3);
         Location mockLocation = new Location(locationProviderName); // a string
-        mockLocation.setLatitude(latitude);  // double
-        mockLocation.setLongitude(longitude);
-        mockLocation.setAltitude(altitude);
-        if (satellites != -1) {
+        mockLocation.setLatitude(location.getLatitude());  // double
+        mockLocation.setLongitude(location.getLongitude());
+        mockLocation.setAltitude(location.getAltitude());
+        if (location.getSatellite() != -1) {
             Bundle bundle = new Bundle();
-            bundle.putInt("satellites", satellites);
+            bundle.putInt("satellites", location.getSatellite());
             mockLocation.setExtras(bundle);
         }
         mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(accuracy);
+        mockLocation.setAccuracy(location.getAccuracy());
 
         mockLocation.setElapsedRealtimeNanos(200);
         LogUITest.info("****************************************");
+        LogUITest.info("Setiing Location .........");
         LogUITest.debug("Provider: "+mockLocation.getProvider());
         //LogUITest.debug("Accuracy is: "+mockLocation.getAccuracy());
         LogUITest.debug("Altitude is: "+mockLocation.getAltitude());
@@ -129,21 +107,13 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
         LogUITest.debug("Latitude: "+mockLocation.getLatitude());
         LogUITest.info("****************************************\n");
 
-        _setMockLocation(mockLocation);
+        mLocationManager.setTestProviderLocation(locationProviderName, mockLocation);
+
+        UiUtils.safeSleep(3);
 
     }
 
-    protected void _setMockLocation(Location mockLocation) {
-        if (!mockLocation.hasAccuracy()) {
-            mockLocation.setAccuracy(accuracy);
-        }
-        if (!mockLocation.hasAltitude()) {
-            mockLocation.setAltitude(0);
-        }
 
-        mLocationManager.setTestProviderLocation(locationProviderName, mockLocation); // actual location bing set
-
-    }
 
 
     protected void _verifyInitiated() {

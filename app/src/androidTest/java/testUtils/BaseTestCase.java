@@ -2,6 +2,7 @@ package testUtils;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -11,6 +12,10 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
+import com.shuttl.location_pings.config.open_lib.LocationsHelper;
+import com.shuttl.location_pings.data.model.entity.GPSLocation;
+import com.shuttl.location_pings.service.LocationPingService;
+import com.shuttl.location_pings.service.LocationSaveService;
 import com.shuttl.packagetest.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +27,7 @@ import org.junit.rules.TestName;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +37,7 @@ import testUtils.mockWebServer.DispatcherUtils;
 import testUtils.mockWebServer.MockWebUtils;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.TestCase.fail;
 
 public class BaseTestCase {
 
@@ -40,7 +47,7 @@ public class BaseTestCase {
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public LocationConfigs locationConfigs;
 
-    public LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
+    public static LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
         @Override
         public void afterSyncLocations(@Nullable List list) {
 
@@ -111,14 +118,6 @@ public class BaseTestCase {
 
         LogUITest.debug("Current GPS PipeLine URL : " + TestConstants.GPS_PIPELINE_URL);
 
-        // Set config
-        locationConfigs =
-                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL
-                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL, TestConstants.ACCURACY_GLOBAL
-                        , TestConstants.BUFFER_SIZE_GLOBAL, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_GLOBAL
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
-                        , TestConstants.NOTIFICATION_ICON_ID);
-
     }
 
 
@@ -156,6 +155,83 @@ public class BaseTestCase {
         LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
         LogUITest.info("\n***** \t\tEND Test: " + testName.getMethodName());
         LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
+
+    }
+
+
+    public List<GPSLocation> fetchDataFromDatabase() {
+
+        List<GPSLocation> gpsLocations = new LinkedList<>();
+        try {
+            gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
+        } catch (Exception e) {
+            LogUITest.debug(e.getMessage());
+        }
+        return gpsLocations;
+    }
+
+
+
+    public void initiateLocationServices(LocationConfigs locationConfigs)
+    {
+        Intent intent = new Intent(BaseTestCase.appContext, LocationPingService.class);
+        intent.setAction("STOP");
+        // Start Both Services Via Init module .
+        LogUITest.debug("Starting 'Save Location Service' & 'Ping Location Service Via Init Module'");
+        LocationsHelper.INSTANCE.initLocationsModule(activityTestRule.getActivity().getApplication(), null, locationConfigs, BaseTestCase.locationPingServiceCallback, intent);
+
+        if (!UiUtils.isServiceRunning(LocationSaveService.class.getName()) || !UiUtils.isServiceRunning(LocationPingService.class.getName()))
+            fail();
+
+        LogUITest.debug("Both Location Services are running");
+    }
+
+
+    public boolean validateDatabaseByComparingLocations(List<Location> mockLocationList) {
+
+        List<GPSLocation> gpsLocationsFromDatabase = fetchDataFromDatabase();
+
+        if (!mockLocationList.isEmpty()) {
+            if (mockLocationList.size() == gpsLocationsFromDatabase.size()) {
+
+                for (int i = 0; i < mockLocationList.size(); i++) {
+                    if (gpsLocationsFromDatabase.get(i).getLatitude() != mockLocationList.get(i).getLatitude() ||
+                            gpsLocationsFromDatabase.get(i).getLongitude() != mockLocationList.get(i).getLongitude() ||
+                            gpsLocationsFromDatabase.get(i).getAccuracy() != mockLocationList.get(i).getAccuracy() ||
+                            !gpsLocationsFromDatabase.get(i).getProvider().equals(mockLocationList.get(i).getProvider())) {
+
+                        LogUITest.debug("Failed to match all values in database");
+
+                        LogUITest.debug(" --------------------     Expected Params : ---------------------");
+                        LogUITest.debug(" Latitude : " + mockLocationList.get(i).getLatitude());
+                        LogUITest.debug(" Longitude : " + mockLocationList.get(i).getLongitude());
+                        LogUITest.debug(" Provider : " + mockLocationList.get(i).getProvider());
+                        LogUITest.debug(" Accuracy : " + mockLocationList.get(i).getAccuracy());
+
+                        LogUITest.debug(" --------------------     Actual Params : ---------------------");
+                        LogUITest.debug(" Latitude : " + gpsLocationsFromDatabase.get(i).getLatitude());
+                        LogUITest.debug(" Longitude : " + gpsLocationsFromDatabase.get(i).getLongitude());
+                        LogUITest.debug(" Provider : " + gpsLocationsFromDatabase.get(i).getProvider());
+                        LogUITest.debug(" Accuracy : " + gpsLocationsFromDatabase.get(i).getAccuracy());
+                        return false;
+                    }
+                }
+
+                return true;
+
+
+            } else {
+                LogUITest.debug("Number of locations in database vs locations set by Mockwebserver are different");
+                LogUITest.debug("Number of Locations mock location set : " + mockLocationList.size());
+                LogUITest.debug("Number of Locations in database : " + gpsLocationsFromDatabase.size());
+                return false;
+
+            }
+        }
+
+        LogUITest.debug("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
+        return false;
+
 
     }
 }

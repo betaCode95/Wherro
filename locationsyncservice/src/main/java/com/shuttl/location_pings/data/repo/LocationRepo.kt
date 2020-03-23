@@ -7,7 +7,10 @@ import com.shuttl.location_pings.config.components.LocationRetrofit
 import com.shuttl.location_pings.data.dao.GPSLocationsDao
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.model.request.SendLocationRequestBody
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class LocationRepo(private val locationsDao: GPSLocationsDao?) {
 
@@ -56,6 +59,7 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
+                    Log.d("SHUTTL_UI" , "Error occured while sending GPS Pings to the backend server" + e.message)
                     e.printStackTrace()
                     callback?.errorWhileSyncLocations(e)
                 }

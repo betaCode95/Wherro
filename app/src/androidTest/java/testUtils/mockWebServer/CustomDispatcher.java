@@ -1,5 +1,7 @@
 package testUtils.mockWebServer;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -18,26 +20,43 @@ public class CustomDispatcher extends Dispatcher {
 
         LogUITest.debug(" ******************** Current request: " + request.getPath() + " *********************");
 
-        LogUITest.debug("Body" + request.getBody());
-        LogUITest.debug("Method" + request.getMethod());
-        LogUITest.debug("getRequestLine" + request.getRequestLine());
-        LogUITest.debug("getBodySize" + request.getBodySize());
-        LogUITest.debug("getUtf8Body" + request.getUtf8Body());
-        LogUITest.debug("getHeaders" + request.getHeaders());
-        LogUITest.debug("encodedQuery" + request.getRequestUrl().encodedQuery());
-        LogUITest.debug("encodedPath" + request.getRequestUrl().encodedPath());
-        LogUITest.debug("query" + request.getRequestUrl().query());
+//        LogUITest.debug("Body" + request.getBody());
+//        LogUITest.debug("Method" + request.getMethod());
+//        LogUITest.debug("getRequestLine" + request.getRequestLine());
+//        LogUITest.debug("getBodySize" + request.getBodySize());
+//        LogUITest.debug("getUtf8Body" + request.getUtf8Body());
+//        LogUITest.debug("getHeaders" + request.getHeaders());
+//        LogUITest.debug("encodedQuery" + request.getRequestUrl().encodedQuery());
+//        LogUITest.debug("encodedPath" + request.getRequestUrl().encodedPath());
+//        LogUITest.debug("query" + request.getRequestUrl().query());
 
 
-        // Get API Response  (Success OR Failure)
-        String apiResponse = getAPIResponse();
+        // Just incase GPS SDK introduces new API , Test Will start failing and automation team will be notified
+        if (request.getPath().contains(TestConstants.GPS_PIPELINE_URL_END_POINT)) {
 
 
-        if (apiResponse != null) {
+            if (!BaseTestCase.edgeCaseResponses.isEmpty()) {
+                if (BaseTestCase.edgeCaseResponses.get("/" + TestConstants.GPS_PIPELINE_URL_END_POINT).equals(TestConstants.RESPONSE_TYPE.DELAYED))
+                {
+                    LogUITest.debug("Dispatching Delayed Response");
+                    return new MockResponse().setBodyDelay(10, TimeUnit.SECONDS).setHeadersDelay(10, TimeUnit.SECONDS);
+                }
 
-            // set and return API RESPONSE
+
+                if (BaseTestCase.edgeCaseResponses.get("/" + TestConstants.GPS_PIPELINE_URL_END_POINT).equals(TestConstants.RESPONSE_TYPE.FAILURE))
+                {
+                    LogUITest.debug("Dispatching Failure Response");
+                    return new MockResponse().setResponseCode(200)
+                            .setBody(PingServiceResponse.FAILURE_RESPONSE);
+                }
+
+            }
+
+            LogUITest.debug("Dispatching Successful Response");
             return new MockResponse().setResponseCode(200)
-                    .setBody(apiResponse);
+                    .setBody(PingServiceResponse.SUCCESS_RESPONSE);
+
+
         }
 
 
@@ -49,17 +68,6 @@ public class CustomDispatcher extends Dispatcher {
         LogUITest.error("++++++++++x`++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         fail();
         return new MockResponse().setResponseCode(404);
-
-    }
-
-    private String getAPIResponse() {
-
-        if (!BaseTestCase.edgeCaseResponses.isEmpty()) {
-            if (BaseTestCase.edgeCaseResponses.get(TestConstants.GPS_PIPELINE_URL).equals(TestConstants.RESPONSE_TYPE.FAILURE))
-                return PingServiceResponse.FAILURE_RESPONSE;
-        }
-
-        return PingServiceResponse.SUCCESS_RESPONSE;
 
     }
 

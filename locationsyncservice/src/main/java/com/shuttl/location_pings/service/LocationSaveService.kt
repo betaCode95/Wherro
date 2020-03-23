@@ -40,8 +40,9 @@ class LocationSaveService : Service() {
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
+
                 if (location != null) {
-                    Log.d("Shuttl_UITest" , "saveLocation is called with Lat : " + location.latitude + " Lng : " + location.longitude)
+                    Log.d("SHUTTL_UI" , "Location Has Changed Lat : " + location.latitude + " Long : " + location.longitude )
                 }
                 saveLocation(location)
             }
