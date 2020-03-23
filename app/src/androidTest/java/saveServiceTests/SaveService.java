@@ -39,7 +39,7 @@ public class SaveService extends BaseTestCase {
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
-        if (testName.getMethodName().equals("verifyBufferSize")) {
+        if (testName.getMethodName().equals("verifyBufferSize") || testName.getMethodName().equals("verifyAddingDuplicateLocations")) {
             // Set config
             locationConfigs =
                     new LocationConfigs(100, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
@@ -144,7 +144,6 @@ public class SaveService extends BaseTestCase {
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
-        UiUtils.safeSleep(20);
 
         // --------------------- Set and Validate Duplicate Location ---------------------
         MockLocationProvider.setMockLocation(loc1);
