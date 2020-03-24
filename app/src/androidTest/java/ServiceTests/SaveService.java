@@ -58,7 +58,7 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        currentTimeStamp = currentTimeStamp + 50;
+        currentTimeStamp = currentTimeStamp + 50; // Added 50 milliseconds
         loc2 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3, currentTimeStamp);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
