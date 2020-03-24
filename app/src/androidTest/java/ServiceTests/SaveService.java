@@ -5,7 +5,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.shuttl.location_pings.config.components.LocationConfigs;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,23 +39,10 @@ public class SaveService extends BaseTestCase {
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
-        if (testName.getMethodName().equals("verifyBufferSize")
-                || testName.getMethodName().equals("verifyAddingDuplicateLocations")) {
-            // Set config
-            locationConfigs =
-                    new LocationConfigs(100, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
-                            , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_SS, TestConstants.ACCURACY_SS
-                            , 3, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_SS
-                            , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
-                            , TestConstants.NOTIFICATION_ICON_ID);
-        }
-
-
         initiateLocationServices(locationConfigs);
 
     }
 
-    @Ignore
     @AutoTest_SaveLocationService
     @Test
     public void verifyTimeCheck() {
@@ -72,15 +58,12 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        currentTimeStamp = currentTimeStamp + 200;
+        currentTimeStamp = currentTimeStamp + 50;
         loc2 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3, currentTimeStamp);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
-
-
-        UiUtils.safeSleep(10);
 
         // --------------------- Set and Validate Third Location ---------------------
         currentTimeStamp = System.currentTimeMillis();
@@ -132,7 +115,7 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(TestConstants.startLatitude+.0001, TestConstants.startLongitude+.0001 , 3);
+        loc2 = new Location(TestConstants.startLatitude + .0001, TestConstants.startLongitude + .0001, 3);
         //mockLocationList.add(loc2);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
@@ -141,13 +124,12 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Third Location ---------------------
-        loc3 = new Location(TestConstants.startLatitude+.01, TestConstants.startLongitude+.01, 3);
+        loc3 = new Location(TestConstants.startLatitude + .01, TestConstants.startLongitude + .01, 3);
         mockLocationList.add(loc3);
         MockLocationProvider.setMockLocation(loc3);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
-
 
 
     }
