@@ -94,13 +94,36 @@ public class SaveService extends BaseTestCase {
 
     }
 
-    @Ignore
+
+    //decimal
+    //places   degrees          distance
+    //-------  -------          --------
+    //0        1                111  km
+    //1        0.1              11.1 km
+    //2        0.01             1.11 km
+    //3        0.001            111  m
+    //4        0.0001           11.1 m
+    //5        0.00001          1.11 m
+    //6        0.000001         11.1 cm
+    //7        0.0000001        1.11 cm
+    //8        0.00000001       1.11 mm
+    //If we were to extend this chart all the way to 13 decimal places:
+    //
+    //decimal
+    //places   degrees          distance
+    //-------  -------          --------
+    //9        0.000000001      111  μm
+    //10       0.0000000001     11.1 μm
+    //11       0.00000000001    1.11 μm
+    //12       0.000000000001   111  nm
+    //13       0.0000000000001  11.1 nm
+
     @AutoTest_SaveLocationService
     @Test
     public void verifyDistanceCheck() {
 
         // --------------------- Set and Validate First Location ---------------------
-        loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
+        loc1 = new Location(TestConstants.startLatitude, TestConstants.startLongitude, 3);
         mockLocationList.add(loc1);
         MockLocationProvider.setMockLocation(loc1);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
@@ -109,28 +132,22 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc2);
+        loc2 = new Location(TestConstants.startLatitude+.0001, TestConstants.startLongitude+.0001 , 3);
+        //mockLocationList.add(loc2);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
-        AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
 
         // --------------------- Set and Validate Third Location ---------------------
-        loc3 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
+        loc3 = new Location(TestConstants.startLatitude+.01, TestConstants.startLongitude+.01, 3);
         mockLocationList.add(loc3);
         MockLocationProvider.setMockLocation(loc3);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
-        AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
 
 
     }
