@@ -71,7 +71,7 @@ public class PingService extends BaseTestCase {
 
         UiUtils.safeSleep(2);
         edgeCaseResponses.put("/" + TestConstants.GPS_PIPELINE_URL_END_POINT, TestConstants.RESPONSE_TYPE.SUCCESS);
-        UiUtils.safeSleep(3);
+        UiUtils.safeSleep(6);
         mockLocationList.remove(0);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
