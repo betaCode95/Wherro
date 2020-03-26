@@ -97,7 +97,6 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
 
         mockLocation.setElapsedRealtimeNanos(200);
         LogUITest.info("****************************************");
-        LogUITest.info("Setiing Location .........");
         LogUITest.debug("Provider: "+mockLocation.getProvider());
         //LogUITest.debug("Accuracy is: "+mockLocation.getAccuracy());
         LogUITest.debug("Altitude is: "+mockLocation.getAltitude());

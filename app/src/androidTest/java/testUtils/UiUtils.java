@@ -8,6 +8,8 @@ import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.location_pings.service.LocationSaveService;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Random;
 
@@ -100,6 +102,17 @@ public class UiUtils {
 
     }
 
+    public static JSONObject convertStringObjectToJsonObject(String jsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            return jsonObject;
+        } catch (Exception e) {
+            LogUITest.debug("Exception Occurred While String to Json Conversion: " + e.getMessage());
+            e.printStackTrace();
 
+        }
+
+        return null;
+    }
 
 }

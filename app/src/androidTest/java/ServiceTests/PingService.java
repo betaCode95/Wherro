@@ -53,8 +53,8 @@ public class PingService extends BaseTestCase {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc1);
         MockLocationProvider.setMockLocation(loc1);
+        mockLocationList.add(loc1);
         AssertUtils.assertTrueV(
                 validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
@@ -63,8 +63,8 @@ public class PingService extends BaseTestCase {
 
         // --------------------- Set and Validate Second Location ---------------------
         loc2 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc2);
         MockLocationProvider.setMockLocation(loc2);
+        mockLocationList.add(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");

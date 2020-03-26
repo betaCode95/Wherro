@@ -41,43 +41,45 @@ import static junit.framework.TestCase.fail;
 
 public class BaseTestCase {
 
+    public Location loc1, loc2, loc3, loc4, loc5;
+    public static List<Location> mockLocationList = new LinkedList<>();
+    public List<GPSLocation> gpsLocationsListFromDatabase;
     public static Map<String, TestConstants.RESPONSE_TYPE> edgeCaseResponses = new HashMap<>();
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
     public static Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public LocationConfigs locationConfigs;
+    public static int currentBatchSize;
 
     public static LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
-        @Override
-        public void afterSyncLocations(@Nullable List list) {
-
-        }
-
         @NotNull
         @Override
         public List beforeSyncLocations(@Nullable List list) {
-            return null;
+            return list;
         }
 
         @Override
-        public void errorWhileSyncLocations(@Nullable Exception error) {
+        public void afterSyncLocations(@Nullable List list) {
+        }
 
+        @Override
+        public void errorWhileSyncLocations(Exception e) {
+            LogUITest.debug("errorWhileSyncLocations : " + e.getMessage());
         }
 
         @Override
         public void serviceStarted() {
-
         }
 
         @Override
         public void serviceStopped() {
-
         }
 
         @Override
         public void serviceStoppedManually() {
-
         }
+
+
     };
 
 
@@ -141,7 +143,7 @@ public class BaseTestCase {
     }
 
     @After
-    public void tearDown() throws IOException {
+    public void tearDown() {
 
         LogUITest.debug("Un-Register MockLocationProvider ...........");
         MockLocationProvider.unregister();
@@ -171,9 +173,8 @@ public class BaseTestCase {
     }
 
 
-
-    public void initiateLocationServices(LocationConfigs locationConfigs)
-    {
+    public void initiateLocationServices(LocationConfigs locationConfigs) {
+        currentBatchSize = locationConfigs.getBatchSize();
         Intent intent = new Intent(BaseTestCase.appContext, LocationPingService.class);
         intent.setAction("STOP");
         // Start Both Services Via Init module .

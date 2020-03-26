@@ -50,8 +50,8 @@ public class SaveService extends BaseTestCase {
         // --------------------- Set and Validate First Location ---------------------
         long currentTimeStamp = System.currentTimeMillis();
         loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3, currentTimeStamp);
-        mockLocationList.add(loc1);
         MockLocationProvider.setMockLocation(loc1);
+        mockLocationList.add(loc1);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
@@ -68,8 +68,8 @@ public class SaveService extends BaseTestCase {
         // --------------------- Set and Validate Third Location ---------------------
         currentTimeStamp = System.currentTimeMillis();
         loc3 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3, currentTimeStamp);
-        mockLocationList.add(loc3);
         MockLocationProvider.setMockLocation(loc3);
+        mockLocationList.add(loc3);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
@@ -107,8 +107,8 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(TestConstants.startLatitude, TestConstants.startLongitude, 3);
-        mockLocationList.add(loc1);
         MockLocationProvider.setMockLocation(loc1);
+        mockLocationList.add(loc1);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
@@ -116,7 +116,6 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate Second Location ---------------------
         loc2 = new Location(TestConstants.startLatitude + .0001, TestConstants.startLongitude + .0001, 3);
-        //mockLocationList.add(loc2);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
@@ -125,8 +124,8 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate Third Location ---------------------
         loc3 = new Location(TestConstants.startLatitude + .01, TestConstants.startLongitude + .01, 3);
-        mockLocationList.add(loc3);
         MockLocationProvider.setMockLocation(loc3);
+        mockLocationList.add(loc3);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
@@ -140,8 +139,8 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc1);
         MockLocationProvider.setMockLocation(loc1);
+        mockLocationList.add(loc1);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
@@ -162,8 +161,8 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc1);
         MockLocationProvider.setMockLocation(loc1);
+        mockLocationList.add(loc1);
         AssertUtils.assertTrueV(
                 validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
@@ -172,25 +171,25 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate Second Location ---------------------
         loc2 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc2);
         MockLocationProvider.setMockLocation(loc2);
+        mockLocationList.add(loc2);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
         // --------------------- Set and Validate Third Location ---------------------
         loc3 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        mockLocationList.add(loc3);
         MockLocationProvider.setMockLocation(loc3);
+        mockLocationList.add(loc3);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
         // --------------------- Set and Validate Fourth Location ---------------------
         loc4 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
+        MockLocationProvider.setMockLocation(loc4);
         mockLocationList.add(loc4);
         mockLocationList.remove(0);
-        MockLocationProvider.setMockLocation(loc4);
         AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");

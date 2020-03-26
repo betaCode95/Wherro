@@ -7,7 +7,8 @@ import testUtils.LogUITest;
 
 public class MockWebUtils {
 
-    private MockWebUtils(){}
+    private MockWebUtils() {
+    }
 
     public static MockWebServer getMockWebServer() {
         return mockWebServer;
@@ -29,12 +30,20 @@ public class MockWebUtils {
     }
 
 
-    public static void stopServer() throws IOException {
+    public static void stopServer() {
         if (mockWebServer != null) {
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@ TEARDOWN : SHUTTING DOWN MOCK WEB SERVER IN MOCK WEB UTILS TEARDOWN @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             LogUITest.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            mockWebServer.shutdown();
+            try {
+                mockWebServer.shutdown();
+            } catch (IOException e) {
+                LogUITest.debug("IOException occurred while shutting down mock web server : " + e.getMessage());
+
+            } catch (Exception e) {
+                LogUITest.debug("Exception occurred while shutting down mock web server : " + e.getMessage());
+
+            }
         }
 
     }
