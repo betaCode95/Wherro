@@ -59,7 +59,6 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
-                    Log.d("SHUTTL_UI" , "Error occured while sending GPS Pings to the backend server" + e.message)
                     e.printStackTrace()
                     callback?.errorWhileSyncLocations(e)
                 }
