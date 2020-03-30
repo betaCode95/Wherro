@@ -85,4 +85,4 @@ lint/tmp/
 # lint/reports/
 
 #idea files
-.idea/misc.xml
+.idea/
