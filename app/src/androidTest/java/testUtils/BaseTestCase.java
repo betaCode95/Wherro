@@ -11,7 +11,6 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
-import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.packagetest.MainActivity;
 import com.shuttl.packagetest.R;
 
@@ -31,7 +30,7 @@ import testUtils.mockWebServer.MockWebUtils;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class BaseTestCase {
-    
+
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
     public LocationConfigs locationConfigs;
@@ -121,8 +120,8 @@ public class BaseTestCase {
     public void tearDown() throws IOException {
         MockLocationProvider.unregister();
 
-        UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
-        UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+        ServiceHelper.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+        ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
         MockWebUtils.stopServer();
 
