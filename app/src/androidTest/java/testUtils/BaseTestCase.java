@@ -15,7 +15,6 @@ import com.shuttl.location_pings.config.components.LocationConfigs;
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.location_pings.service.LocationPingService;
-import com.shuttl.location_pings.service.LocationSaveService;
 import com.shuttl.packagetest.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +44,7 @@ public class BaseTestCase {
     public static List<Location> mockLocationList = new LinkedList<>();
     public List<GPSLocation> gpsLocationsListFromDatabase;
     public static Map<String, TestConstants.RESPONSE_TYPE> edgeCaseResponses = new HashMap<>();
+
     public static Context appContext = InstrumentationRegistry.getInstrumentation().getContext();
     public static Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
     public static UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
@@ -148,9 +148,8 @@ public class BaseTestCase {
         LogUITest.debug("Un-Register MockLocationProvider ...........");
         MockLocationProvider.unregister();
 
-        // Stop Services Individually
-        UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
-        UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+        ServiceHelper.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+        ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
         MockWebUtils.stopServer();
 
@@ -170,21 +169,6 @@ public class BaseTestCase {
             LogUITest.debug(e.getMessage());
         }
         return gpsLocations;
-    }
-
-
-    public void initiateLocationServices(LocationConfigs locationConfigs) {
-        currentBatchSize = locationConfigs.getBatchSize();
-        Intent intent = new Intent(BaseTestCase.appContext, LocationPingService.class);
-        intent.setAction("STOP");
-        // Start Both Services Via Init module .
-        LogUITest.debug("Starting 'Save Location Service' & 'Ping Location Service Via Init Module'");
-        LocationsHelper.INSTANCE.initLocationsModule(activityTestRule.getActivity().getApplication(), null, locationConfigs, BaseTestCase.locationPingServiceCallback, intent);
-
-        if (!UiUtils.isServiceRunning(LocationSaveService.class.getName()) || !UiUtils.isServiceRunning(LocationPingService.class.getName()))
-            fail();
-
-        LogUITest.debug("Both Location Services are running");
     }
 
 

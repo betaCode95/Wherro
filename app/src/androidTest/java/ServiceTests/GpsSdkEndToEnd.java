@@ -12,6 +12,7 @@ import mockLocationUtils.MockLocationProvider;
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.Location;
+import testUtils.ServiceHelper;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
 import testUtils.customAnnotations.AutoTest_Critical;
@@ -34,7 +35,8 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                         , TestConstants.NOTIFICATION_ICON_ID);
 
         // Initiate Both Location Services
-        initiateLocationServices(locationConfigs);
+        ServiceHelper.startBothServicesIfNotRunning(activityTestRule.getActivity().getApplication()
+                , locationConfigs, locationPingServiceCallback, appContext);
 
     }
 

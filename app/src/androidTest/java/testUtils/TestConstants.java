@@ -13,6 +13,7 @@ public class TestConstants {
     public static String GPS_PIPELINE_URL_END_POINT = "sendGps";
     public static String GPS_PIPELINE_URL = MockWebUtils.getMockWebServerUrl() + GPS_PIPELINE_URL_END_POINT;
     public static int NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES = 3;
+    public static int NUMBER_OF_RETRIES_FOR_STARTING_SERVICES = 3;
     public static final int NOTIFICATION_ICON_ID = R.drawable.ic_loc;
 
 
@@ -21,7 +22,6 @@ public class TestConstants {
         FAILURE,
         DELAYED
     }
-
 
 
     // ---------------------------------    LOCATION CONFIG FOR SAVE SERVICE TESTS  -------------------------------------
@@ -36,7 +36,6 @@ public class TestConstants {
     // ---------------------------------    LOCATION CONFIG FOR SAVE SERVICE TESTS  -------------------------------------
 
 
-
     // ---------------------------------    LOCATION CONFIG FOR END TO END FLOW  -------------------------------------
 
     public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS = 100;  // in millis
@@ -49,7 +48,6 @@ public class TestConstants {
     // ---------------------------------    LOCATION CONFIG FOR COMPLETE FLOW  -------------------------------------
 
 
-
     // ---------------------------------    GLOBAL LOCATION CONFIG   -------------------------------------
 
     public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL = 1000;  // in millis
@@ -59,6 +57,7 @@ public class TestConstants {
     public static final int BUFFER_SIZE_GLOBAL = 50;
     public static final int BATCH_SIZE_FOR_PING_SERVICE_GLOBAL = 10;
     public static final int SERVICE_TIMEOUT_GLOBAL = 1800000;  // in millis
+
 
     // ---------------------------------    LOCATION CONFIG FOR COMPLETE FLOW  -------------------------------------
 }

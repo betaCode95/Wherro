@@ -21,6 +21,7 @@ import testUtils.UiUtils;
 import testUtils.customAnnotations.AutoTest_Critical;
 import testUtils.customAnnotations.AutoTest_PingLocationService;
 import testUtils.customAnnotations.AutoTest_SaveLocationService;
+import testUtils.ServiceHelper;
 import testUtils.customAnnotations.AutoTest_StartStopServices;
 
 @RunWith(AndroidJUnit4.class)
@@ -37,8 +38,9 @@ public class StartStopService extends BaseTestCase {
                         , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
                         , TestConstants.NOTIFICATION_ICON_ID);
 
-        UiUtils.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
-        UiUtils.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+
+        ServiceHelper.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
+        ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
     }
 
 
@@ -54,13 +56,13 @@ public class StartStopService extends BaseTestCase {
         LocationsHelper.INSTANCE.initLocationsModule(activityTestRule.getActivity().getApplication(), null, locationConfigs, locationPingServiceCallback, intent);
 
 
-        boolean isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
+        boolean isLocationSaveServiceRunning = ServiceHelper.isServiceRunning(LocationSaveService.class.getName());
 
         AssertUtils.assertTrueV(isLocationSaveServiceRunning,
                 "Failed to start 'Save Location Service'  Via Init Module",
                 "Successfully started 'Save Location Service'  Via Init Module");
 
-        boolean isLocationPingServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
+        boolean isLocationPingServiceRunning = ServiceHelper.isServiceRunning(LocationPingService.class.getName());
 
         AssertUtils.assertTrueV(isLocationPingServiceRunning,
                 "Failed to start 'Ping Location Service' Via Init Module",
@@ -73,13 +75,13 @@ public class StartStopService extends BaseTestCase {
         LogUITest.debug("Stopping 'Save Location Service' & 'Ping Location Service Via Init Module'");
         LocationsHelper.INSTANCE.stopAndClearAll(activityTestRule.getActivity().getApplication());
 
-        isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
+        isLocationSaveServiceRunning = ServiceHelper.isServiceRunning(LocationSaveService.class.getName());
 
         AssertUtils.assertTrueV(!isLocationSaveServiceRunning,
                 "Failed to stop 'Save Location Service'  Via Init Module",
                 "Successfully stopped 'Save Location Service'  Via Init Module");
 
-        isLocationPingServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
+        isLocationPingServiceRunning = ServiceHelper.isServiceRunning(LocationPingService.class.getName());
 
         AssertUtils.assertTrueV(!isLocationPingServiceRunning,
                 "Failed to stop 'Ping Location Service' Via Init Module",
@@ -98,7 +100,7 @@ public class StartStopService extends BaseTestCase {
         LogUITest.debug("Starting 'Ping Location Service'");
         LocationsHelper.INSTANCE.startLocationPingService(activityTestRule.getActivity().getApplication(), null, locationConfigs);
 
-        boolean isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
+        boolean isLocationSaveServiceRunning = ServiceHelper.isServiceRunning(LocationPingService.class.getName());
 
         AssertUtils.assertTrueV(isLocationSaveServiceRunning,
                 "Failed to start 'Ping Location Service'",
@@ -109,7 +111,7 @@ public class StartStopService extends BaseTestCase {
         LogUITest.debug("Stopping 'Ping Location Service'");
         LocationsHelper.INSTANCE.stopLocationPingService(activityTestRule.getActivity().getApplication());
 
-        boolean isServiceRunning = UiUtils.isServiceRunning(LocationPingService.class.getName());
+        boolean isServiceRunning = ServiceHelper.isServiceRunning(LocationPingService.class.getName());
 
         AssertUtils.assertTrueV(!isServiceRunning,
                 "Failed to stop 'Ping Location Service'",
@@ -127,7 +129,7 @@ public class StartStopService extends BaseTestCase {
         LogUITest.debug("Starting 'Save Location Service'");
         LocationsHelper.INSTANCE.startLocationSaveService(activityTestRule.getActivity().getApplication(), locationConfigs);
 
-        boolean isLocationSaveServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
+        boolean isLocationSaveServiceRunning = ServiceHelper.isServiceRunning(LocationSaveService.class.getName());
 
         AssertUtils.assertTrueV(isLocationSaveServiceRunning,
                 "Failed to start 'Save Location Service'",
@@ -137,7 +139,7 @@ public class StartStopService extends BaseTestCase {
         LogUITest.debug("Stopping 'Save Location Service'");
         LocationsHelper.INSTANCE.stopLocationSaveService(activityTestRule.getActivity().getApplication());
 
-        boolean isServiceRunning = UiUtils.isServiceRunning(LocationSaveService.class.getName());
+        boolean isServiceRunning = ServiceHelper.isServiceRunning(LocationSaveService.class.getName());
 
         AssertUtils.assertTrueV(!isServiceRunning,
                 "Failed to stop 'Save Location Service'",

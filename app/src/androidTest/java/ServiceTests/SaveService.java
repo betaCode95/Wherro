@@ -15,6 +15,7 @@ import mockLocationUtils.MockLocationProvider;
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.Location;
+import testUtils.ServiceHelper;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
 import testUtils.customAnnotations.AutoTest_SaveLocationService;
@@ -39,7 +40,9 @@ public class SaveService extends BaseTestCase {
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
-        initiateLocationServices(locationConfigs);
+        // Initiate Both Location Services
+        ServiceHelper.startBothServicesIfNotRunning(activityTestRule.getActivity().getApplication()
+                , locationConfigs, locationPingServiceCallback, appContext);
 
     }
 
