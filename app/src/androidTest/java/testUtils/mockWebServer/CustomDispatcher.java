@@ -33,7 +33,7 @@ public class CustomDispatcher extends Dispatcher {
         LogUITest.debug(" ******************** Current request: " + request.getPath() + " *********************");
 
         // Convert Actual Request Body to Json Object
-        JSONObject actualRequestBodyAsJsonObject = UiUtils.convertStringObjectToJsonObject(request.getBody().readUtf8());
+        JSONObject actualRequestBodyAsJsonObject = UiUtils.convertStringJsonToJsonObject(request.getBody().readUtf8());
         // Convert Expected Request Body to Json Object
         JSONObject expectedRequestBodyAsJsonObject = convertListOfLocationsIntoJsonObject(BaseTestCase.mockLocationList, BaseTestCase.currentBatchSize);
 
@@ -127,8 +127,8 @@ public class CustomDispatcher extends Dispatcher {
                 // Validate if number of location objects are same in expected and actual request body
                 if (expectedRequestBodyOfSyncRequest.optJSONArray(expectedJsonCurrentKey).length() == actualRequestBodyOfSyncRequest.optJSONArray(actualJsonCurrentKey).length()) {
                     for (int i = 0; i < expectedRequestBodyOfSyncRequest.optJSONArray(expectedJsonCurrentKey).length(); i++) {
-                        JSONObject currentLocationObjectOfExpectedBodyJson = UiUtils.convertStringObjectToJsonObject(expectedRequestBodyOfSyncRequest.optJSONArray(expectedJsonCurrentKey).optString(i));
-                        JSONObject currentLocationObjectOfActualBodyJson = UiUtils.convertStringObjectToJsonObject(actualRequestBodyOfSyncRequest.optJSONArray(actualJsonCurrentKey).optString(i));
+                        JSONObject currentLocationObjectOfExpectedBodyJson = UiUtils.convertStringJsonToJsonObject(expectedRequestBodyOfSyncRequest.optJSONArray(expectedJsonCurrentKey).optString(i));
+                        JSONObject currentLocationObjectOfActualBodyJson = UiUtils.convertStringJsonToJsonObject(actualRequestBodyOfSyncRequest.optJSONArray(actualJsonCurrentKey).optString(i));
 
                         if (!currentLocationObjectOfExpectedBodyJson.get("accuracy").equals(currentLocationObjectOfActualBodyJson.get("accuracy"))) {
                             LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");

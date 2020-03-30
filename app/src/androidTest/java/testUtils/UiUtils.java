@@ -102,7 +102,7 @@ public class UiUtils {
 
     }
 
-    public static JSONObject convertStringObjectToJsonObject(String jsonString) {
+    public static JSONObject convertStringJsonToJsonObject(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             return jsonObject;
