@@ -7,10 +7,7 @@ import com.shuttl.location_pings.config.components.LocationRetrofit
 import com.shuttl.location_pings.data.dao.GPSLocationsDao
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.model.request.SendLocationRequestBody
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class LocationRepo(private val locationsDao: GPSLocationsDao?) {
 
