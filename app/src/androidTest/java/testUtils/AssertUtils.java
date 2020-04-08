@@ -1,5 +1,7 @@
 package testUtils;
 
+import testUtils.mockWebServer.NetworkManager;
+
 import static org.junit.Assert.fail;
 
 public class AssertUtils {
@@ -11,12 +13,22 @@ public class AssertUtils {
      * @return
      */
     public static boolean assertTrueV(boolean condition, String failureMessage, String successMessage) {
+        if (NetworkManager.requestInspectionFailed){
+            LogUITest.error("*********************************************************************************************");
+            LogUITest.error("*********************************************************************************************");
+            LogUITest.error("****************************** REQUEST VALIDATION FAILURE  ******************************");
+            LogUITest.error("****************************** CLOSE MOCK WEB SERVER       ******************************");
+            LogUITest.error("*********************************************************************************************");
+            LogUITest.error("*********************************************************************************************");
+            fail("************************ REQUEST INSPECTION FAILURE  ***********************");
+            return false;
+        }
         if (condition) {
             LogUITest.debug(successMessage);
             return true;
         } else {
             LogUITest.error(failureMessage);
-            fail(); //todo replace this with a custom Supreme fail that'll eventually have send feedback and other fail shenanigans
+            fail(failureMessage);
             return false;
         }
     }

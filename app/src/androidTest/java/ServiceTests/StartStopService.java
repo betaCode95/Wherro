@@ -16,12 +16,11 @@ import org.junit.runner.RunWith;
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.LogUITest;
+import testUtils.ServiceHelper;
 import testUtils.TestConstants;
-import testUtils.UiUtils;
 import testUtils.customAnnotations.AutoTest_Critical;
 import testUtils.customAnnotations.AutoTest_PingLocationService;
 import testUtils.customAnnotations.AutoTest_SaveLocationService;
-import testUtils.ServiceHelper;
 import testUtils.customAnnotations.AutoTest_StartStopServices;
 
 @RunWith(AndroidJUnit4.class)
@@ -35,7 +34,7 @@ public class StartStopService extends BaseTestCase {
                 new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL
                         , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL, TestConstants.ACCURACY_GLOBAL
                         , TestConstants.BUFFER_SIZE_GLOBAL, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_GLOBAL
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL, TestConstants.GPS_PIPELINE_URL
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 

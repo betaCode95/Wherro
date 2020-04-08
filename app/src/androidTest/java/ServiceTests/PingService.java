@@ -1,5 +1,7 @@
 package ServiceTests;
 
+import android.app.Application;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.shuttl.location_pings.config.components.LocationConfigs;
@@ -9,12 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import mockLocationUtils.MockLocationProvider;
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
+import testUtils.DBHelper;
 import testUtils.Location;
 import testUtils.ServiceHelper;
 import testUtils.TestConstants;
@@ -24,9 +25,9 @@ import testUtils.customAnnotations.AutoTest_PingLocationService;
 
 @RunWith(AndroidJUnit4.class)
 public class PingService extends BaseTestCase {
-    List<GPSLocation> gpsLocationsFromDatabase;
-    Location loc1, loc2;
-    List<Location> mockLocationList = new LinkedList<>();
+
+    Application mainApplication;
+    List<GPSLocation> gpsLocationsCurrentlyInDatabase;
 
     @Before
     public void setUp() {
@@ -36,16 +37,19 @@ public class PingService extends BaseTestCase {
 
         // Set config
         locationConfigs =
-                new LocationConfigs(100, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
-                        , 7000, TestConstants.ACCURACY_SS
-                        , 3, 1
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, "", TestConstants.GPS_PIPELINE_URL
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_PS
+                        , TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_PS
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_PS, TestConstants.ACCURACY_PS
+                        , TestConstants.BUFFER_SIZE_PS, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_PS
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL, TestConstants.GPS_PIPELINE_URL
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
         // Initiate Both Location Services
         ServiceHelper.startBothServicesIfNotRunning(activityTestRule.getActivity().getApplication()
                 , locationConfigs, locationPingServiceCallback, appContext);
+
+        mainApplication = activityTestRule.getActivity().getApplication();
 
     }
 
@@ -55,34 +59,33 @@ public class PingService extends BaseTestCase {
     public void verifyFailedResponseOfPingService() {
 
         // --------------------- Set and Validate First Location ---------------------
-        loc1 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        MockLocationProvider.setMockLocation(loc1);
-        mockLocationList.add(loc1);
+        loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
-                validateDatabaseByComparingLocations(mockLocationList),
+                DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(UiUtils.randomGenerator(1, 90), UiUtils.randomGenerator(1, 90), 3);
-        MockLocationProvider.setMockLocation(loc2);
-        mockLocationList.add(loc2);
-        AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
+        loc2 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
+        AssertUtils.assertTrueV(
+                DBHelper.setLocationAndValidateDB(loc2, mainApplication),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
         edgeCaseResponses.put("/" + TestConstants.GPS_PIPELINE_URL_END_POINT, TestConstants.RESPONSE_TYPE.SUCCESS);
         UiUtils.safeSleep(5);
         mockLocationList.remove(0);
-        AssertUtils.assertTrueV(validateDatabaseByComparingLocations(mockLocationList),
+        AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList , mainApplication),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 
 
         UiUtils.safeSleep(6);
-        gpsLocationsFromDatabase = fetchDataFromDatabase();
-        AssertUtils.assertTrueV(gpsLocationsFromDatabase.isEmpty(),
+        gpsLocationsCurrentlyInDatabase = DBHelper.fetchGpsDataFromDatabase(mainApplication);
+        AssertUtils.assertTrueV(gpsLocationsCurrentlyInDatabase.isEmpty(),
                 "Database state does not match with the desired state",
                 "Successfully validated expected database state ");
 

@@ -2,7 +2,6 @@ package testUtils;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -12,9 +11,7 @@ import androidx.test.uiautomator.UiDevice;
 
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback;
 import com.shuttl.location_pings.config.components.LocationConfigs;
-import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.data.model.entity.GPSLocation;
-import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.packagetest.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +20,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,16 +30,15 @@ import java.util.List;
 import java.util.Map;
 
 import mockLocationUtils.MockLocationProvider;
-import testUtils.mockWebServer.CustomDispatcher;
 import testUtils.mockWebServer.DispatcherUtils;
 import testUtils.mockWebServer.MockWebUtils;
+import testUtils.mockWebServer.NetworkManager;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.TestCase.fail;
 
 public class BaseTestCase {
 
-    public Location loc1, loc2, loc3, loc4, loc5;
+    public static Location loc1, loc2, loc3, loc4, loc5;
     public static List<Location> mockLocationList = new LinkedList<>();
     public List<GPSLocation> gpsLocationsListFromDatabase;
     public static Map<String, TestConstants.RESPONSE_TYPE> edgeCaseResponses = new HashMap<>();
@@ -89,6 +87,29 @@ public class BaseTestCase {
             Manifest.permission.ACCESS_COARSE_LOCATION
     );
 
+    @Rule
+    public TestWatcher testWatcher = new TestWatcher() {
+        @Override
+        protected void succeeded(Description description) {
+
+            LogUITest.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            LogUITest.info("@@@@@@@@@@@@@@@@@@@@@@@@    TEST SUCCESS: " + description.getMethodName() + "   @@@@@@@@@@@@@@@@@@@@@@@@");
+            LogUITest.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+
+            super.succeeded(description);
+        }
+
+        @Override
+        protected void failed(Throwable e, Description description) {
+            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@     TEST FAILED: " + description.getMethodName() + " BECAUSE : " + e.getMessage());
+            LogUITest.error("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+
+            super.failed(e, description);
+        }
+
+    };
+
 
     @Rule
     public TestName testName = new TestName();
@@ -107,7 +128,7 @@ public class BaseTestCase {
         MockWebUtils.startServer();
 
         LogUITest.debug("Setting Dispatcher ...........");
-        DispatcherUtils.setDispacher(new CustomDispatcher());
+        DispatcherUtils.setDispacher(new NetworkManager());
 
         LogUITest.debug("Initiating MockLocationProvider ...........");
         MockLocationProvider.init(targetContext); // get app under test context
@@ -153,70 +174,8 @@ public class BaseTestCase {
 
         MockWebUtils.stopServer();
 
-        LogUITest.debug("\n***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****");
-        LogUITest.info("\n***** \t\tEND Test: " + testName.getMethodName());
-        LogUITest.debug("***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****\n");
-
     }
 
 
-    public List<GPSLocation> fetchDataFromDatabase() {
 
-        List<GPSLocation> gpsLocations = new LinkedList<>();
-        try {
-            gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(activityTestRule.getActivity().getApplication());
-        } catch (Exception e) {
-            LogUITest.debug(e.getMessage());
-        }
-        return gpsLocations;
-    }
-
-
-    public boolean validateDatabaseByComparingLocations(List<Location> mockLocationList) {
-
-        List<GPSLocation> gpsLocationsFromDatabase = fetchDataFromDatabase();
-
-        if (!mockLocationList.isEmpty()) {
-            if (mockLocationList.size() == gpsLocationsFromDatabase.size()) {
-
-                for (int i = 0; i < mockLocationList.size(); i++) {
-                    if (gpsLocationsFromDatabase.get(i).getLatitude() != mockLocationList.get(i).getLatitude() ||
-                            gpsLocationsFromDatabase.get(i).getLongitude() != mockLocationList.get(i).getLongitude() ||
-                            gpsLocationsFromDatabase.get(i).getAccuracy() != mockLocationList.get(i).getAccuracy() ||
-                            !gpsLocationsFromDatabase.get(i).getProvider().equals(mockLocationList.get(i).getProvider())) {
-
-                        LogUITest.debug("Failed to match all values in database");
-
-                        LogUITest.debug(" --------------------     Expected Params : ---------------------");
-                        LogUITest.debug(" Latitude : " + mockLocationList.get(i).getLatitude());
-                        LogUITest.debug(" Longitude : " + mockLocationList.get(i).getLongitude());
-                        LogUITest.debug(" Provider : " + mockLocationList.get(i).getProvider());
-                        LogUITest.debug(" Accuracy : " + mockLocationList.get(i).getAccuracy());
-
-                        LogUITest.debug(" --------------------     Actual Params : ---------------------");
-                        LogUITest.debug(" Latitude : " + gpsLocationsFromDatabase.get(i).getLatitude());
-                        LogUITest.debug(" Longitude : " + gpsLocationsFromDatabase.get(i).getLongitude());
-                        LogUITest.debug(" Provider : " + gpsLocationsFromDatabase.get(i).getProvider());
-                        LogUITest.debug(" Accuracy : " + gpsLocationsFromDatabase.get(i).getAccuracy());
-                        return false;
-                    }
-                }
-
-                return true;
-
-
-            } else {
-                LogUITest.debug("Number of locations in database vs locations set by Mockwebserver are different");
-                LogUITest.debug("Number of Locations mock location set : " + mockLocationList.size());
-                LogUITest.debug("Number of Locations in database : " + gpsLocationsFromDatabase.size());
-                return false;
-
-            }
-        }
-
-        LogUITest.debug("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
-        return false;
-
-
-    }
 }
