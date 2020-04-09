@@ -14,6 +14,7 @@ import testUtils.UiUtils;
 public class DispatcherUtils {
 
     public static Dispatcher currentDispatcher;
+
     public static void setDispacher(Dispatcher mDispacher) {
         LogUITest.debug("Setting up Response_Dispatcher : " + mDispacher.getClass().getSimpleName());
         MockWebUtils.getMockWebServer().setDispatcher(mDispacher);
@@ -22,7 +23,7 @@ public class DispatcherUtils {
     }
 
 
-    public static boolean compareLocationJsonObjects(JSONObject actualRequestBodyOfSyncRequest, JSONObject expectedRequestBodyOfSyncRequest) throws JSONException {
+    public static boolean compareLocationJsonObjects(JSONObject actualRequestBodyOfSyncRequest, JSONObject expectedRequestBodyOfSyncRequest) {
 
         String expectedJsonCurrentKey, actualJsonCurrentKey;
 
@@ -51,33 +52,41 @@ public class DispatcherUtils {
                         JSONObject currentLocationObjectOfExpectedBodyJson = UiUtils.convertStringJsonToJsonObject(expectedRequestBodyOfSyncRequest.optJSONArray(expectedJsonCurrentKey).optString(i));
                         JSONObject currentLocationObjectOfActualBodyJson = UiUtils.convertStringJsonToJsonObject(actualRequestBodyOfSyncRequest.optJSONArray(actualJsonCurrentKey).optString(i));
 
-                        if (!currentLocationObjectOfExpectedBodyJson.get("accuracy").equals(currentLocationObjectOfActualBodyJson.get("accuracy"))) {
-                            LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
-                            LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
-                            LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
-                            return false;
+                        try {
+                            if (!currentLocationObjectOfExpectedBodyJson.get("accuracy").equals(currentLocationObjectOfActualBodyJson.get("accuracy"))) {
+                                LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
+                                LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
+                                LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
+                                return false;
 
-                        }
-                        if (!currentLocationObjectOfExpectedBodyJson.get("latitude").equals(currentLocationObjectOfActualBodyJson.get("latitude"))) {
-                            LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
-                            LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
-                            LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
-                            return false;
+                            }
+                            if (!currentLocationObjectOfExpectedBodyJson.get("latitude").equals(currentLocationObjectOfActualBodyJson.get("latitude"))) {
+                                LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
+                                LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
+                                LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
+                                return false;
 
-                        }
-                        if (!currentLocationObjectOfExpectedBodyJson.get("longitude").equals(currentLocationObjectOfActualBodyJson.get("longitude"))) {
-                            LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
-                            LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
-                            LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
-                            return false;
+                            }
+                            if (!currentLocationObjectOfExpectedBodyJson.get("longitude").equals(currentLocationObjectOfActualBodyJson.get("longitude"))) {
+                                LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
+                                LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
+                                LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
+                                return false;
 
-                        }
-                        if (!currentLocationObjectOfExpectedBodyJson.get("provider").equals(currentLocationObjectOfActualBodyJson.get("provider"))) {
-                            LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
-                            LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
-                            LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
-                            return false;
+                            }
+                            if (!currentLocationObjectOfExpectedBodyJson.get("provider").equals(currentLocationObjectOfActualBodyJson.get("provider"))) {
+                                LogUITest.debug("'Accuracy' of " + i + 1 + " Location is different");
+                                LogUITest.debug("Expected 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfExpectedBodyJson.get("accuracy"));
+                                LogUITest.debug("Actual 'Accuracy' of " + i + 1 + " Location is " + currentLocationObjectOfActualBodyJson.get("accuracy"));
+                                return false;
 
+                            }
+                        } catch (JSONException e) {
+                            LogUITest.debug("JSONException occurred while comparing compareLocationJsonObjects " + e.getMessage());
+                            return false;
+                        } catch (Exception e) {
+                            LogUITest.debug("Exception occurred while comparing compareLocationJsonObjects " + e.getMessage());
+                            return false;
                         }
                     }
 

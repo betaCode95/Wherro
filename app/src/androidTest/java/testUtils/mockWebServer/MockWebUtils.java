@@ -3,7 +3,6 @@ package testUtils.mockWebServer;
 import java.io.IOException;
 
 import okhttp3.mockwebserver.MockWebServer;
-import testUtils.LogUITest;
 
 public class MockWebUtils {
 
@@ -30,14 +29,9 @@ public class MockWebUtils {
     }
 
 
-    public static void stopServer() {
+    public static void stopServer() throws IOException {
         if (mockWebServer != null) {
-            try {
-                mockWebServer.shutdown();
-            } catch (IOException e) {
-                LogUITest.error("");
-                e.printStackTrace();
-            }
+            mockWebServer.shutdown();
         }
 
 
