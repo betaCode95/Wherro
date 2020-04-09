@@ -14,10 +14,11 @@ import testUtils.PingServiceResponse;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
 
-import static junit.framework.TestCase.fail;
-
 public class NetworkManager extends Dispatcher {
 
+
+    public static boolean apiResponseNotFoundFailure = false;
+    public static boolean requestInspectionFailure = false;
 
     @Override
     public MockResponse dispatch(RecordedRequest request) {
@@ -29,18 +30,15 @@ public class NetworkManager extends Dispatcher {
         // Convert Expected Request Body to Json Object
         JSONObject expectedRequestBodyAsJsonObject = DispatcherUtils.convertListOfLocationsIntoJsonObject(BaseTestCase.mockLocationList, BaseTestCase.currentBatchSize);
 
-        try
-        {
-            AssertUtils.assertRequestInspectionTrueV((DispatcherUtils.compareLocationJsonObjects(actualRequestBodyAsJsonObject , expectedRequestBodyAsJsonObject)),
-                    "Locations Data is as expected in current sync request");
-        }catch (AssertionError e)
-        {
-            BaseTestCase.requestInspectionFailure = true;
-            new BaseTestCase().wrapUpTestSetup();
+        try {
+            AssertUtils.assertNetworkManagerTrueV((DispatcherUtils.compareLocationJsonObjects(actualRequestBodyAsJsonObject, expectedRequestBodyAsJsonObject)),
+                    "Locations Data is different than expected");
+        } catch (AssertionError e) {
+            requestInspectionFailure = true;
         }
 
         // Just in case GPS SDK introduces new API , Test Will start failing and automation team will be notified
-        if (request.getPath().contains(TestConstants.GPS_PIPELINE_URL_END_POINT)) {
+        if (request.getPath().contains(TestConstants.GPS_PIPELINE_URL)) {
 
 
             if (!BaseTestCase.edgeCaseResponses.isEmpty()) {
@@ -67,14 +65,16 @@ public class NetworkManager extends Dispatcher {
         }
 
 
-        LogUITest.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        LogUITest.error("** ** ** IN " + DispatcherUtils.currentDispatcher.getClass().getSimpleName() + " : NO APPROPRIATE RESPONSE FOUND !!! ** ** **");
-        LogUITest.error("PATH is: " + request.getPath());
-        LogUITest.error("URL is : " + request.getRequestLine());
-        LogUITest.error("** ** ** IN " + DispatcherUtils.currentDispatcher.getClass().getSimpleName() + " : NO APPROPRIATE RESPONSE FOUND !!! ** ** **");
-        LogUITest.error("++++++++++x`++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        fail();
-        return new MockResponse().setResponseCode(404);
+        try {
+            AssertUtils.assertNetworkManagerTrueV(request.getPath().contains(TestConstants.GPS_PIPELINE_URL),
+                    "***************** NO APPROPRIATE RESPONSE FOUND for " + request.getPath() + " !!! *****************");
+            return new MockResponse().setResponseCode(404);
+        } catch (AssertionError e) {
+            apiResponseNotFoundFailure = true ;
+            return new MockResponse().setResponseCode(404);
+
+        }
+
 
     }
 

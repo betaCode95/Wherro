@@ -40,7 +40,6 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 
 public class BaseTestCase extends TestCase {
 
-    public static boolean requestInspectionFailure = false ;
     public static Location loc1, loc2, loc3, loc4, loc5;
     public static List<Location> mockLocationList = new LinkedList<>();
     public List<GPSLocation> gpsLocationsListFromDatabase;
