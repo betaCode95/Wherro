@@ -3,6 +3,7 @@ package testUtils.mockWebServer;
 import java.io.IOException;
 
 import okhttp3.mockwebserver.MockWebServer;
+import testUtils.LogUITest;
 
 public class MockWebUtils {
 
@@ -31,6 +32,7 @@ public class MockWebUtils {
 
     public static void stopServer() throws IOException {
         if (mockWebServer != null) {
+            LogUITest.debug("********************** TEARDOWN : SHUTTING DOWN MOCK WEB SERVER IN MOCK WEB UTILS TEARDOWN  **********************");
             mockWebServer.shutdown();
         }
 

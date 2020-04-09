@@ -14,6 +14,8 @@ import com.shuttl.location_pings.config.components.LocationConfigs;
 import com.shuttl.location_pings.data.model.entity.GPSLocation;
 import com.shuttl.packagetest.MainActivity;
 
+import junit.framework.TestCase;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.After;
@@ -36,8 +38,9 @@ import testUtils.mockWebServer.NetworkManager;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
-public class BaseTestCase {
+public class BaseTestCase extends TestCase {
 
+    public static boolean requestInspectionFailure = false ;
     public static Location loc1, loc2, loc3, loc4, loc5;
     public static List<Location> mockLocationList = new LinkedList<>();
     public List<GPSLocation> gpsLocationsListFromDatabase;
@@ -164,7 +167,23 @@ public class BaseTestCase {
     }
 
     @After
-    public void tearDown() {
+    public void wrapUpTestSetup() {
+
+
+        try {
+            tearDown();
+            MockWebUtils.stopServer();
+        } catch (IOException e) {
+            LogUITest.error("*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***");
+            LogUITest.error("** FAILURE : UI Test Base Case failed to teardown MockWebUtils ! : " + e.getMessage());
+            LogUITest.error("*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***");
+            e.printStackTrace();
+        } catch (Exception e) {
+            LogUITest.error("*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***");
+            LogUITest.error("** FAILURE : Failed to teardown super.tearDown " + e.getMessage());
+            LogUITest.error("*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***");
+            e.printStackTrace();
+        }
 
         LogUITest.debug("Un-Register MockLocationProvider ...........");
         MockLocationProvider.unregister();
@@ -172,8 +191,11 @@ public class BaseTestCase {
         ServiceHelper.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
 
-        MockWebUtils.stopServer();
+    }
 
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
     }
 
 

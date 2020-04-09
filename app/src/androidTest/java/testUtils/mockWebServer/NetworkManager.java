@@ -1,8 +1,5 @@
 package testUtils.mockWebServer;
 
-import junit.framework.AssertionFailedError;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
@@ -10,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
+import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.LogUITest;
 import testUtils.PingServiceResponse;
@@ -19,10 +17,6 @@ import testUtils.UiUtils;
 import static junit.framework.TestCase.fail;
 
 public class NetworkManager extends Dispatcher {
-
-    public static boolean requestInspectionFailed = false;
-    boolean exceptionOccurredWhileComparingRequestObjects = false;
-    boolean requestObjectsAreDifferent = false;
 
 
     @Override
@@ -35,25 +29,14 @@ public class NetworkManager extends Dispatcher {
         // Convert Expected Request Body to Json Object
         JSONObject expectedRequestBodyAsJsonObject = DispatcherUtils.convertListOfLocationsIntoJsonObject(BaseTestCase.mockLocationList, BaseTestCase.currentBatchSize);
 
-        try {
-            if (!DispatcherUtils.compareLocationJsonObjects(actualRequestBodyAsJsonObject, expectedRequestBodyAsJsonObject)) {
-                requestObjectsAreDifferent = true;
-            }
-        } catch (JSONException e) {
-            exceptionOccurredWhileComparingRequestObjects = true;
-            LogUITest.debug("JSONException occurred while comparing compareLocationJsonObjects " + e.getMessage());
-        } catch (Exception e) {
-            exceptionOccurredWhileComparingRequestObjects = true;
-            LogUITest.debug("Exception occurred while comparing compareLocationJsonObjects " + e.getMessage());
-        }
-
-        try {
-            if (exceptionOccurredWhileComparingRequestObjects || requestObjectsAreDifferent)
-                fail();
-        } catch (AssertionFailedError e) {
-            requestInspectionFailed = true;
-            new BaseTestCase().tearDown();
-            LogUITest.debug("Actual & Expected Request body are different : " + e.getMessage());
+        try
+        {
+            AssertUtils.assertRequestInspectionTrueV((DispatcherUtils.compareLocationJsonObjects(actualRequestBodyAsJsonObject , expectedRequestBodyAsJsonObject)),
+                    "Locations Data is as expected in current sync request");
+        }catch (AssertionError e)
+        {
+            BaseTestCase.requestInspectionFailure = true;
+            new BaseTestCase().wrapUpTestSetup();
         }
 
         // Just in case GPS SDK introduces new API , Test Will start failing and automation team will be notified

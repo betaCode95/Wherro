@@ -112,7 +112,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
         // There were total 5 locations we had set using mockLocation .
         // 3 were Dispatched in last call
         // Remaining will be now.
-        mockLocationList.clear();
+        // Therefore, There should not be any locations left in database
         gpsLocationsListFromDatabase = DBHelper.fetchGpsDataFromDatabase(mainApplication);
         AssertUtils.assertTrueV(gpsLocationsListFromDatabase.isEmpty(),
                 "Database state does not match with the desired state",
