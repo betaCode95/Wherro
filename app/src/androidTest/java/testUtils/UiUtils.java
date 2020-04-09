@@ -33,16 +33,17 @@ public class UiUtils {
     }
 
     public static JSONObject convertStringJsonToJsonObject(String jsonString) {
+
+        JSONObject jsonObject = null;
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
+            jsonObject = new JSONObject(jsonString);
             return jsonObject;
         } catch (Exception e) {
             LogUITest.debug("Exception Occurred While String to Json Conversion: " + e.getMessage());
             e.printStackTrace();
 
         }
-
-        return null;
+        return jsonObject;
     }
 
 
