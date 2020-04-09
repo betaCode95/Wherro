@@ -57,8 +57,8 @@ public class SaveService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3, currentTimeStamp);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate First Location with the Database",
+                "Successfully set and validated First Location with the database ");
 
 
         // --------------------- Set and Validate Second Location ---------------------
@@ -67,8 +67,8 @@ public class SaveService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3, currentTimeStamp);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! Database store locations having difference in time less than the expected difference set in configuration",
+                "Successfully validated that database store valid locations only");
 
         // --------------------- Set and Validate Third Location ---------------------
         currentTimeStamp = System.currentTimeMillis();
@@ -76,8 +76,8 @@ public class SaveService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3, currentTimeStamp);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! Database store locations having difference in time greater than the expected difference set in configuration",
+                "Successfully validated that database store valid locations only");
 
 
     }
@@ -114,24 +114,24 @@ public class SaveService extends BaseTestCase {
         loc1 = new Location(TestConstants.startLatitude, TestConstants.startLongitude, 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate First Location with the Database",
+                "Successfully set and validated First Location with the database ");
 
 
         // --------------------- Set and Validate Second Location ---------------------
         loc2 = new Location(TestConstants.startLatitude + .0001, TestConstants.startLongitude + .0001, 3);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! Database store locations having difference in distance less than the expected difference set in configuration",
+                "Successfully validated that database store valid locations only");
 
 
         // --------------------- Set and Validate Third Location ---------------------
         loc3 = new Location(TestConstants.startLatitude + .01, TestConstants.startLongitude + .01, 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! Database store locations having difference in distance greater than the expected difference set in configuration",
+                "Successfully validated that database store valid locations only");
 
 
     }
@@ -145,15 +145,15 @@ public class SaveService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate First Location with the Database",
+                "Successfully set and validated First Location with the database ");
 
 
         // --------------------- Set and Validate Duplicate Location ---------------------
         MockLocationProvider.setMockLocation(loc1);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! Duplicate locations exists in database",
+                "Test Passed !! Successfully validated that duplicate locations are not stored in database");
 
     }
 
@@ -167,8 +167,8 @@ public class SaveService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate First Location with the Database",
+                "Successfully set and validated First Location with the database ");
 
 
         // --------------------- Set and Validate Second Location ---------------------
@@ -176,16 +176,17 @@ public class SaveService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Second Location with the Database",
+                "Successfully set and validated Second Location with the database ");
+
 
         // --------------------- Set and Validate Third Location ---------------------
         loc3 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Third Location with the Database",
+                "Successfully set and validated Third Location with the database ");
 
         // --------------------- Set and Validate Fourth Location ---------------------
         loc4 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
@@ -194,8 +195,8 @@ public class SaveService extends BaseTestCase {
         mockLocationList.add(loc4);
         mockLocationList.remove(0);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! Old locations are not getting replaced with the recent locations if buffer size has reached.",
+                "Test Passed !! Old locations are getting replaced with the recent locations if buffer size has reached.");
 
 
     }

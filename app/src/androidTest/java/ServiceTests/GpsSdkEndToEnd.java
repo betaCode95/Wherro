@@ -56,8 +56,8 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate First Location with the Database",
+                "Successfully set and validated First Location with the database ");
 
 
         // --------------------- Set and Validate Second Location ---------------------
@@ -65,8 +65,8 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Second Location with the Database",
+                "Successfully set and validated Second Location with the database ");
 
 
         // --------------------- Set and Validate Third Location ---------------------
@@ -74,8 +74,9 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Third Location with the Database",
+                "Successfully set and validated Third Location with the database ");
+
 
 
         // --------------------- Set and Validate Fourth Location ---------------------
@@ -83,8 +84,9 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc4, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Fourth Location with the Database",
+                "Successfully set and validated Fourth Location with the database ");
+
 
 
         // --------------------- Set and Validate Fifth Location ---------------------
@@ -92,13 +94,17 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc5, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Fifth Location with the Database",
+                "Successfully set and validated Fifth Location with the database ");
+
 
 
         // Dispatch Success Response and Validate Database
-        UiUtils.safeSleep(15);
+        // Wait for all other API to get served with the delayed response.
+        UiUtils.safeSleep(8);
         edgeCaseResponses.put("/sendGps", TestConstants.RESPONSE_TYPE.SUCCESS);
+        // Wait for the Sync service to be called.
+        // Sync interval is taken as 7 seconds.
         UiUtils.safeSleep(5);
         mockLocationList.remove(0);
         mockLocationList.remove(0);
@@ -108,6 +114,9 @@ public class GpsSdkEndToEnd extends BaseTestCase {
                 "Successfully validated expected database state ");
 
 
+        // Assuming tightest case that last sync request was made just after validating state of database in previous statement.
+        // Therefore wait for another call to happen.
+        // Sync interval is taken as 7 seconds. So we have for atleast 7 seconds . But taking some buffer of 3 seconds.
         UiUtils.safeSleep(10);
         // There were total 5 locations we had set using mockLocation .
         // 3 were Dispatched in last call
@@ -115,8 +124,8 @@ public class GpsSdkEndToEnd extends BaseTestCase {
         // Therefore, There should not be any locations left in database
         gpsLocationsListFromDatabase = DBHelper.fetchGpsDataFromDatabase(mainApplication);
         AssertUtils.assertTrueV(gpsLocationsListFromDatabase.isEmpty(),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Test Failed !! There are still some Locations in Database. DB should have been empty. ",
+                "Test Passed !! Successfully validated that no locations data exists in database ");
 
     }
 

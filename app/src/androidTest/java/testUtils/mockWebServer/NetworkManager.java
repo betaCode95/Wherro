@@ -38,7 +38,7 @@ public class NetworkManager extends Dispatcher {
         }
 
         // Just in case GPS SDK introduces new API , Test Will start failing and automation team will be notified
-        if (request.getPath().contains(TestConstants.GPS_PIPELINE_URL)) {
+        if (request.getPath().contains(TestConstants.GPS_PIPELINE_URL_END_POINT)) {
 
 
             if (!BaseTestCase.edgeCaseResponses.isEmpty()) {

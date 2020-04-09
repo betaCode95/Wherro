@@ -63,8 +63,8 @@ public class PingService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate First Location with the Database",
+                "Successfully set and validated First Location with the database ");
 
 
         // --------------------- Set and Validate Second Location ---------------------
@@ -72,22 +72,25 @@ public class PingService extends BaseTestCase {
                 , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "Failed to set and validate Second Location with the Database",
+                "Successfully set and validated Second Location with the database ");
 
         edgeCaseResponses.put("/" + TestConstants.GPS_PIPELINE_URL_END_POINT, TestConstants.RESPONSE_TYPE.SUCCESS);
+        // Wait for the Sync service to be called.
+        // Sync interval is taken as 7 seconds.
+        // There is already some wait in setMockLocation() Therefore, not waiting for 7 or more seconds.
         UiUtils.safeSleep(5);
         mockLocationList.remove(0);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList , mainApplication),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+                "There are more than 1 locations data available in database",
+                "Successfully validated that database has only 1 location left ");
 
-
+        // Sync interval is taken as 7 seconds.
         UiUtils.safeSleep(6);
         gpsLocationsCurrentlyInDatabase = DBHelper.fetchGpsDataFromDatabase(mainApplication);
-        AssertUtils.assertTrueV(gpsLocationsCurrentlyInDatabase.isEmpty(),
-                "Database state does not match with the desired state",
-                "Successfully validated expected database state ");
+        AssertUtils.assertTrueV(gpsLocationsListFromDatabase.isEmpty(),
+                "Test Failed !! There are still some Locations in Database. DB should have been empty. ",
+                "Test Passed !! Successfully validated that no locations data exists in database ");
 
 
     }
