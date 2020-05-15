@@ -1,9 +1,10 @@
-package saveServiceTests;
+package ServiceTests;
 
 import android.content.Intent;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.shuttl.location_pings.config.components.LocationConfigs;
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.location_pings.service.LocationSaveService;
@@ -16,6 +17,10 @@ import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.LogUITest;
 import testUtils.ServiceHelper;
+import testUtils.TestConstants;
+import testUtils.customAnnotations.AutoTest_Critical;
+import testUtils.customAnnotations.AutoTest_PingLocationService;
+import testUtils.customAnnotations.AutoTest_SaveLocationService;
 import testUtils.customAnnotations.AutoTest_StartStopServices;
 
 @RunWith(AndroidJUnit4.class)
@@ -24,11 +29,21 @@ public class StartStopService extends BaseTestCase {
     @Before
     public void setUp() {
 
+        // Set config
+        locationConfigs =
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL, TestConstants.ACCURACY_GLOBAL
+                        , TestConstants.BUFFER_SIZE_GLOBAL, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_GLOBAL
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL, TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.NOTIFICATION_ICON_ID);
+
+
         ServiceHelper.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
     }
 
 
+    @AutoTest_Critical
     @AutoTest_StartStopServices
     @Test
     public void verifyStartStopLocationServicesViaInitModule() {
@@ -75,6 +90,7 @@ public class StartStopService extends BaseTestCase {
     }
 
 
+    @AutoTest_PingLocationService
     @AutoTest_StartStopServices
     @Test
     public void verifyStartStopLocationPingService() {
@@ -103,7 +119,7 @@ public class StartStopService extends BaseTestCase {
 
     }
 
-
+    @AutoTest_SaveLocationService
     @AutoTest_StartStopServices
     @Test
     public void verifyStartStopLocationSaveService() {

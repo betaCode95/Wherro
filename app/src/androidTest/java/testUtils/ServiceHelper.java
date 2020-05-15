@@ -19,6 +19,7 @@ public class ServiceHelper {
     public static boolean startBothServicesIfNotRunning(Application application, LocationConfigs locationConfigs
             , LocationPingServiceCallback locationPingServiceCallback, Context appContext) {
 
+        BaseTestCase.currentBatchSize = locationConfigs.getBatchSize();
         Intent intent = new Intent(appContext, LocationPingService.class);
         intent.setAction("STOP");
         // Start Both Services Via Init module .
@@ -76,12 +77,14 @@ public class ServiceHelper {
                 LocationsHelper.INSTANCE.startLocationPingService(application, null, locationConfigs);
             } else {
                 LogUITest.debug("'Ping Location Service' is running now.");
+                BaseTestCase.currentBatchSize = locationConfigs.getBatchSize();
                 return true;
             }
         }
 
         if (isServiceRunning(LocationPingService.class.getName())) {
             LogUITest.debug("Successfully started 'Ping Location Service'");
+            BaseTestCase.currentBatchSize = locationConfigs.getBatchSize();
             return true;
         }
 
