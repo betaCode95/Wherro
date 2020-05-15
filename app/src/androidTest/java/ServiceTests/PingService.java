@@ -5,13 +5,10 @@ import android.app.Application;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.shuttl.location_pings.config.components.LocationConfigs;
-import com.shuttl.location_pings.data.model.entity.GPSLocation;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.List;
 
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
@@ -27,7 +24,6 @@ import testUtils.customAnnotations.AutoTest_PingLocationService;
 public class PingService extends BaseTestCase {
 
     Application mainApplication;
-    List<GPSLocation> gpsLocationsCurrentlyInDatabase;
 
     @Before
     public void setUp() {
@@ -87,11 +83,9 @@ public class PingService extends BaseTestCase {
 
         // Sync interval is taken as 7 seconds.
         UiUtils.safeSleep(6);
-        gpsLocationsCurrentlyInDatabase = DBHelper.fetchGpsDataFromDatabase(mainApplication);
-        AssertUtils.assertTrueV(gpsLocationsListFromDatabase.isEmpty(),
+        AssertUtils.assertTrueV(DBHelper.fetchGpsDataFromDatabase(mainApplication).size() == 0,
                 "Test Failed !! There are still some Locations in Database. DB should have been empty. ",
                 "Test Passed !! Successfully validated that no locations data exists in database ");
-
 
     }
 
