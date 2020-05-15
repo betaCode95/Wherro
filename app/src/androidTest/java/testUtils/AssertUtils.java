@@ -1,5 +1,8 @@
 package testUtils;
 
+import testUtils.mockWebServer.DispatcherUtils;
+import testUtils.mockWebServer.NetworkManager;
+
 import static org.junit.Assert.fail;
 
 public class AssertUtils {
@@ -10,15 +13,44 @@ public class AssertUtils {
      * @param successMessage
      * @return
      */
-    public static boolean assertTrueV(boolean condition, String failureMessage, String successMessage) {
+    public static void assertTrueV(boolean condition, String failureMessage, String successMessage) {
+        if (NetworkManager.requestInspectionFailure) {
+            LogUITest.error("*********************************************************************************************");
+            LogUITest.error("*********************************************************************************************");
+            LogUITest.error("****************************** REQUEST VALIDATION FAILURE  ******************************");
+            LogUITest.error("****************************** CLOSE MOCK WEB SERVER       ******************************");
+            LogUITest.error("*********************************************************************************************");
+            LogUITest.error("*********************************************************************************************");
+            fail("***************** REQUEST INSPECTION FAILURE *****************");
+            new BaseTestCase().wrapUpTestSetup();
+        }
+        if (NetworkManager.apiResponseNotFoundFailure) {
+            LogUITest.error("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            LogUITest.error("** ** ** IN " + DispatcherUtils.currentDispatcher.getClass().getSimpleName() + " : NO APPROPRIATE RESPONSE FOUND !!! ** ** **");
+            LogUITest.error(failureMessage);
+            LogUITest.error("** ** ** IN " + DispatcherUtils.currentDispatcher.getClass().getSimpleName() + " : NO APPROPRIATE RESPONSE FOUND !!! ** ** **");
+            LogUITest.error("++++++++++x`++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            fail("***************** NO APPROPRIATE RESPONSE FOUND !!! *****************");
+            new BaseTestCase().wrapUpTestSetup();
+        }
         if (condition) {
             LogUITest.debug(successMessage);
-            return true;
         } else {
             LogUITest.error(failureMessage);
-            fail(); //todo replace this with a custom Supreme fail that'll eventually have send feedback and other fail shenanigans
-            return false;
+            fail(failureMessage);
         }
+    }
+
+    /**
+     * @param condition
+     * @param failureMessage
+     */
+    public static void assertNetworkManagerTrueV(boolean condition, String failureMessage) throws AssertionError {
+        if (!condition) {
+            LogUITest.error(failureMessage);
+            throw new AssertionError(failureMessage);
+        }
+
     }
 
     /**
@@ -26,12 +58,9 @@ public class AssertUtils {
      * @param failureMessage
      * @return
      */
-    public static boolean assertTrueV(boolean condition, String failureMessage) {
+    public static void assertTrueV(boolean condition, String failureMessage) {
         if (!condition) {
             LogUITest.error(failureMessage);
-            return false;
-        } else {
-            return true;
         }
     }
 }

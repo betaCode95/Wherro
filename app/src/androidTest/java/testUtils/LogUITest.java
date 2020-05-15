@@ -4,35 +4,28 @@ import android.util.Log;
 
 public class LogUITest {
 
-    private static String UiTestTag = "Shuttl_UITest";
+    private static String TestTag = "Shuttl_GPSTest";
 
     public static void verbose(String logStr) {
-        Log.v(UiTestTag, "Verbose: " + logStr);
+        Log.v(TestTag, "Verbose: " + logStr);
     }
 
     public static void debug(String logStr) {
-        Log.d(UiTestTag, logStr);
+
+        Log.d(TestTag, logStr);
     }
 
     public static void info(String logStr) {
-        Log.i(UiTestTag, logStr);
+
+        Log.i(TestTag, logStr);
     }
 
     public static void warn(String logStr) {
-        Log.w(UiTestTag, "Warn: " + logStr);
+        Log.w(TestTag, logStr);
     }
 
     public static void error(String logStr) {
-        Log.e(UiTestTag, "Error: " + logStr);
+        Log.e(TestTag, logStr);
     }
 
-    public static String getCallerMethodName() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        StackTraceElement stackTraceElement = stackTraceElements[4];
-
-        for (int i = 5; stackTraceElement.toString().contains("assert"); ++i) {
-            stackTraceElement = stackTraceElements[i];
-        }
-        return stackTraceElement.getMethodName();
-    }
 }

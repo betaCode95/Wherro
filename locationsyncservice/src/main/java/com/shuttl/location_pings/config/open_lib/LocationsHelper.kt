@@ -11,12 +11,14 @@ import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationRetrofit
 import com.shuttl.location_pings.config.components.LocationsDB
+import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
 import com.shuttl.location_pings.service.LocationPingService
 import com.shuttl.location_pings.service.LocationSaveService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 
 object LocationsHelper {
@@ -28,16 +30,17 @@ object LocationsHelper {
             }
 
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                (service as LocationPingService.CustomBinder).getService().setCallbackAndWork(callback)
+                (service as LocationPingService.CustomBinder).getService()
+                    .setCallbackAndWork(callback)
             }
         }
     }
-  
+
     private fun setNetworkingDebug(inteceptor: Interceptor?) {
         LocationRetrofit.networkDebug = inteceptor
     }
 
-    fun<T> initLocationsModule(
+    fun <T> initLocationsModule(
         app: Application,
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs,
@@ -113,6 +116,13 @@ object LocationsHelper {
 
     fun getAllLocations(app: Application) =
         LocationRepo(LocationsDB.create(app)?.locationsDao()).getAllLocations()
+
+    fun getAllLocations1(app: Application): List<GPSLocation>? = runBlocking {
+        getAllLocations(app).await()
+
+
+    }
+
 
     fun getBatchedLocations(app: Application, entries: Int) =
         LocationRepo(LocationsDB.create(app)?.locationsDao()).getBatchedLocations(entries)
