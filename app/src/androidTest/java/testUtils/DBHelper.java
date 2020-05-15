@@ -5,6 +5,7 @@ import android.app.Application;
 import com.shuttl.location_pings.config.open_lib.LocationsHelper;
 import com.shuttl.location_pings.data.model.entity.GPSLocation;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,14 +13,14 @@ import mockLocationUtils.MockLocationProvider;
 
 public class DBHelper {
 
-    public static boolean setLocationAndValidateDB(Location currentLocation , Application application) {
+    public static boolean setLocationAndValidateDB(Location currentLocation, Application application) {
         MockLocationProvider.setMockLocation(currentLocation);
         BaseTestCase.mockLocationList.add(currentLocation);
-        return validateLocationsDataInDatabase(BaseTestCase.mockLocationList , application);
+        return validateLocationsDataInDatabase(BaseTestCase.mockLocationList, application);
     }
 
 
-    public static boolean validateLocationsDataInDatabase(List<Location> listOfExpectedLocations , Application application) {
+    public static boolean validateLocationsDataInDatabase(List<Location> listOfExpectedLocations, Application application) {
 
         List<GPSLocation> gpsLocationsFromDatabase = fetchGpsDataFromDatabase(application);
 
@@ -71,11 +72,12 @@ public class DBHelper {
     public static List<GPSLocation> fetchGpsDataFromDatabase(Application application) {
 
         List<GPSLocation> gpsLocations = new LinkedList<>();
-        try {
-            gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(application);
-        } catch (Exception e) {
-            LogUITest.debug(e.getMessage());
-        }
+        gpsLocations = LocationsHelper.INSTANCE.getAllLocations1(application);
+        if (gpsLocations.size() == 0)
+            return Collections.emptyList();
+
+
         return gpsLocations;
+
     }
 }
