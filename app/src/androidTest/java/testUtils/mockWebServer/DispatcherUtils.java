@@ -43,7 +43,6 @@ public class DispatcherUtils {
 
 
         if (expectedJsonCurrentKey.equals(actualJsonCurrentKey)) {
-
             if (expectedRequestBodyOfSyncRequest.optJSONArray(expectedJsonCurrentKey).length() > 0) {
 
                 // Validate if number of location objects are same in expected and actual request body
