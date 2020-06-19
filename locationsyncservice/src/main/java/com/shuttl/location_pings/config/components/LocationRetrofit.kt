@@ -8,11 +8,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 internal object LocationRetrofit {
 
+    var baseUrl = ""
+
     private val retrofit by lazy {
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://random.com/")
+            .baseUrl(baseUrl)
             .build()
     }
 

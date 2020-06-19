@@ -56,13 +56,10 @@ class MainActivity : AppCompatActivity() {
         {
             val intent = Intent(this, LocationPingService::class.java)
             intent.action = "STOP"
-
-            LocationsHelper.initLocationsModule(
-                app = application,
-                locationConfigs = LocationConfigs(syncUrl = "http://10.191.6.177:3000/record", minSyncInterval = 5000, minDistanceInterval = 10, minTimeInterval = 1000), callback = callback, intent = intent)
-
-        }
-
+          
+        LocationsHelper.initLocationsModule(
+            app = application,
+            locationConfigs = LocationConfigs(syncUrl = "http://10.191.6.177:3000/record/", minSyncInterval = 5000, minDistanceInterval = 10, minTimeInterval = 1000), callback = callback, intent = intent)
     }
 
     fun requestLocationPermission() {
