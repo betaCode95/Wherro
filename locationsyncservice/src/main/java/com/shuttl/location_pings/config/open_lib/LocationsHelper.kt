@@ -28,22 +28,28 @@ object LocationsHelper {
             }
 
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                (service as LocationPingService.CustomBinder).getService().setCallbackAndWork(callback)
+                (service as LocationPingService.CustomBinder).getService()
+                    .setCallbackAndWork(callback)
             }
         }
     }
-  
+
     private fun setNetworkingDebug(inteceptor: Interceptor?) {
         LocationRetrofit.networkDebug = inteceptor
     }
 
-    fun<T> initLocationsModule(
+    private fun setUrl(url: String) {
+        LocationRetrofit.baseUrl = url
+    }
+
+    fun <T> initLocationsModule(
         app: Application,
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs,
         callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
+        setUrl(locationConfigs.syncUrl ?: "")
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)
