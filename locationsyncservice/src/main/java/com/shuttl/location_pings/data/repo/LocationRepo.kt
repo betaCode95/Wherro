@@ -25,6 +25,14 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         locationsDao?.clearLocations()
     }
 
+    fun getAllLocations() = GlobalScope.async(Dispatchers.IO) {
+        locationsDao?.locations()
+    }
+
+    fun getBatchedLocations(entries: Int) = GlobalScope.async(Dispatchers.IO) {
+        locationsDao?.getLimitedLocations(entries)
+    }
+
     fun syncLocations(apiKey: String = "",
                       url: String = "",
                       batchSize: Int,
