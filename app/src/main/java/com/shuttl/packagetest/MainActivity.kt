@@ -11,6 +11,8 @@ import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.open_lib.LocationsHelper
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.service.LocationPingService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +46,13 @@ class MainActivity : AppCompatActivity() {
 
         override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
             return locations?: emptyList()
+        }
+    }
+
+    fun getAllLocations() {
+        GlobalScope.launch {
+        Log.i("AllLocations", LocationsHelper.getAllLocations(application).await()?.toString()?: "None")
+
         }
     }
 

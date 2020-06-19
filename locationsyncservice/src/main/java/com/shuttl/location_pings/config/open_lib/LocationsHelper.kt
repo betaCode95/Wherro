@@ -110,4 +110,10 @@ object LocationsHelper {
             LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
         }
     }
+
+    fun getAllLocations(app: Application) =
+            LocationRepo(LocationsDB.create(app)?.locationsDao()).getAllLocations()
+
+    fun getBatchedLocations(app: Application, entries: Int) =
+        LocationRepo(LocationsDB.create(app)?.locationsDao()).getBatchedLocations(entries)
 }

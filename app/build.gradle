@@ -37,6 +37,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
+
 
     implementation project(path: ':locationsyncservice')
 //    implementation(group: 'com.shuttl', name: 'locationsyncservice', version: '0.14', ext: 'aar', classifier: '')
