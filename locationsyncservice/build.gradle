@@ -30,7 +30,7 @@ android {
         }
 
         debug {
-            defaultConfig.minSdkVersion 18
+            defaultConfig.minSdkVersion 16
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
