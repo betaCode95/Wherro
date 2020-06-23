@@ -23,7 +23,7 @@ public class TestConstants {
     public static double startLatitude = 28.3992;
     public static double startLongitude = 77.0187;
 
-    public static String GPS_PIPELINE_URL_END_POINT = "sendGps";
+    public static String GPS_PIPELINE_URL_END_POINT = "sendGps/";
     public static String GPS_PIPELINE_URL = MockWebUtils.getMockWebServerUrl() + GPS_PIPELINE_URL_END_POINT;
     public static int NUMBER_OF_RETRIES_FOR_STOPPING_SERVICES = 3;
     public static int NUMBER_OF_RETRIES_FOR_STARTING_SERVICES = 3;

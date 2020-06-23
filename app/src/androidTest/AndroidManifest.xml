@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.shuttl.packagetest"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+
+    <uses-sdk android:targetSdkVersion="29" android:minSdkVersion="18"
+        tools:overrideLibrary="android_libs.ub_uiautomator"/>
+</manifest>

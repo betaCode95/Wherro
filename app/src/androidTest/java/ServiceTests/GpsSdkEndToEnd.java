@@ -102,7 +102,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
         // Dispatch Success Response and Validate Database
         // Wait for all other API to get served with the delayed response.
         UiUtils.safeSleep(8);
-        edgeCaseResponses.put("/sendGps", TestConstants.RESPONSE_TYPE.SUCCESS);
+        edgeCaseResponses.put("/" + TestConstants.GPS_PIPELINE_URL_END_POINT, TestConstants.RESPONSE_TYPE.SUCCESS);
         // Wait for the Sync service to be called.
         // Sync interval is taken as 7 seconds.
         UiUtils.safeSleep(5);
