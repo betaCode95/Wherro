@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 internal object LocationRetrofit {
 
-    var baseUrl = ""
+    var baseUrl = "https://gps.shuttltech.com/"
 
     private val retrofit by lazy {
         Retrofit.Builder()

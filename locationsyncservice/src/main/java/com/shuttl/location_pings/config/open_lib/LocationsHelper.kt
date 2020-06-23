@@ -39,10 +39,6 @@ object LocationsHelper {
     private fun setNetworkingDebug(inteceptor: Interceptor?) {
         LocationRetrofit.networkDebug = inteceptor
     }
-
-    private fun setUrl(url: String) {
-        LocationRetrofit.baseUrl = url
-    }
   
     fun <T> initLocationsModule(
         app: Application,
@@ -51,7 +47,6 @@ object LocationsHelper {
         callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
-        setUrl(locationConfigs.syncUrl ?: "")
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)
