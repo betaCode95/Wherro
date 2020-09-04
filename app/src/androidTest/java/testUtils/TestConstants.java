@@ -12,6 +12,8 @@ public class TestConstants {
     When we try to stop the service immediatelystarting it, It may fire the exception.
     Because Service is not started due to processing speed and low memory in RAM.
     This was causing Instrumentation Crash in tests.
+    Usually waiting for 500 ms helps ... But since we are running on simulators .
+    Therefore, adding more wait for safer side.
      */
     public static int WAIT_FOR_SERVICE_TO_GET_STARTED = 2;
 
