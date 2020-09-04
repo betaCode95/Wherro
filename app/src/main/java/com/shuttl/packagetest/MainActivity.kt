@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.name
     private val locationPermissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
     )
 
     private val callback = object : LocationPingServiceCallback<GPSLocation> {

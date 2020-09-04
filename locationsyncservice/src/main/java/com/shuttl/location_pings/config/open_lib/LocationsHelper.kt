@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.IBinder
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
@@ -55,7 +56,11 @@ object LocationsHelper {
         pingIntent.putExtra("pendingIntent", pendingIntent)
         val saveIntent = Intent(app, LocationSaveService::class.java)
         saveIntent.putExtra("config", locationConfigs)
-        app.startService(saveIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            app.startForegroundService(saveIntent)
+        } else {
+            app.startService(saveIntent);
+        }
         app.bindService(pingIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
