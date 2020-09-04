@@ -13,7 +13,7 @@ public class TestConstants {
     Because Service is not started due to processing speed and low memory in RAM.
     This was causing Instrumentation Crash in tests.
      */
-    public static int WAIT_FOR_SERVICE_TO_GET_STARTED = 3;
+    public static int WAIT_FOR_SERVICE_TO_GET_STARTED = 2;
 
     // Inputs for random number generator
     public static int minValue = 1;
