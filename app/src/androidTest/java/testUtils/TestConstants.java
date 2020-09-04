@@ -7,6 +7,14 @@ import testUtils.mockWebServer.MockWebUtils;
 public class TestConstants {
 
 
+    /*
+    When we call startForgroundSerivce() method, Service do not started immediately.
+    When we try to stop the service immediatelystarting it, It may fire the exception.
+    Because Service is not started due to processing speed and low memory in RAM.
+    This was causing Instrumentation Crash in tests.
+     */
+    public static int WAIT_FOR_SERVICE_TO_GET_STARTED = 3;
+
     // Inputs for random number generator
     public static int minValue = 1;
     public static int maxValue = 90;

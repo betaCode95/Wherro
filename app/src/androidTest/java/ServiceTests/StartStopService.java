@@ -55,7 +55,7 @@ public class StartStopService extends BaseTestCase {
         LogUITest.debug("Starting 'Save Location Service' & 'Ping Location Service Via Init Module'");
         LocationsHelper.INSTANCE.initLocationsModule(activityTestRule.getActivity().getApplication(), null, locationConfigs, locationPingServiceCallback, intent);
 
-        UiUtils.safeSleep(3);
+        UiUtils.safeSleep(TestConstants.WAIT_FOR_SERVICE_TO_GET_STARTED);
 
         boolean isLocationSaveServiceRunning = ServiceHelper.isServiceRunning(LocationSaveService.class.getName());
 
