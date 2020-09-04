@@ -17,7 +17,8 @@ class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.name
     private val locationPermissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
     )
 
     private val callback = object : LocationPingServiceCallback<GPSLocation> {
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         LocationsHelper.initLocationsModule(
             app = application,
-            locationConfigs = LocationConfigs(syncUrl = "http://10.191.6.177:3000/record", minSyncInterval = 5000, minDistanceInterval = 10, minTimeInterval = 1000), callback = callback, intent = intent)
+            locationConfigs = LocationConfigs(syncUrl = "http://192.168.1.5:3000/record", minSyncInterval = 1000, minDistanceInterval = 10, minTimeInterval = 1000, batchSize = 100), callback = callback, intent = intent)
 
     }
 
