@@ -8,8 +8,8 @@ public class TestConstants {
 
 
     /*
-    When we call startForgroundSerivce() method, Service do not started immediately.
-    When we try to stop the service immediatelystarting it, It may fire the exception.
+    When we call startForgroundSerivce() method, Service do not get started immediately.
+    When we try to stop the service immediately starting it, It may fire the exception.
     Because Service is not started due to processing speed and low memory in RAM.
     This was causing Instrumentation Crash in tests.
     Usually waiting for 500 ms helps ... But since we are running on simulators .
