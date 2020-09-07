@@ -35,7 +35,7 @@ dependencies {
 To start using Wherro, just put in `LocationConfigs` through `LocationsHelper.initLocationsModule` method:
 
 ```kotlin
-LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs())
+LocationsHelper.initLocationsModule(app = application, locationConfigs = LocationConfigs(), callback = callback, intent = intent)
 ```
 Following need to be added in the app's `AndroidManifest` root
 
@@ -43,7 +43,9 @@ Following need to be added in the app's `AndroidManifest` root
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
 ```
 
 Add this to your app's `AndroidManifest` application
@@ -68,30 +70,57 @@ Don't forget to check the [changelog](https://bintray.com/deeptolat/LocationSync
 
 ## Configure 🎨
 ```kotlin
-LocationConfigs(val minTimeInterval: Int = 10000, // min Time Interval for Location Fetching
-  val minDistanceInterval: Int = 100, // min Distance Interval for Location Fetching
-  val minSyncInterval: Int = 10000, // min Time Interval for Location Syncing
-  val xApiKey: String? = "", // xApiKey Auth Key for the URL to function, if you have one
-  val syncUrl: String? = "" // PUTs the location parameters on this URL
+LocationConfigs(
+     val minTimeInterval: Int = 10000, // min Time Interval for Location Fetching
+     val minDistanceInterval: Int = 100, // min Distance Interval for Location Fetching
+     val minSyncInterval: Int = 10000, // min Time Interval for Location Syncing
+     val accuracy: Int = 3, // accuracy of Lat-Long in meters, 3 means 110 meter
+     val bufferSize: Int = 100, // number of entries at max can be stored in the Database
+     val batchSize: Int = 10, // number of location entries sent at a time while polling
+     val timeout: Int = 1800000, // time in milliseconds after which we stop the services
+     val xApiKey: String? = "", // xApiKey Auth Key for the URL to function
+     val syncUrl: String? = "", // PUTS the location parameters on this URL
+     val smallIcon: Int = R.drawable.ic_loc // Notification icon
   )
+```
+Callbacks
+```kotlin
+private val callback = object : LocationPingServiceCallback<GPSLocation> {
+        override fun afterSyncLocations(locations: List<GPSLocation>?) {
+            Log.i(TAG, "afterSyncLocations, number of locations synced: " + locations?.size)
+        }
+
+        override fun errorWhileSyncLocations(error: Exception?) {
+            Log.i(TAG, "errorWhileSyncLocations" + error?.toString())
+        }
+
+        override fun serviceStarted() {
+            Log.i(TAG, "serviceStarted")
+        }
+
+        override fun serviceStopped() {
+            Log.i(TAG, "serviceStopped")
+        }
+
+        override fun serviceStoppedManually() {
+            Log.i(TAG, "serviceStoppedManually")
+            LocationsHelper.stopAndClearAll(application)
+        }
+
+        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+            return locations?: emptyList()
+        }
+    }
 ```
 
 Request Body JSON in the PUT network call, along with `xApiKey` as Authorization
 ```json
 [
 	{
-	   "latitude": 23,
-	   "longitude": 23,
-	   "accuracy": 20,
-	   "provider": "gps",
-	   "time": "1202"
+	   //Its Configurable from beforeSyncLocations
 	},
 	{
-	   "latitude": 26.0012,
-	   "longitude": 23.0012,
-	   "accuracy": 20.00,
-	   "provider": "gps",
-	   "time": "1203"
+	  //Its Configurable from beforeSyncLocations
 	}
 ]
 ```
