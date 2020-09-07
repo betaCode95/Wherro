@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.shuttl.location_pings.data.dao.GPSLocationsDao
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 
-@Database(entities = [GPSLocation::class], version = 1, exportSchema = false)
+@Database(entities = [GPSLocation::class], version = 3, exportSchema = false)
 abstract class LocationsDB : RoomDatabase() {
 
     abstract fun locationsDao(): GPSLocationsDao

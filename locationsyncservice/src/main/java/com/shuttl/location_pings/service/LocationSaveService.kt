@@ -35,10 +35,15 @@ class LocationSaveService : Service() {
             }
         }
     }
+
     private val locListener by lazy {
         object : LocationListener {
 
             override fun onLocationChanged(location: Location?) {
+
+                if (location != null) {
+                    Log.d("Shuttl_UITest" , "Location Has Changed Lat : " + location.latitude + " Long : " + location.longitude )
+                }
                 saveLocation(location)
             }
 
@@ -69,7 +74,8 @@ class LocationSaveService : Service() {
                 notification(
                     this,
                     "Updating trip details...",
-                    configs.smallIcon
+                    configs.smallIcon,
+                    null
                 )
             )
             serviceStarted = true
@@ -81,7 +87,8 @@ class LocationSaveService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            timer.cancel()
+            if (configs.timeout > 0)
+                timer.cancel()
             locManager.removeUpdates(locListener)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -91,7 +98,8 @@ class LocationSaveService : Service() {
     @SuppressLint("MissingPermission")
     private fun work() {
         try {
-            timer.start()
+            if (configs.timeout > 0)
+                timer.start()
             locManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 configs.minTimeInterval.toLong(),
@@ -108,9 +116,7 @@ class LocationSaveService : Service() {
     private fun saveLocation(location: Location?) {
         repo.addLocation(
             GPSLocation.create(
-                location,
-                configs.userId ?: "",
-                configs.bookingId ?: ""
+                location
             ), configs.bufferSize
         )
     }

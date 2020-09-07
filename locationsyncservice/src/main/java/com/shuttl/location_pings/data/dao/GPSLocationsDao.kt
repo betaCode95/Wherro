@@ -17,19 +17,19 @@ interface GPSLocationsDao {
     @Query("SELECT * FROM gps_locations LIMIT :entries")
     fun getLimitedLocations(entries: Int): List<GPSLocation>
 
-    @Query("SELECT * FROM gps_locations where timestamp < :lastTimestamp")
-    fun getBatchLocations(lastTimestamp: String): List<GPSLocation>
+    @Query("SELECT * FROM gps_locations where time < :lastTime")
+    fun getBatchLocations(lastTime: String): List<GPSLocation>
 
     @Query("DELETE FROM gps_locations")
     fun clearLocations()
 
-    @Query("DELETE FROM gps_locations WHERE timestamp = (SELECT MIN(timestamp) from gps_locations)")
+    @Query("DELETE FROM gps_locations WHERE time = (SELECT MIN(time) from gps_locations)")
     fun deleteOldestLocation()
 
     @Query("SELECT COUNT(*) FROM gps_locations")
     fun getRowsCount(): Int
 
-    @Query("DELETE FROM gps_locations WHERE timestamp <= :lastTimestamp ")
-    fun deleteEntries(lastTimestamp: String)
+    @Query("DELETE FROM gps_locations WHERE time <= :lastTime ")
+    fun deleteEntries(lastTime: String)
 
 }

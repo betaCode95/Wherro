@@ -25,10 +25,18 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         locationsDao?.clearLocations()
     }
 
+    fun getAllLocations() = GlobalScope.async(Dispatchers.IO) {
+        locationsDao?.locations()
+    }
+
+    fun getBatchedLocations(entries: Int) = GlobalScope.async(Dispatchers.IO) {
+        locationsDao?.getLimitedLocations(entries)
+    }
+
     fun syncLocations(apiKey: String = "",
                       url: String = "",
                       batchSize: Int,
-                      callback: LocationPingServiceCallback?) {
+                      callback: LocationPingServiceCallback<Any>?) {
         GlobalScope.launch(Dispatchers.IO) {
             val locations = locationsDao?.getLimitedLocations(batchSize)
             if (locations?.isNotEmpty() == true) {
@@ -36,26 +44,27 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                     if (TextUtils.isEmpty(url)) {
                         Log.e(TAG, "No Url Found")
                     }
+                    val obj = callback?.beforeSyncLocations(locations)
                     val response = LocationRetrofit.locationAPI.syncLocation(
                         url,
                         apiKey,
                         "application/json",
-                        SendLocationRequestBody.create(locations)
+                        SendLocationRequestBody.create(obj)
                     )
-                    if (!response.SequenceNumber.isNullOrEmpty()) {
-                        deleteEntries(locations.last().timestamp)
+                    if (response.success == true) {
+                        deleteEntries(locations.last().time)
                         callback?.afterSyncLocations(locations)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    callback?.errorWhileSyncLocations(e.toString())
+                    callback?.errorWhileSyncLocations(e)
                 }
 
             }
         }
     }
 
-    fun deleteEntries(timeStamp: String) {
-        locationsDao?.deleteEntries(timeStamp)
+    fun deleteEntries(time: String) {
+        locationsDao?.deleteEntries(time)
     }
 }
