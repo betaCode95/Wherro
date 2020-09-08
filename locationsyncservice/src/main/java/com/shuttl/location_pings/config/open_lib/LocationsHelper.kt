@@ -48,6 +48,7 @@ object LocationsHelper {
         callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
+        LocationRetrofit.reset(locationConfigs?.syncUrl)
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)

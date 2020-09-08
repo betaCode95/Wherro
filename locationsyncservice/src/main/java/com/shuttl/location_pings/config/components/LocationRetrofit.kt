@@ -10,16 +10,26 @@ internal object LocationRetrofit {
 
     var baseUrl = "https://gps.shuttltech.com/"
 
-    private val retrofit by lazy {
-        Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseUrl)
-            .build()
+    private var retrofit: Retrofit? = null
+
+    fun reset(url: String?) {
+        retrofit = if (url.isNullOrEmpty()) {
+            Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(baseUrl)
+                .build()
+        } else {
+            Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(url)
+                .build()
+        }
     }
 
     val locationAPI by lazy {
-        retrofit.create(LocationApi::class.java)
+        retrofit?.create(LocationApi::class.java)
     }
 
     private val okHttpClient by lazy {
