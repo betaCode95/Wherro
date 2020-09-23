@@ -67,8 +67,9 @@ object LocationsHelper {
     fun stop(app: Application) {
         val pingIntent = Intent(app, LocationPingService::class.java)
         val saveIntent = Intent(app, LocationSaveService::class.java)
-        app.stopService(pingIntent)
         app.stopService(saveIntent)
+        app.unbindService(serviceConnection)
+        app.stopService(pingIntent)
     }
 
     fun stopAndClearAll(app: Application) {
