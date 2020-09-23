@@ -2,16 +2,11 @@ package com.shuttl.location_pings.service
 
 import android.annotation.SuppressLint
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.os.Binder
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.IBinder
+import android.os.*
 import android.util.Log
+import com.google.android.gms.location.*
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
 import com.shuttl.location_pings.custom.notification
@@ -22,7 +17,7 @@ class LocationSaveService : Service() {
 
     private var serviceStarted = false
     private val TAG: String = javaClass.name
-    private val locManager by lazy { applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+    private val fusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(applicationContext) as FusedLocationProviderClient }
     private var configs: LocationConfigs = LocationConfigs()
     private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
     private val timer by lazy {
@@ -36,25 +31,12 @@ class LocationSaveService : Service() {
         }
     }
 
-    private val locListener by lazy {
-        object : LocationListener {
-
-            override fun onLocationChanged(location: Location?) {
-
-                if (location != null) {
-                    Log.d("Shuttl_UITest" , "Location Has Changed Lat : " + location.latitude + " Long : " + location.longitude )
-                }
-                saveLocation(location)
-            }
-
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-            }
-
-            override fun onProviderEnabled(provider: String?) {
-            }
-
-            override fun onProviderDisabled(provider: String?) {
-                locManager.removeUpdates(this)
+    private val locationCallback by lazy {
+        object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                saveLocation(locationResult.lastLocation)
+                Log.d("Shuttl_UITest" , "Location Has Changed Lat FA: " + locationResult.lastLocation.latitude + " Long : " + locationResult.lastLocation.longitude )
             }
         }
     }
@@ -89,7 +71,7 @@ class LocationSaveService : Service() {
         try {
             if (configs.timeout > 0)
                 timer.cancel()
-            locManager.removeUpdates(locListener)
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -100,17 +82,23 @@ class LocationSaveService : Service() {
         try {
             if (configs.timeout > 0)
                 timer.start()
-            locManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                configs.minTimeInterval.toLong(),
-                configs.minDistanceInterval.toFloat(),
-                locListener,
-                null
-            )
+          setUpLocationListener()
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e(TAG, "GPS can't be accessed. Asked for permission?")
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun setUpLocationListener() {
+        val locationRequest = LocationRequest().setInterval(configs.minTimeInterval.toLong()).setSmallestDisplacement(configs.minDistanceInterval.toFloat())
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
     }
 
     private fun saveLocation(location: Location?) {
