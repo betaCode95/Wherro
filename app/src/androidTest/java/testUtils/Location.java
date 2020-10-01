@@ -1,5 +1,7 @@
 package testUtils;
 
+import android.os.SystemClock;
+
 public class Location {
     private double latitude;
     private double longitude;
@@ -8,6 +10,7 @@ public class Location {
     float accuracy = 5;
     int satellite = -1;
     double altitude = 5.5;
+    long elapsedRealtimeNanos;
 
 
     public int getSatellite() {
@@ -38,11 +41,24 @@ public class Location {
         return accuracy;
     }
 
+    public long getElapsedRealtimeNanos() {
+        if (elapsedRealtimeNanos <= 0)
+            return SystemClock.elapsedRealtimeNanos();
+        else return elapsedRealtimeNanos;
+    }
+
 
     public Location(double latitude, double longitude, float accuracy) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.accuracy = accuracy;
+
+    }
+
+    public Location(double latitude, double longitude, long elapsedRealtimeNanos) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.elapsedRealtimeNanos = elapsedRealtimeNanos;
 
     }
 

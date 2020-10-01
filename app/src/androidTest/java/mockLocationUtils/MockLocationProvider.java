@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -96,13 +95,11 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
         mockLocation.setTime(System.currentTimeMillis());
         mockLocation.setAccuracy(location.getAccuracy());
 
-        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
+        mockLocation.setElapsedRealtimeNanos(location.getElapsedRealtimeNanos());
         LogUITest.info("****************************************");
         LogUITest.debug("Provider: "+mockLocation.getProvider());
-        //LogUITest.debug("Accuracy is: "+mockLocation.getAccuracy());
+        LogUITest.debug("ElapsedRealtimeNanos : "+location.getElapsedRealtimeNanos());
         LogUITest.debug("Altitude is: "+mockLocation.getAltitude());
-        //LogUITest.debug("Bearing is: "+mockLocation.getBearing());
-        //LogUITest.debug("Bearing is: "+mockLocation.getBearingAccuracyDegrees());
         LogUITest.debug("Longitude: "+mockLocation.getLongitude());
         LogUITest.debug("Latitude: "+mockLocation.getLatitude());
         LogUITest.info("****************************************\n");

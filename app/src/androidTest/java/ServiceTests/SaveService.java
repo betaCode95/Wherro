@@ -47,42 +47,6 @@ public class SaveService extends BaseTestCase {
 
     }
 
-    @AutoTest_SaveLocationService
-    @Test
-    public void verifyTimeCheck() {
-
-        // --------------------- Set and Validate First Location ---------------------
-        long currentTimeStamp = System.currentTimeMillis();
-        loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), currentTimeStamp);
-        AssertUtils.assertTrueV(
-                DBHelper.setLocationAndValidateDB(loc1, mainApplication),
-                "Failed to set and validate First Location with the Database",
-                "Successfully set and validated First Location with the database ");
-
-
-        // --------------------- Set and Validate Second Location ---------------------
-        currentTimeStamp = currentTimeStamp + 50; // Added 50 milliseconds
-        loc2 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), currentTimeStamp);
-        MockLocationProvider.setMockLocation(loc2);
-        AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
-                "Test Failed !! Database store locations having difference in time less than the expected difference set in configuration",
-                "Successfully validated that database store valid locations only");
-
-        // --------------------- Set and Validate Third Location ---------------------
-        currentTimeStamp = System.currentTimeMillis();
-        loc3 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), currentTimeStamp);
-        AssertUtils.assertTrueV(
-                DBHelper.setLocationAndValidateDB(loc3, mainApplication),
-                "Test Failed !! Database store locations having difference in time greater than the expected difference set in configuration",
-                "Successfully validated that database store valid locations only");
-
-
-    }
-
-
     //decimal
     //places   degrees          distance
     //-------  -------          --------
