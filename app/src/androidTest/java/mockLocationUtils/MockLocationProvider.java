@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -92,10 +93,10 @@ public class MockLocationProvider implements SharedPreferences.OnSharedPreferenc
             bundle.putInt("satellites", location.getSatellite());
             mockLocation.setExtras(bundle);
         }
-        mockLocation.setTime(location.getTimeStamp());
+        mockLocation.setTime(System.currentTimeMillis());
         mockLocation.setAccuracy(location.getAccuracy());
 
-        mockLocation.setElapsedRealtimeNanos(200);
+        mockLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
         LogUITest.info("****************************************");
         LogUITest.debug("Provider: "+mockLocation.getProvider());
         //LogUITest.debug("Accuracy is: "+mockLocation.getAccuracy());
