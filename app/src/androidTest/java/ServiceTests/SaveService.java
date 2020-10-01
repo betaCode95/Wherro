@@ -54,7 +54,7 @@ public class SaveService extends BaseTestCase {
         // --------------------- Set and Validate First Location ---------------------
         long currentTimeStamp = System.currentTimeMillis();
         loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3, currentTimeStamp);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), currentTimeStamp);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -64,7 +64,7 @@ public class SaveService extends BaseTestCase {
         // --------------------- Set and Validate Second Location ---------------------
         currentTimeStamp = currentTimeStamp + 50; // Added 50 milliseconds
         loc2 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3, currentTimeStamp);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), currentTimeStamp);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
                 "Test Failed !! Database store locations having difference in time less than the expected difference set in configuration",
@@ -73,7 +73,7 @@ public class SaveService extends BaseTestCase {
         // --------------------- Set and Validate Third Location ---------------------
         currentTimeStamp = System.currentTimeMillis();
         loc3 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3, currentTimeStamp);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), currentTimeStamp);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
                 "Test Failed !! Database store locations having difference in time greater than the expected difference set in configuration",
@@ -111,7 +111,7 @@ public class SaveService extends BaseTestCase {
     public void verifyDistanceCheck() {
 
         // --------------------- Set and Validate First Location ---------------------
-        loc1 = new Location(TestConstants.startLatitude, TestConstants.startLongitude, 3);
+        loc1 = new Location(TestConstants.startLatitude, TestConstants.startLongitude);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -119,7 +119,7 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(TestConstants.startLatitude + .0001, TestConstants.startLongitude + .0001, 3);
+        loc2 = new Location(TestConstants.startLatitude + .0001, TestConstants.startLongitude + .0001);
         MockLocationProvider.setMockLocation(loc2);
         AssertUtils.assertTrueV(DBHelper.validateLocationsDataInDatabase(mockLocationList, mainApplication),
                 "Test Failed !! Database store locations having difference in distance less than the expected difference set in configuration",
@@ -127,7 +127,7 @@ public class SaveService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Third Location ---------------------
-        loc3 = new Location(TestConstants.startLatitude + .01, TestConstants.startLongitude + .01, 3);
+        loc3 = new Location(TestConstants.startLatitude + .01, TestConstants.startLongitude + .01);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
                 "Test Failed !! Database store locations having difference in distance greater than the expected difference set in configuration",
@@ -142,7 +142,7 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -164,7 +164,7 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate First Location ---------------------
         loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -173,7 +173,7 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate Second Location ---------------------
         loc2 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
                 "Failed to set and validate Second Location with the Database",
@@ -182,7 +182,7 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate Third Location ---------------------
         loc3 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
                 "Failed to set and validate Third Location with the Database",
@@ -190,7 +190,7 @@ public class SaveService extends BaseTestCase {
 
         // --------------------- Set and Validate Fourth Location ---------------------
         loc4 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue), 3);
+                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
         MockLocationProvider.setMockLocation(loc4);
         mockLocationList.add(loc4);
         mockLocationList.remove(0);
