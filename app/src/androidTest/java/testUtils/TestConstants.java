@@ -59,7 +59,7 @@ public class TestConstants {
 
     // ---------------------------------    LOCATION CONFIG FOR SAVE SERVICE TESTS  -------------------------------------
 
-    public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 100;  // in millis
+    public static final int MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 2000;  // in millis
     public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 1000;
     public static final int MIN_PING_SERVICE_SYNC_INTERVAL_SS = 90000;  // in millis
     public static final int ACCURACY_SS = 3;
