@@ -30,21 +30,18 @@ public class DBHelper {
                 for (int i = 0; i < listOfExpectedLocations.size(); i++) {
                     if (gpsLocationsFromDatabase.get(i).getLatitude() != listOfExpectedLocations.get(i).getLatitude() ||
                             gpsLocationsFromDatabase.get(i).getLongitude() != listOfExpectedLocations.get(i).getLongitude() ||
-                            gpsLocationsFromDatabase.get(i).getAccuracy() != listOfExpectedLocations.get(i).getAccuracy() ||
-                            !gpsLocationsFromDatabase.get(i).getProvider().equals(listOfExpectedLocations.get(i).getProvider())) {
+                            gpsLocationsFromDatabase.get(i).getAccuracy() != listOfExpectedLocations.get(i).getAccuracy()) {
 
-                        LogUITest.debug("Failed to match all values in database");
+                        LogUITest.debug("Failed to match values in database");
 
                         LogUITest.debug(" --------------------     Expected Params : ---------------------");
                         LogUITest.debug(" Latitude : " + listOfExpectedLocations.get(i).getLatitude());
                         LogUITest.debug(" Longitude : " + listOfExpectedLocations.get(i).getLongitude());
-                        LogUITest.debug(" Provider : " + listOfExpectedLocations.get(i).getProvider());
                         LogUITest.debug(" Accuracy : " + listOfExpectedLocations.get(i).getAccuracy());
 
                         LogUITest.debug(" --------------------     Actual Params : ---------------------");
                         LogUITest.debug(" Latitude : " + gpsLocationsFromDatabase.get(i).getLatitude());
                         LogUITest.debug(" Longitude : " + gpsLocationsFromDatabase.get(i).getLongitude());
-                        LogUITest.debug(" Provider : " + gpsLocationsFromDatabase.get(i).getProvider());
                         LogUITest.debug(" Accuracy : " + gpsLocationsFromDatabase.get(i).getAccuracy());
                         return false;
                     }
