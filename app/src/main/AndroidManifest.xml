@@ -24,8 +24,12 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.shuttl.location_pings.service.LocationPingService" />
-        <service android:name="com.shuttl.location_pings.service.LocationSaveService" />
+        <service
+            android:name="com.shuttl.location_pings.service.LocationPingService"
+            android:foregroundServiceType="dataSync|location" />
+        <service
+            android:name="com.shuttl.location_pings.service.LocationSaveService"
+            android:foregroundServiceType="location|dataSync" />
 
     </application>
 

@@ -17,9 +17,17 @@ class LocationSaveService : Service() {
 
     private var serviceStarted = false
     private val TAG: String = javaClass.name
-    private val fusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(applicationContext) as FusedLocationProviderClient }
+    private val fusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(
+            applicationContext
+        ) as FusedLocationProviderClient
+    }
     private var configs: LocationConfigs = LocationConfigs()
-    private val repo by lazy { LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()) }
+    private val repo by lazy {
+        LocationRepo(
+            LocationsDB.create(applicationContext)?.locationsDao()
+        )
+    }
     private val timer by lazy {
         object : CountDownTimer(configs.timeout.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -36,7 +44,10 @@ class LocationSaveService : Service() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
                 saveLocation(locationResult.lastLocation)
-                Log.d("Shuttl_UITest" , "Location Has Changed Lat FA: " + locationResult.lastLocation.latitude + " Long : " + locationResult.lastLocation.longitude )
+                Log.d(
+                    "Shuttl_UITest",
+                    "Location Has Changed Lat FA: " + locationResult.lastLocation.latitude + " Long : " + locationResult.lastLocation.longitude
+                )
             }
         }
     }
@@ -50,16 +61,16 @@ class LocationSaveService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
-        if (!serviceStarted) {
-            startForeground(
-                1,
-                notification(
-                    this,
-                    "Updating trip details...",
-                    configs.smallIcon,
-                    null
-                )
+        startForeground(
+            1,
+            notification(
+                this,
+                "Updating trip details...",
+                configs.smallIcon,
+                null
             )
+        )
+        if (!serviceStarted) {
             serviceStarted = true
             work()
         }
@@ -82,7 +93,7 @@ class LocationSaveService : Service() {
         try {
             if (configs.timeout > 0)
                 timer.start()
-          setUpLocationListener()
+            setUpLocationListener()
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e(TAG, "GPS can't be accessed. Asked for permission?")
@@ -91,7 +102,8 @@ class LocationSaveService : Service() {
 
     @SuppressLint("MissingPermission")
     private fun setUpLocationListener() {
-        val locationRequest = LocationRequest().setInterval(configs.minTimeInterval.toLong()).setSmallestDisplacement(configs.minDistanceInterval.toFloat())
+        val locationRequest = LocationRequest().setInterval(configs.minTimeInterval.toLong())
+            .setSmallestDisplacement(configs.minDistanceInterval.toFloat())
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
 
         fusedLocationProviderClient.requestLocationUpdates(
