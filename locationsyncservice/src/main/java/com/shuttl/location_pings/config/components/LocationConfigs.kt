@@ -14,7 +14,7 @@ data class LocationConfigs(
     val timeout: Int = 1800000, // time in milliseconds after which we stop the services
     val xApiKey: String? = "", // xApiKey Auth Key for the URL to function
     val syncUrl: String? = "", // PUTS the location parameters on this URL
-    val wakeLock: Boolean? = false, // PUTS the location parameters on this URL
+    val wakeLock: Boolean? = false, // WakeLocks are enabled on service if made true
     val smallIcon: Int = R.drawable.ic_loc // Notification icon
 ) : Parcelable {
 
