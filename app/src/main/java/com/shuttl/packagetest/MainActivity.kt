@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestLocationPermission()
 
-        if (!BuildConfig.BUILD_TYPE.equals("debug")) {
+        if (true) {
             val intent = Intent(this, LocationPingService::class.java)
             intent.action = "STOP"
 

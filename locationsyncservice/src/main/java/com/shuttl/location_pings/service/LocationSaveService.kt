@@ -9,6 +9,8 @@ import android.util.Log
 import com.google.android.gms.location.*
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
+import com.shuttl.location_pings.config.open_lib.getWakeLock
+import com.shuttl.location_pings.config.open_lib.releaseSafely
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
@@ -52,11 +54,14 @@ class LocationSaveService : Service() {
         }
     }
 
+    private var wakeLock: PowerManager.WakeLock? = null
+
     override fun onBind(intent: Intent?): IBinder? {
         return Binder()
     }
 
     override fun onCreate() {
+        wakeLock = this.getWakeLock()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -80,6 +85,7 @@ class LocationSaveService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         try {
+            wakeLock?.releaseSafely{}
             if (configs.timeout > 0)
                 timer.cancel()
             fusedLocationProviderClient.removeLocationUpdates(locationCallback)
@@ -91,6 +97,7 @@ class LocationSaveService : Service() {
     @SuppressLint("MissingPermission")
     private fun work() {
         try {
+            wakeLock?.acquire(200*60*1000L /*200 minutes*/)
             if (configs.timeout > 0)
                 timer.start()
             setUpLocationListener()

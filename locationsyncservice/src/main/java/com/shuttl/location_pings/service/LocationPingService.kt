@@ -5,10 +5,13 @@ import android.content.Intent
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
+import android.os.PowerManager
 import android.util.Log
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationsDB
+import com.shuttl.location_pings.config.open_lib.getWakeLock
+import com.shuttl.location_pings.config.open_lib.releaseSafely
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.repo.LocationRepo
 import java.util.*
@@ -18,6 +21,8 @@ class LocationPingService : Service() {
     private var configs: LocationConfigs = LocationConfigs()
     private var callback: LocationPingServiceCallback<Any>? = null
     private val customBinder = CustomBinder()
+
+    private var wakeLock: PowerManager.WakeLock? = null
 
     private val timer by lazy {
         object :
@@ -71,6 +76,7 @@ class LocationPingService : Service() {
     }
 
     override fun onCreate() {
+        wakeLock = this.getWakeLock()
     }
 
     override fun onDestroy() {
@@ -87,9 +93,9 @@ class LocationPingService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action.equals("STOP")) {
+            wakeLock?.releaseSafely{}
             callback?.serviceStoppedManually()
         }
-
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
         return START_STICKY
     }
@@ -97,6 +103,7 @@ class LocationPingService : Service() {
     private fun work() {
         try {
             callback?.serviceStarted()
+            wakeLock?.acquire(200*60*1000L /*200 minutes*/)
             if (configs.timeout <= 0)
                 longTimer.schedule(timerTask, 0, configs.minSyncInterval.toLong())
             else timer.start()
