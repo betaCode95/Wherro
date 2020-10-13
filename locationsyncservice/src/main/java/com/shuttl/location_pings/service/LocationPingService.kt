@@ -76,7 +76,7 @@ class LocationPingService : Service() {
     }
 
     override fun onCreate() {
-        wakeLock = this.getWakeLock()
+
     }
 
     override fun onDestroy() {
@@ -93,7 +93,7 @@ class LocationPingService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action.equals("STOP")) {
-            wakeLock?.releaseSafely{}
+            wakeLock?.releaseSafely {}
             callback?.serviceStoppedManually()
         }
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
@@ -103,7 +103,10 @@ class LocationPingService : Service() {
     private fun work() {
         try {
             callback?.serviceStarted()
-            wakeLock?.acquire(200*60*1000L /*200 minutes*/)
+            if (configs.wakeLock == true) {
+                wakeLock = this.getWakeLock()
+                wakeLock?.acquire(200 * 60 * 1000L /*200 minutes*/)
+            }
             if (configs.timeout <= 0)
                 longTimer.schedule(timerTask, 0, configs.minSyncInterval.toLong())
             else timer.start()

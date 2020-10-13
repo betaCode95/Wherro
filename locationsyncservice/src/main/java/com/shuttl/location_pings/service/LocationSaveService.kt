@@ -85,7 +85,7 @@ class LocationSaveService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            wakeLock?.releaseSafely{}
+            wakeLock?.releaseSafely {}
             if (configs.timeout > 0)
                 timer.cancel()
             fusedLocationProviderClient.removeLocationUpdates(locationCallback)
@@ -97,7 +97,10 @@ class LocationSaveService : Service() {
     @SuppressLint("MissingPermission")
     private fun work() {
         try {
-            wakeLock?.acquire(200*60*1000L /*200 minutes*/)
+            if (configs.wakeLock == true) {
+                wakeLock = this.getWakeLock()
+                wakeLock?.acquire(200 * 60 * 1000L /*200 minutes*/)
+            }
             if (configs.timeout > 0)
                 timer.start()
             setUpLocationListener()
