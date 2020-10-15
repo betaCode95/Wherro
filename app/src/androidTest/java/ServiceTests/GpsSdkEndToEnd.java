@@ -31,12 +31,16 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
         // Set config
         locationConfigs =
-                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING
                         , TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS
-                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL, TestConstants.ACCURACY
-                        , TestConstants.BUFFER_SIZE, TestConstants.BATCH_SIZE_FOR_PING_SERVICE
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL
+                        , TestConstants.ACCURACY
+                        , TestConstants.BUFFER_SIZE
+                        , TestConstants.BATCH_SIZE_FOR_PING_SERVICE
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL
+                        , TestConstants.XAPI_KEY_GLOBAL
                         , TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.WAKE_LOCK_ENABLED
                         , TestConstants.NOTIFICATION_ICON_ID);
 
         // Initiate Both Location Services

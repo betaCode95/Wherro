@@ -33,11 +33,16 @@ public class PingService extends BaseTestCase {
 
         // Set config
         locationConfigs =
-                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_PS
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING_PS
                         , TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_PS
-                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_PS, TestConstants.ACCURACY_PS
-                        , TestConstants.BUFFER_SIZE_PS, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_PS
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL, TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_PS
+                        , TestConstants.ACCURACY_PS
+                        , TestConstants.BUFFER_SIZE_PS
+                        , TestConstants.BATCH_SIZE_FOR_PING_SERVICE_PS
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL
+                        , TestConstants.XAPI_KEY_GLOBAL
+                        , TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.WAKE_LOCK_ENABLED
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 

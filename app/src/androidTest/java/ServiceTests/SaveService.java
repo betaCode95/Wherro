@@ -31,11 +31,16 @@ public class SaveService extends BaseTestCase {
 
         // Set config
         locationConfigs =
-                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING_SS
                         , TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS
-                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_SS, TestConstants.ACCURACY_SS
-                        , TestConstants.BUFFER_SIZE_SS, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_SS
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL, TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_SS
+                        , TestConstants.ACCURACY_SS
+                        , TestConstants.BUFFER_SIZE_SS
+                        , TestConstants.BATCH_SIZE_FOR_PING_SERVICE_SS
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL
+                        , TestConstants.XAPI_KEY_GLOBAL
+                        , TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.WAKE_LOCK_ENABLED
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
