@@ -54,14 +54,12 @@ public class PingService extends BaseTestCase {
 
     }
 
-
     @AutoTest_PingLocationService
     @Test
     public void verifyFailedResponseOfPingService() {
 
         // --------------------- Set and Validate First Location ---------------------
-        loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc1 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG++);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -69,8 +67,7 @@ public class PingService extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc2 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG++);
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
                 "Failed to set and validate Second Location with the Database",

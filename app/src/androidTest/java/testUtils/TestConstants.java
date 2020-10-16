@@ -17,10 +17,6 @@ public class TestConstants {
      */
     public static int WAIT_FOR_SERVICE_TO_GET_STARTED = 2;
 
-    // Inputs for random number generator
-    public static int minValue = 1;
-    public static int maxValue = 90;
-
     public static class DelayInSeconds {
 
         public static long THREE_SEC = 3000;
@@ -30,8 +26,9 @@ public class TestConstants {
 
     }
 
-    public static double startLatitude = 28.3992;
-    public static double startLongitude = 77.0187;
+    public static double START_LAT = 13.001;
+    public static double START_LNG = 77.010;
+
     public static boolean WAKE_LOCK_ENABLED = true;
     public static boolean WAKE_LOCK_DISABLED = false;
 
