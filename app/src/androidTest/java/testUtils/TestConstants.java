@@ -26,8 +26,9 @@ public class TestConstants {
 
     }
 
-    public static double START_LAT = 13.001;
-    public static double START_LNG = 77.010;
+    public static double BASE_LAT = 13.001;
+    public static double BASE_LNG = 77.010;
+    public static double DIFFERENCE_IN_LATITUDE_BETWEEN_TWO_LOCATIONS = 0.001;
 
     public static boolean WAKE_LOCK_ENABLED = true;
     public static boolean WAKE_LOCK_DISABLED = false;
@@ -49,17 +50,17 @@ public class TestConstants {
     // ---------------------------------    LOCATION CONFIG FOR PING SERVICE TESTS  -------------------------------------
 
     public static final int MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING_PS = 100;  // in millis
-    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_PS = 1000;
+    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_PS = 20;
     public static final int MIN_PING_SERVICE_SYNC_INTERVAL_PS = 7000;  // in millis
     public static final int ACCURACY_PS = 3;
     public static final int BUFFER_SIZE_PS = 3;
-    public static final int BATCH_SIZE_FOR_PING_SERVICE_PS = 1;
+    public static final int BATCH_SIZE_FOR_PING_SERVICE_PS = 5;
 
 
     // ---------------------------------    LOCATION CONFIG FOR SAVE SERVICE TESTS  -------------------------------------
 
     public static final int MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING_SS = 2000;  // in millis
-    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 1000;
+    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_SS = 20;
     public static final int MIN_PING_SERVICE_SYNC_INTERVAL_SS = 90000;  // in millis
     public static final int ACCURACY_SS = 3;
     public static final int BUFFER_SIZE_SS = 3;
@@ -69,7 +70,7 @@ public class TestConstants {
     // ---------------------------------    LOCATION CONFIG FOR END TO END FLOW  -------------------------------------
 
     public static final int MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING = 100;  // in millis
-    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS = 100;
+    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS = 20;
     public static final int MIN_PING_SERVICE_SYNC_INTERVAL = 7000;  // in millis
     public static final int ACCURACY = 3;
     public static final int BUFFER_SIZE = 5;
@@ -79,7 +80,7 @@ public class TestConstants {
     // ---------------------------------    GLOBAL LOCATION CONFIG   -------------------------------------
 
     public static final int MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING_GLOBAL = 1000;  // in millis
-    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL = 1000;
+    public static final int MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL = 20;
     public static final int MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL = 10000;  // in millis
     public static final int ACCURACY_GLOBAL = 3;
     public static final int BUFFER_SIZE_GLOBAL = 50;

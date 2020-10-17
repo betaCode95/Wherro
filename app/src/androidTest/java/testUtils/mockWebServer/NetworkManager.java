@@ -26,7 +26,9 @@ public class NetworkManager extends Dispatcher {
         LogUITest.debug(" ******************** Current request: " + request.getPath() + " *********************");
 
         // Convert Actual Request Body to Json Object
-        JSONObject actualRequestBodyAsJsonObject = UiUtils.convertStringJsonToJsonObject(request.getBody().readUtf8());
+        String requestBody =  request.getBody().readUtf8();
+        LogUITest.debug("Current Body : "+ requestBody);
+        JSONObject actualRequestBodyAsJsonObject = UiUtils.convertStringJsonToJsonObject(requestBody);
         // Convert Expected Request Body to Json Object
         JSONObject expectedRequestBodyAsJsonObject = DispatcherUtils.convertListOfLocationsIntoJsonObject(BaseTestCase.mockLocationList, BaseTestCase.currentBatchSize);
 

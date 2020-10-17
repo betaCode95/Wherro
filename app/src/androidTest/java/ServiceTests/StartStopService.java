@@ -10,7 +10,6 @@ import com.shuttl.location_pings.service.LocationPingService;
 import com.shuttl.location_pings.service.LocationSaveService;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,7 +49,6 @@ public class StartStopService extends BaseTestCase {
         ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
     }
 
-    @Ignore
     @AutoTest_Critical
     @AutoTest_StartStopServices
     @Test
@@ -98,7 +96,7 @@ public class StartStopService extends BaseTestCase {
 
     }
 
-    @Ignore
+    
     @AutoTest_PingLocationService
     @AutoTest_StartStopServices
     @Test
@@ -128,7 +126,7 @@ public class StartStopService extends BaseTestCase {
 
     }
 
-    @Ignore
+    
     @AutoTest_SaveLocationService
     @AutoTest_StartStopServices
     @Test

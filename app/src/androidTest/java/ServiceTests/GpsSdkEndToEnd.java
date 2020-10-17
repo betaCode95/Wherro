@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.DBHelper;
-import testUtils.Location;
 import testUtils.ServiceHelper;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
@@ -56,7 +55,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
     public void verifySdkEndToEnd() {
 
         // --------------------- Set and Validate First Location ---------------------
-        loc1 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG);
+        loc1 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -64,7 +63,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG);
+        loc2 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
                 "Failed to set and validate Second Location with the Database",
@@ -72,7 +71,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Third Location ---------------------
-        loc3 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG);
+        loc3 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
                 "Failed to set and validate Third Location with the Database",
@@ -81,7 +80,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Fourth Location ---------------------
-        loc4 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG);
+        loc4 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc4, mainApplication),
                 "Failed to set and validate Fourth Location with the Database",
@@ -90,7 +89,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Fifth Location ---------------------
-        loc5 = new Location(TestConstants.START_LAT++ , TestConstants.START_LNG);
+        loc5 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc5, mainApplication),
                 "Failed to set and validate Fifth Location with the Database",

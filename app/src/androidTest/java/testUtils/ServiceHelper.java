@@ -180,4 +180,15 @@ public class ServiceHelper {
         }
         return false;
     }
+
+
+    /**
+     * @description Create new location with a difference of TestConstants.DIFFERENCE_IN_LATITUDE_BETWEEN_TWO_LOCATIONS in latitude
+     * @return
+     */
+    public static Location getNewLocation() {
+        TestConstants.BASE_LAT =  Double.sum(TestConstants.BASE_LAT , TestConstants.DIFFERENCE_IN_LATITUDE_BETWEEN_TWO_LOCATIONS);
+        Location newLocation = new Location(TestConstants.BASE_LAT , TestConstants.BASE_LNG);
+        return newLocation;
+    }
 }

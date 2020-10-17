@@ -38,33 +38,25 @@ public class DBHelper {
             }
 
             // ----------- CHECK IF LOCATIONS IN DATABASE ARE ONE OF OUR MOCKED LOCATIONS OR NOT    --------------
-            LogUITest.info("Checking if locations in database are one of the location we have already set ... !!  ");
             for (int i = 0; i < listOfExpectedLocations.size(); i++)
             {
-                boolean locationFoundInDatabase = false;
-                LogUITest.debug("Checking for location : " +
-                        listOfExpectedLocations.get(i).getLatitude() + "," + listOfExpectedLocations.get(i).getLongitude()
-                + " if available in database");
-
-                for (int j = 0; j < gpsLocationsFromDatabase.size(); j++) {
-
+                boolean validLocation = false;
+                for (int j = 0; j < gpsLocationsFromDatabase.size(); j++)
+                {
                     if ((gpsLocationsFromDatabase.get(j).getLatitude() - 13) > 1 || (gpsLocationsFromDatabase.get(j).getLatitude() - 13) < 0 )
                         continue;
 
-
                     if (listOfExpectedLocations.get(i).getLatitude() == gpsLocationsFromDatabase.get(j).getLatitude()
-                            || listOfExpectedLocations.get(i).getLongitude() == gpsLocationsFromDatabase.get(j).getLongitude()) {
-                        LogUITest.debug("Location : " +
-                                listOfExpectedLocations.get(i).getLatitude() + "," + listOfExpectedLocations.get(i).getLongitude()
-                                + " found in database");
-                        locationFoundInDatabase =  true;
+                            && listOfExpectedLocations.get(i).getLongitude() == gpsLocationsFromDatabase.get(j).getLongitude()){
+                        validLocation =  true;
+                        break;
                     }
                 }
 
-                if (!locationFoundInDatabase){
-                    LogUITest.debug("Location : " +
+                if (!validLocation){
+                    LogUITest.error("Location : " +
                             listOfExpectedLocations.get(i).getLatitude() + "," + listOfExpectedLocations.get(i).getLongitude()
-                            + " is does not exists in database");
+                            + " is does not exist in database");
                     return false;
                 }
 
@@ -75,7 +67,7 @@ public class DBHelper {
 
         }
 
-        LogUITest.debug("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
+        LogUITest.error("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
         return false;
 
 
