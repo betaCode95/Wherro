@@ -77,7 +77,7 @@ public class PingService extends BaseTestCase {
 
         // Wait for the Sync service to be called.
         // Sync interval is taken as 7 seconds.
-        UiUtils.safeSleep(TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_PS);
+        UiUtils.safeSleep(TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_PS/1000);
         AssertUtils.assertTrueV(DBHelper.fetchGpsDataFromDatabase(mainApplication).size() == 0,
                 "Test Failed !! There are still some Locations in Database. DB should have been empty. ",
                 "Test Passed !! Successfully validated that no locations data exists in database ");
