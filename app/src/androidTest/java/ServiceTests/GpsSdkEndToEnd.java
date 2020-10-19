@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import testUtils.AssertUtils;
 import testUtils.BaseTestCase;
 import testUtils.DBHelper;
-import testUtils.Location;
 import testUtils.ServiceHelper;
 import testUtils.TestConstants;
 import testUtils.UiUtils;
@@ -31,12 +30,16 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
         // Set config
         locationConfigs =
-                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING
                         , TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS
-                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL, TestConstants.ACCURACY
-                        , TestConstants.BUFFER_SIZE, TestConstants.BATCH_SIZE_FOR_PING_SERVICE
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL
+                        , TestConstants.ACCURACY
+                        , TestConstants.BUFFER_SIZE
+                        , TestConstants.BATCH_SIZE_FOR_PING_SERVICE
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL
+                        , TestConstants.XAPI_KEY_GLOBAL
                         , TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.WAKE_LOCK_ENABLED
                         , TestConstants.NOTIFICATION_ICON_ID);
 
         // Initiate Both Location Services
@@ -52,8 +55,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
     public void verifySdkEndToEnd() {
 
         // --------------------- Set and Validate First Location ---------------------
-        loc1 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc1 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc1, mainApplication),
                 "Failed to set and validate First Location with the Database",
@@ -61,8 +63,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Second Location ---------------------
-        loc2 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc2 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc2, mainApplication),
                 "Failed to set and validate Second Location with the Database",
@@ -70,8 +71,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Third Location ---------------------
-        loc3 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc3 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc3, mainApplication),
                 "Failed to set and validate Third Location with the Database",
@@ -80,8 +80,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Fourth Location ---------------------
-        loc4 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc4 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc4, mainApplication),
                 "Failed to set and validate Fourth Location with the Database",
@@ -90,8 +89,7 @@ public class GpsSdkEndToEnd extends BaseTestCase {
 
 
         // --------------------- Set and Validate Fifth Location ---------------------
-        loc5 = new Location(UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue)
-                , UiUtils.randomGenerator(TestConstants.minValue, TestConstants.maxValue));
+        loc5 = ServiceHelper.getNewLocation();
         AssertUtils.assertTrueV(
                 DBHelper.setLocationAndValidateDB(loc5, mainApplication),
                 "Failed to set and validate Fifth Location with the Database",

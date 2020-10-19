@@ -25,46 +25,53 @@ public class DBHelper {
         List<GPSLocation> gpsLocationsFromDatabase = fetchGpsDataFromDatabase(application);
 
         if (!listOfExpectedLocations.isEmpty()) {
-            if (listOfExpectedLocations.size() == gpsLocationsFromDatabase.size()) {
 
-                for (int i = 0; i < listOfExpectedLocations.size(); i++) {
-                    if (gpsLocationsFromDatabase.get(i).getLatitude() != listOfExpectedLocations.get(i).getLatitude() ||
-                            gpsLocationsFromDatabase.get(i).getLongitude() != listOfExpectedLocations.get(i).getLongitude() ||
-                            gpsLocationsFromDatabase.get(i).getAccuracy() != listOfExpectedLocations.get(i).getAccuracy()) {
 
-                        LogUITest.debug("Failed to match values in database");
+            LogUITest.info("Locations in Mock Locations Set ... !!  ");
+            for (int i = 0; i < listOfExpectedLocations.size(); i++) {
+                LogUITest.debug(listOfExpectedLocations.get(i).getLatitude() + "," + listOfExpectedLocations.get(i).getLongitude());
+            }
 
-                        LogUITest.debug(" --------------------     Expected Params : ---------------------");
-                        LogUITest.debug(" Latitude : " + listOfExpectedLocations.get(i).getLatitude());
-                        LogUITest.debug(" Longitude : " + listOfExpectedLocations.get(i).getLongitude());
-                        LogUITest.debug(" Accuracy : " + listOfExpectedLocations.get(i).getAccuracy());
+            LogUITest.info("Locations in Database ... !!  ");
+            for (int i = 0; i < gpsLocationsFromDatabase.size(); i++) {
+                LogUITest.debug(gpsLocationsFromDatabase.get(i).getLatitude() + "," + gpsLocationsFromDatabase.get(i).getLongitude());
+            }
 
-                        LogUITest.debug(" --------------------     Actual Params : ---------------------");
-                        LogUITest.debug(" Latitude : " + gpsLocationsFromDatabase.get(i).getLatitude());
-                        LogUITest.debug(" Longitude : " + gpsLocationsFromDatabase.get(i).getLongitude());
-                        LogUITest.debug(" Accuracy : " + gpsLocationsFromDatabase.get(i).getAccuracy());
-                        return false;
+            // ----------- CHECK IF LOCATIONS IN DATABASE ARE ONE OF OUR MOCKED LOCATIONS OR NOT    --------------
+            for (int i = 0; i < listOfExpectedLocations.size(); i++)
+            {
+                boolean validLocation = false;
+                for (int j = 0; j < gpsLocationsFromDatabase.size(); j++)
+                {
+                    if ((gpsLocationsFromDatabase.get(j).getLatitude() - 13) > 1 || (gpsLocationsFromDatabase.get(j).getLatitude() - 13) < 0 )
+                        continue;
+
+                    if (listOfExpectedLocations.get(i).getLatitude() == gpsLocationsFromDatabase.get(j).getLatitude()
+                            && listOfExpectedLocations.get(i).getLongitude() == gpsLocationsFromDatabase.get(j).getLongitude()){
+                        validLocation =  true;
+                        break;
                     }
                 }
 
-                return true;
+                if (!validLocation){
+                    LogUITest.error("Location : " +
+                            listOfExpectedLocations.get(i).getLatitude() + "," + listOfExpectedLocations.get(i).getLongitude()
+                            + " is does not exist in database");
+                    return false;
+                }
 
-
-            } else {
-                LogUITest.debug("Number of locations in database vs locations set by Mockwebserver are different");
-                LogUITest.debug("Number of Locations mock location set : " + listOfExpectedLocations.size());
-                LogUITest.debug("Number of Locations in database : " + gpsLocationsFromDatabase.size());
-                return false;
 
             }
+
+            return true;
+
         }
 
-        LogUITest.debug("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
+        LogUITest.error("Have not set any locations. Set Atleast One location using mockLocationServer to compare");
         return false;
 
 
     }
-
 
     public static List<GPSLocation> fetchGpsDataFromDatabase(Application application) {
 
