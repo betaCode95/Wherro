@@ -1,11 +1,13 @@
 package com.shuttl.location_pings.service
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
-import android.os.Binder
-import android.os.CountDownTimer
-import android.os.IBinder
-import android.os.PowerManager
+import android.content.IntentFilter
+import android.os.*
 import android.util.Log
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
@@ -47,6 +49,24 @@ class LocationPingService : Service() {
         }
     }
 
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.i("LPing", "Broadcast ${intent?.action}")
+
+            context?.let {
+                when (intent?.action) {
+                    ACTION_ALARM -> {
+                        Log.i("LPing", "Alarm")
+                    }
+                    else -> return
+                }
+            }
+        }
+    }
+
+    private val ACTION_ALARM by lazy { "alarm" }
+
+
     private fun pingLocations() {
         try {
             LocationRepo(LocationsDB.create(applicationContext)?.locationsDao()).syncLocations(
@@ -76,7 +96,8 @@ class LocationPingService : Service() {
     }
 
     override fun onCreate() {
-
+        registerReceiver(receiver, IntentFilter(ACTION_ALARM));
+        scheduleAlarm()
     }
 
     override fun onDestroy() {
@@ -86,6 +107,8 @@ class LocationPingService : Service() {
                 longTimer.cancel()
                 timerTask.cancel()
             } else timer.cancel()
+            cancelAlarm()
+            unregisterReceiver(receiver)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -125,4 +148,43 @@ class LocationPingService : Service() {
             return this@LocationPingService
         }
     }
+
+
+    private fun getAlarmIntent(): PendingIntent {
+        val i = Intent(ACTION_ALARM)
+        i.setPackage(packageName)
+        return PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    fun scheduleAlarm() {
+        Log.i("LPing", "Scheduling at alarm ${Date(System.currentTimeMillis() + 30000)}")
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 5000,
+                    getAlarmIntent()
+                )
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {
+                (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 5000,
+                    getAlarmIntent()
+                )
+            }
+            else -> {
+                (getSystemService(Context.ALARM_SERVICE) as AlarmManager).set(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 5000,
+                    getAlarmIntent()
+                )
+            }
+        }
+    }
+
+    private fun cancelAlarm() {
+        (getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(getAlarmIntent())
+    }
+
 }

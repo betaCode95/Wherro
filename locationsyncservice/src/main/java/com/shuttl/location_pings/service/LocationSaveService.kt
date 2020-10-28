@@ -1,8 +1,13 @@
 package com.shuttl.location_pings.service
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.os.*
 import android.util.Log
@@ -14,6 +19,7 @@ import com.shuttl.location_pings.config.open_lib.releaseSafely
 import com.shuttl.location_pings.custom.notification
 import com.shuttl.location_pings.data.model.entity.GPSLocation
 import com.shuttl.location_pings.data.repo.LocationRepo
+import java.util.*
 
 class LocationSaveService : Service() {
 
@@ -46,6 +52,23 @@ class LocationSaveService : Service() {
         }
     }
 
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.i(TAG, "Broadcast ${intent?.action}")
+            scheduleAlarm()
+            context?.let {
+                when (intent?.action) {
+                    ACTION_ALARM -> {
+                        Log.i(TAG, "Alarm")
+                    }
+                    else -> return
+                }
+            }
+        }
+    }
+
+    private val ACTION_ALARM by lazy { "alarm" }
+
     private val locationCallback by lazy {
         object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -66,6 +89,8 @@ class LocationSaveService : Service() {
     }
 
     override fun onCreate() {
+        registerReceiver(receiver, IntentFilter(ACTION_ALARM));
+        scheduleAlarm()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -93,6 +118,8 @@ class LocationSaveService : Service() {
             if (configs.timeout > 0)
                 timer.cancel()
             fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            cancelAlarm()
+            unregisterReceiver(receiver)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -133,5 +160,42 @@ class LocationSaveService : Service() {
                 location
             ), configs.bufferSize
         )
+    }
+
+    private fun getAlarmIntent(): PendingIntent {
+        val i = Intent(ACTION_ALARM)
+        i.setPackage(packageName)
+        return PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    fun scheduleAlarm() {
+        Log.i(TAG, "Scheduling at alarm ${Date(System.currentTimeMillis() + 30000)}")
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 3000,
+                    getAlarmIntent()
+                )
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {
+                (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 3000,
+                    getAlarmIntent()
+                )
+            }
+            else -> {
+                (getSystemService(Context.ALARM_SERVICE) as AlarmManager).set(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 3000,
+                    getAlarmIntent()
+                )
+            }
+        }
+    }
+
+    private fun cancelAlarm() {
+        (getSystemService(Context.ALARM_SERVICE) as AlarmManager).cancel(getAlarmIntent())
     }
 }

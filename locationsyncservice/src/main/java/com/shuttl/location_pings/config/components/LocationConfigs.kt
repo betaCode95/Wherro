@@ -1,7 +1,10 @@
 package com.shuttl.location_pings.config.components
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.Gson
 import com.shuttl.locations_sync.R
 
 data class LocationConfigs(
@@ -14,7 +17,8 @@ data class LocationConfigs(
     val timeout: Int = 1800000, // time in milliseconds after which we stop the services
     val xApiKey: String? = "", // xApiKey Auth Key for the URL to function
     val syncUrl: String? = "", // PUTS the location parameters on this URL
-    val wakeLock: Boolean? = false, // WakeLocks are enabled on service if made true
+    val wakeLock: Boolean? = true, // WakeLocks are enabled on service if made true
+    val alarm: Boolean? = true, // Alarm Manager
     val smallIcon: Int = R.drawable.ic_loc // Notification icon
 ) : Parcelable {
 
@@ -28,6 +32,7 @@ data class LocationConfigs(
         parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readInt()
     ) {
@@ -44,6 +49,7 @@ data class LocationConfigs(
         parcel.writeString(xApiKey)
         parcel.writeString(syncUrl)
         parcel.writeValue(wakeLock)
+        parcel.writeValue(alarm)
         parcel.writeInt(smallIcon)
     }
 
@@ -61,5 +67,16 @@ data class LocationConfigs(
         }
     }
 
+    fun saveToSharedPref(context: Context) {
+        val prefs = context.getSharedPreferences("sdk_location_configs", 0)
+        val editor = prefs.edit()
+        editor.putString("config", Gson().toJson(this))
+    }
+
+    fun getFromLocal(context: Context) {
+        val prefs = context.getSharedPreferences("sdk_location_configs", 0)
+        val editor = prefs.edit()
+        editor.putString("config", Gson().toJson(this))
+    }
 
 }
