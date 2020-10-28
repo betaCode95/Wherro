@@ -36,6 +36,11 @@ class LocationSaveService : Service() {
             }
 
             override fun onFinish() {
+                try {
+                    wakeLock?.releaseSafely {}
+                } catch (e: Exception) {
+                    Log.e("ERROR", e.toString())
+                }
                 stopForeground(true)
             }
         }
@@ -61,7 +66,6 @@ class LocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        wakeLock = this.getWakeLock()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

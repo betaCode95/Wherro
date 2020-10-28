@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                     minSyncInterval = 5000,
                     minDistanceInterval = 10,
                     minTimeInterval = 1000,
-                    wakeLock = false
+                    wakeLock = true
                 ), callback = callback, intent = intent
             )
         }
