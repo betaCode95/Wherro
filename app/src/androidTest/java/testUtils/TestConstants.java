@@ -32,6 +32,8 @@ public class TestConstants {
 
     public static boolean WAKE_LOCK_ENABLED = true;
     public static boolean WAKE_LOCK_DISABLED = false;
+    public static boolean ALARM_LOCK_ENABLED = true;
+    public static boolean ALARM_LOCK_DISABLED = false;
 
     public static String GPS_PIPELINE_URL_END_POINT = "sendGps/";
     public static String GPS_PIPELINE_URL = MockWebUtils.getMockWebServerUrl() + GPS_PIPELINE_URL_END_POINT;

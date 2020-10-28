@@ -42,6 +42,7 @@ public class PingService extends BaseTestCase {
                         , TestConstants.XAPI_KEY_GLOBAL
                         , TestConstants.GPS_PIPELINE_URL
                         , TestConstants.WAKE_LOCK_DISABLED
+                        , TestConstants.ALARM_LOCK_ENABLED
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
