@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version '0.2001' // your library version
+version '0.2003' // your library version
 group 'com.shuttl' // whatever group name you'd like
 
 publishing {
