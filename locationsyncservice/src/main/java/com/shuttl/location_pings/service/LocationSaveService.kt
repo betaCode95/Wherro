@@ -67,7 +67,7 @@ class LocationSaveService : Service() {
         }
     }
 
-    private val ACTION_ALARM by lazy { "alarm" }
+    private val ACTION_ALARM by lazy { "loc_save_alarm" }
 
     private val locationCallback by lazy {
         object : LocationCallback() {
@@ -165,6 +165,7 @@ class LocationSaveService : Service() {
     private fun getAlarmIntent(): PendingIntent {
         val i = Intent(ACTION_ALARM)
         i.setPackage(packageName)
+        Log.e("GPS_SDK", packageName)
         return PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 

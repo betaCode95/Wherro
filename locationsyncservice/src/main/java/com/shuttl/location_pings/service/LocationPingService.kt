@@ -64,7 +64,7 @@ class LocationPingService : Service() {
         }
     }
 
-    private val ACTION_ALARM by lazy { "alarm" }
+    private val ACTION_ALARM by lazy { "loc_ping_alarm" }
 
 
     private fun pingLocations() {
