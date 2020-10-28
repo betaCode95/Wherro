@@ -65,18 +65,18 @@ data class LocationConfigs(
         override fun newArray(size: Int): Array<LocationConfigs?> {
             return arrayOfNulls(size)
         }
+
+        fun getFromLocal(context: Context): LocationConfigs? {
+            val prefs = context.getSharedPreferences("sdk_location_configs", 0)
+            return Gson().fromJson<LocationConfigs>(prefs.getString("config", ""), LocationConfigs::class.java)
+        }
     }
 
     fun saveToSharedPref(context: Context) {
         val prefs = context.getSharedPreferences("sdk_location_configs", 0)
         val editor = prefs.edit()
         editor.putString("config", Gson().toJson(this))
-    }
-
-    fun getFromLocal(context: Context) {
-        val prefs = context.getSharedPreferences("sdk_location_configs", 0)
-        val editor = prefs.edit()
-        editor.putString("config", Gson().toJson(this))
+        editor.apply()
     }
 
 }

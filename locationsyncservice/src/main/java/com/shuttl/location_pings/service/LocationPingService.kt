@@ -64,7 +64,7 @@ class LocationPingService : Service() {
         }
     }
 
-    private val ACTION_ALARM by lazy { "loc_ping_alarm" }
+    private val ACTION_ALARM by lazy { "loc_save_alarm" }
 
 
     private fun pingLocations() {
@@ -96,8 +96,6 @@ class LocationPingService : Service() {
     }
 
     override fun onCreate() {
-        registerReceiver(receiver, IntentFilter(ACTION_ALARM));
-        scheduleAlarm()
     }
 
     override fun onDestroy() {
@@ -107,8 +105,10 @@ class LocationPingService : Service() {
                 longTimer.cancel()
                 timerTask.cancel()
             } else timer.cancel()
-            cancelAlarm()
-            unregisterReceiver(receiver)
+            if (configs.alarm == true) {
+                cancelAlarm()
+                unregisterReceiver(receiver)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -133,6 +133,10 @@ class LocationPingService : Service() {
             if (configs.timeout <= 0)
                 longTimer.schedule(timerTask, 0, configs.minSyncInterval.toLong())
             else timer.start()
+            if (configs.alarm == true) {
+                registerReceiver(receiver, IntentFilter(ACTION_ALARM));
+                scheduleAlarm()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

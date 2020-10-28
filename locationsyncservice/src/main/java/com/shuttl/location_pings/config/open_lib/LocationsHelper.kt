@@ -1,5 +1,6 @@
 package com.shuttl.location_pings.config.open_lib
 
+import android.app.ActivityManager
 import android.app.Application
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -48,6 +49,7 @@ object LocationsHelper {
         callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
+        locationConfigs.saveToSharedPref(app)
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)
@@ -62,6 +64,29 @@ object LocationsHelper {
             app.startService(saveIntent);
         }
         app.bindService(pingIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    fun <T> initSilently(
+        context: Context,
+        interceptor: Interceptor? = null,
+        callback: LocationPingServiceCallback<T>,
+        intent: Intent
+    ) {
+        val pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
+        this.callback = callback as LocationPingServiceCallback<Any>
+        setNetworkingDebug(interceptor)
+        val locationConfigs = LocationConfigs.getFromLocal(context)
+        val pingIntent = Intent(context, LocationPingService::class.java)
+        pingIntent.putExtra("config", locationConfigs)
+        pingIntent.putExtra("pendingIntent", pendingIntent)
+        val saveIntent = Intent(context, LocationSaveService::class.java)
+        saveIntent.putExtra("config", locationConfigs)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(saveIntent)
+        } else {
+            context.startService(saveIntent);
+        }
+        context.bindService(pingIntent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     fun stop(app: Application) {
@@ -129,7 +154,25 @@ object LocationsHelper {
 
     }
 
-
     fun getBatchedLocations(app: Application, entries: Int) =
         LocationRepo(LocationsDB.create(app)?.locationsDao()).getBatchedLocations(entries)
+
+    fun isServiceRunning(
+        context: Context?,
+        serviceClass: Class<*>?
+    ): Boolean {
+        if (context == null || serviceClass == null) {
+            return false
+        }
+        val serviceClassName = serviceClass.name
+        val manager =
+            context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClassName == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 }

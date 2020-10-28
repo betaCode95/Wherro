@@ -89,8 +89,6 @@ class LocationSaveService : Service() {
     }
 
     override fun onCreate() {
-        registerReceiver(receiver, IntentFilter(ACTION_ALARM));
-        scheduleAlarm()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -108,6 +106,10 @@ class LocationSaveService : Service() {
             serviceStarted = true
             work()
         }
+        if (configs.alarm == true) {
+            registerReceiver(receiver, IntentFilter(ACTION_ALARM));
+            scheduleAlarm()
+        }
         return START_STICKY // this makes the service restart if it was stopped by system, when memory gets restored in the system
     }
 
@@ -118,8 +120,10 @@ class LocationSaveService : Service() {
             if (configs.timeout > 0)
                 timer.cancel()
             fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-            cancelAlarm()
-            unregisterReceiver(receiver)
+            if (configs.alarm == true) {
+                cancelAlarm()
+                unregisterReceiver(receiver)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -175,21 +179,21 @@ class LocationSaveService : Service() {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
                 (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + 3000,
+                    System.currentTimeMillis() + 2000,
                     getAlarmIntent()
                 )
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {
                 (getSystemService(Context.ALARM_SERVICE) as AlarmManager).setExact(
                     AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + 3000,
+                    System.currentTimeMillis() + 2000,
                     getAlarmIntent()
                 )
             }
             else -> {
                 (getSystemService(Context.ALARM_SERVICE) as AlarmManager).set(
                     AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + 3000,
+                    System.currentTimeMillis() + 2000,
                     getAlarmIntent()
                 )
             }
