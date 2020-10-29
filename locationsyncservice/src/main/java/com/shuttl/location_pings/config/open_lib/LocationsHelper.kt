@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
+import android.text.TextUtils
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationRetrofit
@@ -76,6 +77,7 @@ object LocationsHelper {
         this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)
         val locationConfigs = LocationConfigs.getFromLocal(context)
+        if (TextUtils.isEmpty(locationConfigs?.syncUrl)) return
         val pingIntent = Intent(context, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         pingIntent.putExtra("pendingIntent", pendingIntent)
