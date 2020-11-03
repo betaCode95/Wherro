@@ -39,10 +39,6 @@ object LocationsHelper {
         }
     }
 
-    private fun setNetworkingDebug(inteceptor: Interceptor?) {
-        LocationRetrofit.networkDebug = inteceptor
-    }
-  
     fun <T> initLocationsModule(
         app: Application,
         interceptor: Interceptor? = null,
@@ -51,10 +47,9 @@ object LocationsHelper {
         intent: Intent
     ) {
         locationConfigs.saveToSharedPref(app)
-        LocationRetrofit.resetRetrofit(locationConfigs.syncUrl)
+        LocationRetrofit.resetRetrofit(locationConfigs.syncUrl, interceptor)
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
-        setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         pingIntent.putExtra("pendingIntent", pendingIntent)
@@ -76,10 +71,9 @@ object LocationsHelper {
     ) {
         val pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
-        setNetworkingDebug(interceptor)
         val locationConfigs = LocationConfigs.getFromLocal(context)
         if (TextUtils.isEmpty(locationConfigs?.syncUrl)) return
-        LocationRetrofit.resetRetrofit(locationConfigs?.syncUrl)
+        LocationRetrofit.resetRetrofit(locationConfigs?.syncUrl, interceptor)
         val pingIntent = Intent(context, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         pingIntent.putExtra("pendingIntent", pendingIntent)
@@ -131,7 +125,6 @@ object LocationsHelper {
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs
     ) {
-        setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         app.startService(pingIntent)

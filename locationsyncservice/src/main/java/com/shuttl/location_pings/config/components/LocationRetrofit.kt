@@ -14,20 +14,21 @@ internal object LocationRetrofit {
 
     private var retrofit: Retrofit? = null
 
-    private val okHttpClient by lazy {
+    private var networkDebug: Interceptor? = null
+
+    private fun getOkHttpClient(interceptor: Interceptor? = networkDebug): OkHttpClient {
+        networkDebug = interceptor
         val b = OkHttpClient.Builder()
-        if (networkDebug != null)
-            b.addInterceptor(networkDebug)
-        b.build()
+        if (interceptor != null)
+            b.addInterceptor(interceptor)
+        return b.build()
     }
 
-    var networkDebug: Interceptor? = null
-
-    fun resetRetrofit(baseUrlR: String?) {
+    fun resetRetrofit(baseUrlR: String?, httpClient: Interceptor?) {
         baseUrl = computeBaseUrl(baseUrlR)
         if (baseUrl.isNullOrEmpty()) return
         retrofit = Retrofit.Builder()
-            .client(okHttpClient)
+            .client(getOkHttpClient(httpClient))
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(baseUrl)
             .build()
@@ -36,7 +37,7 @@ internal object LocationRetrofit {
     fun getRetrofitObj(): Retrofit? {
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
-                .client(okHttpClient)
+                .client(getOkHttpClient(networkDebug))
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(baseUrl)
                 .build()
@@ -48,7 +49,7 @@ internal object LocationRetrofit {
         baseUrl = computeBaseUrl(baseUrlR)
         if (baseUrl.isNullOrEmpty()) return retrofit
         retrofit = Retrofit.Builder()
-            .client(okHttpClient)
+            .client(getOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(baseUrl)
             .build()
