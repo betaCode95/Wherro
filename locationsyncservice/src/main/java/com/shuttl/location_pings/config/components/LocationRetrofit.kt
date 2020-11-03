@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 internal object LocationRetrofit {
 
-    private var baseUrl = ""
+    private var baseUrl: String? = ""
 
     private var retrofit: Retrofit? = null
 
@@ -23,7 +23,8 @@ internal object LocationRetrofit {
 
     var networkDebug: Interceptor? = null
 
-    fun resetRetrofit(baseUrl: String?) {
+    fun resetRetrofit(baseUrlR: String?) {
+        baseUrl = computeBaseUrl(baseUrlR)
         if (baseUrl.isNullOrEmpty()) return
         retrofit = Retrofit.Builder()
             .client(okHttpClient)
@@ -43,7 +44,8 @@ internal object LocationRetrofit {
         return retrofit
     }
 
-    fun getRetrofitObj(baseUrl: String?): Retrofit? {
+    fun getRetrofitObj(baseUrlR: String?): Retrofit? {
+        baseUrl = computeBaseUrl(baseUrlR)
         if (baseUrl.isNullOrEmpty()) return retrofit
         retrofit = Retrofit.Builder()
             .client(okHttpClient)
@@ -53,8 +55,15 @@ internal object LocationRetrofit {
         return retrofit
     }
 
-    fun getLocationApi(baseUrl: String? = null): LocationApi? {
+    fun getLocationApi(baseUrlR: String? = null): LocationApi? {
+        baseUrl = computeBaseUrl(baseUrlR)
         return getRetrofitObj(baseUrl)?.create(LocationApi::class.java)
+    }
+
+    private fun computeBaseUrl(baseUrl: String?): String? {
+        if (baseUrl.isNullOrEmpty()) return baseUrl
+        else if (baseUrl.endsWith("/")) return baseUrl
+        else return "$baseUrl/"
     }
 
 }
