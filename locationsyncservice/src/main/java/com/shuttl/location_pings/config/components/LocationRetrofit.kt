@@ -1,6 +1,8 @@
 package com.shuttl.location_pings.config.components
 
+import android.text.TextUtils
 import com.shuttl.location_pings.data.api.LocationApi
+import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -8,19 +10,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 internal object LocationRetrofit {
 
-    var baseUrl = "https://gps.shuttltech.com/"
+    private var baseUrl = ""
 
-    private val retrofit by lazy {
-        Retrofit.Builder()
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseUrl)
-            .build()
-    }
-
-    val locationAPI by lazy {
-        retrofit.create(LocationApi::class.java)
-    }
+    private var retrofit: Retrofit? = null
 
     private val okHttpClient by lazy {
         val b = OkHttpClient.Builder()
@@ -30,5 +22,39 @@ internal object LocationRetrofit {
     }
 
     var networkDebug: Interceptor? = null
+
+    fun resetRetrofit(baseUrl: String?) {
+        if (baseUrl.isNullOrEmpty()) return
+        retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(baseUrl)
+            .build()
+    }
+
+    fun getRetrofitObj(): Retrofit? {
+        if (retrofit == null) {
+            retrofit = Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(baseUrl)
+                .build()
+        }
+        return retrofit
+    }
+
+    fun getRetrofitObj(baseUrl: String?): Retrofit? {
+        if (baseUrl.isNullOrEmpty()) return retrofit
+        retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(baseUrl)
+            .build()
+        return retrofit
+    }
+
+    fun getLocationApi(baseUrl: String? = null): LocationApi? {
+        return getRetrofitObj(baseUrl)?.create(LocationApi::class.java)
+    }
 
 }

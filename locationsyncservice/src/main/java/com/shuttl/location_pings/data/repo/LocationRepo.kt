@@ -45,13 +45,13 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                         Log.e(TAG, "No Url Found")
                     }
                     val obj = callback?.beforeSyncLocations(locations)
-                    val response = LocationRetrofit.locationAPI.syncLocation(
+                    val response = LocationRetrofit.getLocationApi()?.syncLocation(
                         url,
                         apiKey,
                         "application/json",
                         SendLocationRequestBody.create(obj)
                     )
-                    if (response.success == true) {
+                    if (response?.success == true) {
                         deleteEntries(locations.last().time)
                         callback?.afterSyncLocations(locations)
                     }

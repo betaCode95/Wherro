@@ -51,6 +51,7 @@ object LocationsHelper {
         intent: Intent
     ) {
         locationConfigs.saveToSharedPref(app)
+        LocationRetrofit.resetRetrofit(locationConfigs.syncUrl)
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
         setNetworkingDebug(interceptor)
@@ -78,6 +79,7 @@ object LocationsHelper {
         setNetworkingDebug(interceptor)
         val locationConfigs = LocationConfigs.getFromLocal(context)
         if (TextUtils.isEmpty(locationConfigs?.syncUrl)) return
+        LocationRetrofit.resetRetrofit(locationConfigs?.syncUrl)
         val pingIntent = Intent(context, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         pingIntent.putExtra("pendingIntent", pendingIntent)
