@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         requestLocationPermission()
 
-        if (BuildConfig.BUILD_TYPE.equals("debug")) {
+        if (!BuildConfig.BUILD_TYPE.equals("debug")) {
             val intent = Intent(this, LocationPingService::class.java)
             intent.action = "STOP"
 
@@ -76,6 +76,21 @@ class MainActivity : AppCompatActivity() {
             this,
             locationPermissions,
             1
+        )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        LocationsHelper.initLocationsModule(
+            app = application,
+            locationConfigs = LocationConfigs(
+                syncUrl = "http://10.191.6.177:3000/record/",
+                minSyncInterval = 5000,
+                minDistanceInterval = 10,
+                minTimeInterval = 1000,
+                wakeLock = true,
+                alarm = true
+            ), callback = callback, intent = intent
         )
     }
 
