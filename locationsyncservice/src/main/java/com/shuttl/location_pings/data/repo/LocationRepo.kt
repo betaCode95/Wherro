@@ -43,8 +43,11 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
         GlobalScope.launch(Dispatchers.IO) {
             var locations = locationsDao?.getLimitedLocations(batchSize)
             if (canReuseLastLocation && locations?.isEmpty() == true) {
-                val lastLocation = GPSLocation.removeFromSharedPref(context)
-                locations = arrayListOf(lastLocation) as List<GPSLocation>
+                val lastLocation = GPSLocation.getLastLocation(context)
+                if (lastLocation != null)
+                    locations = listOf(lastLocation)
+                else
+                    locations = listOf()
             }
             if (locations?.isNotEmpty() == true) {
                 try {
