@@ -74,6 +74,8 @@ class LocationPingService : Service() {
                     ?: "",
                 configs.syncUrl ?: "",
                 configs.batchSize,
+                this.applicationContext,
+                configs.canReuseLastLocation ?: false,
                 callback
             )
         } catch (e: Exception) {

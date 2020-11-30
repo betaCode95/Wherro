@@ -47,6 +47,7 @@ object LocationsHelper {
         intent: Intent
     ) {
         locationConfigs.saveToSharedPref(app)
+        GPSLocation.removeFromSharedPref(app)
         LocationRetrofit.resetRetrofit(locationConfigs.syncUrl, interceptor)
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
@@ -69,6 +70,7 @@ object LocationsHelper {
         callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
+        GPSLocation.removeFromSharedPref(context)
         val pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
         val locationConfigs = LocationConfigs.getFromLocal(context)
@@ -101,6 +103,7 @@ object LocationsHelper {
         val pingIntent = Intent(app, LocationPingService::class.java)
         app.unbindService(serviceConnection)
         app.stopService(pingIntent)
+        GPSLocation.removeFromSharedPref(app.applicationContext)
         GlobalScope.launch(Dispatchers.IO) {
             LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
         }

@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+            Log.i(TAG, "beforeSyncLocations, number of locations synced: " + locations?.size)
             return locations?: emptyList()
         }
     }

@@ -1,5 +1,6 @@
 package com.shuttl.location_pings.data.repo
 
+import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
@@ -36,9 +37,15 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
     fun syncLocations(apiKey: String = "",
                       url: String = "",
                       batchSize: Int,
+                      context: Context,
+                      canReuseLastLocation: Boolean,
                       callback: LocationPingServiceCallback<Any>?) {
         GlobalScope.launch(Dispatchers.IO) {
-            val locations = locationsDao?.getLimitedLocations(batchSize)
+            var locations = locationsDao?.getLimitedLocations(batchSize)
+            if (canReuseLastLocation && locations?.isEmpty() == true) {
+                val lastLocation = GPSLocation.removeFromSharedPref(context)
+                locations = arrayListOf(lastLocation) as List<GPSLocation>
+            }
             if (locations?.isNotEmpty() == true) {
                 try {
                     if (TextUtils.isEmpty(url)) {
