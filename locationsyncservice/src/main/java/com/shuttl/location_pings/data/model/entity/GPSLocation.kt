@@ -29,7 +29,7 @@ data class GPSLocation(
         fun getLastLocation(context: Context): GPSLocation? {
             val prefs = context.getSharedPreferences("sdk_location_last", 0)
             return Gson().fromJson<GPSLocation>(
-                prefs.getString("config", ""),
+                prefs.getString("last_location", ""),
                 GPSLocation::class.java
             )
         }
