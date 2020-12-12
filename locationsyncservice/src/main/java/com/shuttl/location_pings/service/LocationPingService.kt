@@ -120,6 +120,19 @@ class LocationPingService : Service() {
         if (intent?.action.equals("STOP")) {
             wakeLock?.releaseSafely {}
             callback?.serviceStoppedManually()
+            try {
+                if (configs.timeout <= 0) {
+                    longTimer.cancel()
+                    timerTask.cancel()
+                } else timer.cancel()
+                if (configs.alarm == true) {
+                    cancelAlarm()
+                    unregisterReceiver(receiver)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            stopSelf()
         }
         configs = intent?.getParcelableExtra("config") ?: LocationConfigs()
         return START_STICKY
