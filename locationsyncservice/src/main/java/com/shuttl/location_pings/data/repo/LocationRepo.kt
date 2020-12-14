@@ -42,19 +42,23 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
                       callback: LocationPingServiceCallback<Any>?) {
         GlobalScope.launch(Dispatchers.IO) {
             var locations = locationsDao?.getLimitedLocations(batchSize)
+            var reused: Boolean = false
             if (canReuseLastLocation && locations?.isEmpty() == true) {
+                reused = true
                 val lastLocation = GPSLocation.getLastLocation(context)
                 if (lastLocation != null)
                     locations = listOf(lastLocation)
                 else
                     locations = listOf()
+            } else {
+                reused = false
             }
             if (locations?.isNotEmpty() == true) {
                 try {
                     if (TextUtils.isEmpty(url)) {
                         Log.e(TAG, "No Url Found")
                     }
-                    val obj = callback?.beforeSyncLocations(locations)
+                    val obj = callback?.beforeSyncLocations(locations, reused)
                     val response = LocationRetrofit.getLocationApi()?.syncLocation(
                         url,
                         apiKey,
