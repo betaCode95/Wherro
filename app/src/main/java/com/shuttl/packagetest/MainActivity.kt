@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             LocationsHelper.stopAndClearAll(application)
         }
 
-        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+        override fun beforeSyncLocations(locations: List<GPSLocation>?, reused: Boolean): List<GPSLocation> {
             Log.i(TAG, "beforeSyncLocations, number of locations synced: " + locations?.size)
             return locations?: emptyList()
         }
@@ -77,21 +77,6 @@ class MainActivity : AppCompatActivity() {
             this,
             locationPermissions,
             1
-        )
-    }
-
-    override fun onStart() {
-        super.onStart()
-        LocationsHelper.initLocationsModule(
-            app = application,
-            locationConfigs = LocationConfigs(
-                syncUrl = "http://10.191.6.177:3000/record/",
-                minSyncInterval = 5000,
-                minDistanceInterval = 10,
-                minTimeInterval = 1000,
-                wakeLock = true,
-                alarm = true
-            ), callback = callback, intent = intent
         )
     }
 
