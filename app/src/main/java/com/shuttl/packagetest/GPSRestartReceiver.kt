@@ -44,7 +44,7 @@ class GPSRestartReceiver : RestartReceiver() {
         override fun serviceStoppedManually() {
         }
 
-        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+        override fun beforeSyncLocations(locations: List<GPSLocation>?, reused: Boolean): List<GPSLocation> {
             return locations?: emptyList()
         }
     }
