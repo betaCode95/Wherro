@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
+import android.text.TextUtils
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
 import com.shuttl.location_pings.config.components.LocationConfigs
 import com.shuttl.location_pings.config.components.LocationRetrofit
@@ -38,10 +39,6 @@ object LocationsHelper {
         }
     }
 
-    private fun setNetworkingDebug(inteceptor: Interceptor?) {
-        LocationRetrofit.networkDebug = inteceptor
-    }
-  
     fun <T> initLocationsModule(
         app: Application,
         interceptor: Interceptor? = null,
@@ -50,9 +47,10 @@ object LocationsHelper {
         intent: Intent
     ) {
         locationConfigs.saveToSharedPref(app)
+        GPSLocation.removeFromSharedPref(app)
+        LocationRetrofit.resetRetrofit(locationConfigs.syncUrl, interceptor)
         val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
-        setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         pingIntent.putExtra("pendingIntent", pendingIntent)
@@ -72,10 +70,12 @@ object LocationsHelper {
         callback: LocationPingServiceCallback<T>,
         intent: Intent
     ) {
+        GPSLocation.removeFromSharedPref(context)
         val pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
         this.callback = callback as LocationPingServiceCallback<Any>
-        setNetworkingDebug(interceptor)
         val locationConfigs = LocationConfigs.getFromLocal(context)
+        if (TextUtils.isEmpty(locationConfigs?.syncUrl)) return
+        LocationRetrofit.resetRetrofit(locationConfigs?.syncUrl, interceptor)
         val pingIntent = Intent(context, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         pingIntent.putExtra("pendingIntent", pendingIntent)
@@ -103,6 +103,7 @@ object LocationsHelper {
         val pingIntent = Intent(app, LocationPingService::class.java)
         app.unbindService(serviceConnection)
         app.stopService(pingIntent)
+        GPSLocation.removeFromSharedPref(app.applicationContext)
         GlobalScope.launch(Dispatchers.IO) {
             LocationRepo(LocationsDB.create(app)?.locationsDao()).clearLocations()
         }
@@ -127,7 +128,6 @@ object LocationsHelper {
         interceptor: Interceptor? = null,
         locationConfigs: LocationConfigs
     ) {
-        setNetworkingDebug(interceptor)
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
         app.startService(pingIntent)

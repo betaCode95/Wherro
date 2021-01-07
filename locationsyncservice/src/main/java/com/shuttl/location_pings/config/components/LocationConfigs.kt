@@ -19,6 +19,7 @@ data class LocationConfigs(
     val syncUrl: String? = "", // PUTS the location parameters on this URL
     val wakeLock: Boolean? = true, // WakeLocks are enabled on service if made true
     val alarm: Boolean? = true, // Alarm Manager
+    val canReuseLastLocation: Boolean? = true, // Last Location gets reused for the Sync on every interval, This will make sure that we ping every on every interval
     val smallIcon: Int = R.drawable.ic_loc // Notification icon
 ) : Parcelable {
 
@@ -32,6 +33,7 @@ data class LocationConfigs(
         parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readInt()
@@ -50,6 +52,7 @@ data class LocationConfigs(
         parcel.writeString(syncUrl)
         parcel.writeValue(wakeLock)
         parcel.writeValue(alarm)
+        parcel.writeValue(canReuseLastLocation)
         parcel.writeInt(smallIcon)
     }
 

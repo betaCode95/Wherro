@@ -52,9 +52,10 @@ public class BaseTestCase extends TestCase {
     public static int currentBatchSize;
 
     public static LocationPingServiceCallback<GPSLocation> locationPingServiceCallback = new LocationPingServiceCallback() {
+
         @NotNull
         @Override
-        public List beforeSyncLocations(@Nullable List list) {
+        public List beforeSyncLocations(@Nullable List list , boolean reused) {
             return list;
         }
 

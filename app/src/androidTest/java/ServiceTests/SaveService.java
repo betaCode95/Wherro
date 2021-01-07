@@ -40,7 +40,8 @@ public class SaveService extends BaseTestCase {
                         , TestConstants.XAPI_KEY_GLOBAL
                         , TestConstants.GPS_PIPELINE_URL
                         , TestConstants.WAKE_LOCK_ENABLED
-                        , TestConstants.ALARM_LOCK_ENABLED
+                        , TestConstants.ENABLE_ALARM_MANAGER
+                        , TestConstants.REUSE_LAST_LOCATION
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 

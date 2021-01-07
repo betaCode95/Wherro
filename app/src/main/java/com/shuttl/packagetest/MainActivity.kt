@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             LocationsHelper.stopAndClearAll(application)
         }
 
-        override fun beforeSyncLocations(locations: List<GPSLocation>?): List<GPSLocation> {
+        override fun beforeSyncLocations(locations: List<GPSLocation>?, reused: Boolean): List<GPSLocation> {
+            Log.i(TAG, "beforeSyncLocations, number of locations synced: " + locations?.size)
             return locations?: emptyList()
         }
     }

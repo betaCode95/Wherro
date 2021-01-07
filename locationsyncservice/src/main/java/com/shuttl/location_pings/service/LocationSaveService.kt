@@ -159,11 +159,9 @@ class LocationSaveService : Service() {
     }
 
     private fun saveLocation(location: Location?) {
-        repo.addLocation(
-            GPSLocation.create(
-                location
-            ), configs.bufferSize
-        )
+        val gpsLocation = GPSLocation.create(location)
+        gpsLocation.saveToSharedPref(this.applicationContext)
+        repo.addLocation(gpsLocation, configs.bufferSize)
     }
 
     private fun getAlarmIntent(): PendingIntent {
