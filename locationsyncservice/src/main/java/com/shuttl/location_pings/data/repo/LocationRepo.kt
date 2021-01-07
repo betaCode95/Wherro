@@ -1,5 +1,6 @@
 package com.shuttl.location_pings.data.repo
 
+import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import com.shuttl.location_pings.callbacks.LocationPingServiceCallback
@@ -36,22 +37,35 @@ class LocationRepo(private val locationsDao: GPSLocationsDao?) {
     fun syncLocations(apiKey: String = "",
                       url: String = "",
                       batchSize: Int,
+                      context: Context,
+                      canReuseLastLocation: Boolean,
                       callback: LocationPingServiceCallback<Any>?) {
         GlobalScope.launch(Dispatchers.IO) {
-            val locations = locationsDao?.getLimitedLocations(batchSize)
+            var locations = locationsDao?.getLimitedLocations(batchSize)
+            var reused: Boolean = false
+            if (canReuseLastLocation && locations?.isEmpty() == true) {
+                reused = true
+                val lastLocation = GPSLocation.getLastLocation(context)
+                if (lastLocation != null)
+                    locations = listOf(lastLocation)
+                else
+                    locations = listOf()
+            } else {
+                reused = false
+            }
             if (locations?.isNotEmpty() == true) {
                 try {
                     if (TextUtils.isEmpty(url)) {
                         Log.e(TAG, "No Url Found")
                     }
-                    val obj = callback?.beforeSyncLocations(locations)
-                    val response = LocationRetrofit.locationAPI.syncLocation(
+                    val obj = callback?.beforeSyncLocations(locations, reused)
+                    val response = LocationRetrofit.getLocationApi()?.syncLocation(
                         url,
                         apiKey,
                         "application/json",
                         SendLocationRequestBody.create(obj)
                     )
-                    if (response.success == true) {
+                    if (response?.success == true) {
                         deleteEntries(locations.last().time)
                         callback?.afterSyncLocations(locations)
                     }

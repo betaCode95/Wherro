@@ -32,17 +32,24 @@ public class StartStopService extends BaseTestCase {
 
         // Set config
         locationConfigs =
-                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL, TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL
-                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL, TestConstants.ACCURACY_GLOBAL
-                        , TestConstants.BUFFER_SIZE_GLOBAL, TestConstants.BATCH_SIZE_FOR_PING_SERVICE_GLOBAL
-                        , TestConstants.SERVICE_TIMEOUT_GLOBAL, TestConstants.XAPI_KEY_GLOBAL, TestConstants.GPS_PIPELINE_URL
+                new LocationConfigs(TestConstants.MIN_TIME_INTERVAL_FOR_LOCATION_FETCHING_GLOBAL
+                        , TestConstants.MIN_DISTANCE_INTERVAL_BETWEEN_TWO_LOCATIONS_GLOBAL
+                        , TestConstants.MIN_PING_SERVICE_SYNC_INTERVAL_GLOBAL
+                        , TestConstants.ACCURACY_GLOBAL
+                        , TestConstants.BUFFER_SIZE_GLOBAL
+                        , TestConstants.BATCH_SIZE_FOR_PING_SERVICE_GLOBAL
+                        , TestConstants.SERVICE_TIMEOUT_GLOBAL
+                        , TestConstants.XAPI_KEY_GLOBAL
+                        , TestConstants.GPS_PIPELINE_URL
+                        , TestConstants.WAKE_LOCK_ENABLED
+                        , TestConstants.ENABLE_ALARM_MANAGER
+                        , TestConstants.REUSE_LAST_LOCATION
                         , TestConstants.NOTIFICATION_ICON_ID);
 
 
         ServiceHelper.stopSaveLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
         ServiceHelper.stopPingLocationServiceIfRunning(activityTestRule.getActivity().getApplication());
     }
-
 
     @AutoTest_Critical
     @AutoTest_StartStopServices
@@ -91,7 +98,7 @@ public class StartStopService extends BaseTestCase {
 
     }
 
-
+    
     @AutoTest_PingLocationService
     @AutoTest_StartStopServices
     @Test
@@ -121,6 +128,7 @@ public class StartStopService extends BaseTestCase {
 
     }
 
+    
     @AutoTest_SaveLocationService
     @AutoTest_StartStopServices
     @Test

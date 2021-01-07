@@ -51,28 +51,32 @@ public class BaseTestCase extends TestCase {
     public LocationConfigs locationConfigs;
     public static int currentBatchSize;
 
-    public static LocationPingServiceCallback locationPingServiceCallback = new LocationPingServiceCallback() {
+    public static LocationPingServiceCallback<GPSLocation> locationPingServiceCallback = new LocationPingServiceCallback() {
+
         @NotNull
         @Override
-        public List beforeSyncLocations(@Nullable List list) {
+        public List beforeSyncLocations(@Nullable List list , boolean reused) {
             return list;
         }
 
         @Override
         public void afterSyncLocations(@Nullable List list) {
+            LogUITest.debug("Number of locations synced  : " + list.size());
         }
 
         @Override
         public void errorWhileSyncLocations(Exception e) {
-            LogUITest.debug("errorWhileSyncLocations : " + e.getMessage());
+            LogUITest.error("errorWhileSyncLocations : " + e.getMessage());
         }
 
         @Override
         public void serviceStarted() {
+            LogUITest.debug("Service Started");
         }
 
         @Override
         public void serviceStopped() {
+            LogUITest.debug("Service Stopped");
         }
 
         @Override
