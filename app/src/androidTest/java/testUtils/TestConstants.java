@@ -32,6 +32,8 @@ public class TestConstants {
 
     public static boolean WAKE_LOCK_ENABLED = true;
     public static boolean WAKE_LOCK_DISABLED = false;
+    public static boolean ALARM_LOCK_ENABLED = true;
+    public static boolean ALARM_LOCK_DISABLED = false;
 
     public static boolean REUSE_LAST_LOCATION = false;
     public static boolean ENABLE_ALARM_MANAGER = true;
