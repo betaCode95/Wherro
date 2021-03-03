@@ -4,7 +4,7 @@
 name: Maven Package
 
 on:
-  release:
+  publish:
     types: [created]
 
 jobs:
