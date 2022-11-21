@@ -168,7 +168,13 @@ class LocationSaveService : Service() {
         val i = Intent(ACTION_ALARM)
         i.setPackage(packageName)
         Log.e("GPS_SDK", packageName)
-        return PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            return PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_IMMUTABLE)
+        }
+        else {
+            return PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
     }
 
     fun scheduleAlarm() {

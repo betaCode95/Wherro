@@ -49,7 +49,14 @@ object LocationsHelper {
         locationConfigs.saveToSharedPref(app)
         GPSLocation.removeFromSharedPref(app)
         LocationRetrofit.resetRetrofit(locationConfigs.syncUrl, interceptor)
-        val pendingIntent: PendingIntent = PendingIntent.getService(app, 0, intent, 0)
+        val pendingIntent:PendingIntent;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getService(app, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        }
+        else
+        {
+            pendingIntent = PendingIntent.getService(app, 0, intent, 0)
+        }
         this.callback = callback as LocationPingServiceCallback<Any>
         val pingIntent = Intent(app, LocationPingService::class.java)
         pingIntent.putExtra("config", locationConfigs)
@@ -71,7 +78,13 @@ object LocationsHelper {
         intent: Intent
     ) {
         GPSLocation.removeFromSharedPref(context)
-        val pendingIntent: PendingIntent = PendingIntent.getService(context, 0, intent, 0)
+        val pendingIntent:PendingIntent
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        }
+        else {
+            pendingIntent = PendingIntent.getService(context, 0, intent, 0)
+        }
         this.callback = callback as LocationPingServiceCallback<Any>
         val locationConfigs = LocationConfigs.getFromLocal(context)
         if (TextUtils.isEmpty(locationConfigs?.syncUrl)) return
